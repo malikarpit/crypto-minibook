@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Arpit">
+  <title>Unit 3 — Cryptanalysis & Security | Crypto MiniBook</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/chapter.css">
+  <link rel="stylesheet" href="../assets/css/timer.css">
+  
+</head>
+<body>
+<div id="progress-bar"></div>
+<header id="main-header">
+  <div class="header-left">
+    <button id="sidebar-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-icon">A&#9889;</div>
+      <div class="brand-text"><span class="main">Crypto MiniBook</span><span class="sub">Unit 3: Cryptanalysis</span></div>
+    </div>
+  </div>
+  <span class="header-chapter-title"></span>
+  <div class="header-right">
+    <button id="search-btn" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button id="tts-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg></button>
+    <button id="print-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span class="print-label">PDF</span></button>
+    <button id="reading-mode-btn" class="icon-btn" aria-pressed="false">&#128214;</button>
+    <button id="theme-toggle" class="icon-btn"></button>
+  </div>
+</header>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="../index.html" class="sidebar-link">&#127968; Home</a>
+      <a href="../progress.html" class="sidebar-link">&#128202; Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Chapters</div>
+      <a href="unit1.html" class="sidebar-link">&#128272; Unit 1 &mdash; Foundations</a>
+      <a href="unit2.html" class="sidebar-link">&#128220; Unit 2 &mdash; Protocols</a>
+      <a href="unit3.html" class="sidebar-link active">&#128373; Unit 3 &mdash; Cryptanalysis</a>
+      <a href="unit4.html" class="sidebar-link">&#128640; Unit 4 &mdash; Advanced</a>
+      <a href="unit5.html" class="sidebar-link">&#128187; Unit 5 &mdash; Practicals</a>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-section-label">Bookmarks</div><div id="bookmarks-list"></div></div>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-brand-mark"><div class="mark">A&#9889;</div><span>Arpit &middot; Crypto MiniBook 2026</span></div></div>
+</aside>
+<main id="main-content">
+<div class="content-inner">
+
+  <div class="chapter-hero">
+    <div class="chapter-num">&#128373; Unit 3</div>
+    <h1 class="chapter-title">Cryptanalysis and Security</h1>
+    <p class="chapter-desc">Breaking and defending cryptographic systems. Attack models, side-channel analysis, data protection states, and the legal landscape of cryptography.</p>
+  </div>
+
+  <div class="toc-card">
+    <h3>&#128203; Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#s-intro" class="toc-item"><span class="toc-num">3.1</span>Introduction to Cryptanalysis</a>
+      <a href="#s-attacks" class="toc-item"><span class="toc-num">3.2</span>Classical Attack Models (COA, KPA, CPA, CCA)</a>
+      <a href="#s-advanced-attacks" class="toc-item"><span class="toc-num">3.3</span>Advanced Attack Techniques</a>
+      <a href="#s-sidechannel" class="toc-item"><span class="toc-num">3.4</span>Side-Channel Attacks</a>
+      <a href="#s-countermeasures" class="toc-item"><span class="toc-num">3.5</span>Countermeasures</a>
+      <a href="#s-datastates" class="toc-item"><span class="toc-num">3.6</span>Data at Rest, in Transit, in Use</a>
+      <a href="#s-legal" class="toc-item"><span class="toc-num">3.7</span>Legal &amp; Ethical Issues</a>
+      <a href="#s-mcq3" class="toc-item"><span class="toc-num">3.8</span>Practice MCQs (15 Q)</a>
+    </div>
+  </div>
+
+  <!-- 3.1 INTRO -->
+  <section id="s-intro" data-search-section="cryptanalysis cryptology breaking cipher attack security">
+    <div class="section-heading">
+      <h2 class="prose">3.1 Introduction to Cryptanalysis
+        <button class="bookmark-btn" data-id="s-intro" data-label="3.1 Intro Cryptanalysis">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose"><strong>Cryptanalysis</strong> is the study of analyzing cryptographic systems to find weaknesses. It is the constructive counterpart to cryptography: by understanding how systems can be broken, we build stronger ones. A cryptanalyst attempts to:</p>
+      <ul class="prose">
+        <li>Recover the <strong>plaintext</strong> from ciphertext without knowing the key.</li>
+        <li>Recover the <strong>key</strong> itself (more damaging &mdash; all past and future messages exposed).</li>
+        <li>Find a <strong>weakness</strong> in the algorithm (even if not directly exploitable).</li>
+      </ul>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why study breaking crypto?</strong> Every modern algorithm (AES, RSA, SHA-256) was publicly released so the global cryptographic community could try to break it. AES survived a 5-year NIST competition. The attacks that were found against early candidates (CAST, RC6, Serpent) directly strengthened the final Rijndael design. Security through public scrutiny, not obscurity.</div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.2 ATTACK MODELS -->
+  <section id="s-attacks" data-search-section="ciphertext-only known-plaintext chosen-plaintext chosen-ciphertext attack model oracle">
+    <div class="section-heading">
+      <h2 class="prose">3.2 Classical Attack Models
+        <button class="bookmark-btn" data-id="s-attacks" data-label="3.2 Attack Models">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose">Attack models are classified by what information the attacker has access to. From weakest to strongest:</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Attack Model</th><th>Attacker Has</th><th>Goal &amp; Method</th><th>Real Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Ciphertext-Only (COA)</strong></td>
+            <td>Only intercepted ciphertexts</td>
+            <td>Hardest. Uses frequency analysis, statistical patterns, index of coincidence to deduce plaintext/key.</td>
+            <td>Breaking Vigen&egrave;re cipher using Kasiski test</td>
+          </tr>
+          <tr>
+            <td><strong>Known-Plaintext (KPA)</strong></td>
+            <td>Some (plaintext, ciphertext) pairs</td>
+            <td>Map pairs to deduce the key or algorithm. Standard headers (e.g., HTTP, file magic bytes) provide known plaintexts.</td>
+            <td>Allied codebreakers at Bletchley Park exploited Enigma message headers. Orion Technologies case study.</td>
+          </tr>
+          <tr>
+            <td><strong>Chosen-Plaintext (CPA)</strong></td>
+            <td>Can choose plaintexts and get ciphertexts from encryption oracle</td>
+            <td>Feed specially crafted inputs to expose algorithm internals. Differential cryptanalysis is a CPA.</td>
+            <td>Breaking DES S-boxes using input pairs with specific XOR differences</td>
+          </tr>
+          <tr>
+            <td><strong>Chosen-Ciphertext (CCA)</strong></td>
+            <td>Can choose ciphertexts and get decryptions from decryption oracle</td>
+            <td>Most powerful. Submit modified ciphertexts to extract private key through error messages or timing.</td>
+            <td>Bleichenbacher&apos;s PKCS#1 attack against RSA (1998)</td>
+          </tr>
+          <tr>
+            <td><strong>Adaptive CPA/CCA</strong></td>
+            <td>Same as above but can adapt queries based on prior responses</td>
+            <td>Interactive attack. Each query refines the next. Much more efficient than non-adaptive.</td>
+            <td>Padding oracle attacks against CBC mode (POODLE, BEAST)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Bleichenbacher&apos;s Million Message Attack</div>
+      <p class="prose">In 1998, Daniel Bleichenbacher showed that RSA-PKCS#1 v1.5 decryption error messages act as a <strong>padding oracle</strong>. An attacker intercepts ciphertext C (encrypting message M). They send thousands of modified ciphertexts C&apos; = C &times; s&sup2; mod n to the server. If the server returns &quot;PKCS conformant&quot; (no error), the attacker learns that M&times;s falls in a certain mathematical range. After ~1 million queries, the attacker reconstructs M entirely without the private key. Fix: OAEP padding. This flaw still existed in many TLS 1.2 implementations in 2017 (ROBOT attack).</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.3 ADVANCED ATTACKS -->
+  <section id="s-advanced-attacks" data-search-section="differential linear cryptanalysis birthday rainbow table replay brute force">
+    <div class="section-heading">
+      <h2 class="prose">3.3 Advanced Attack Techniques
+        <button class="bookmark-btn" data-id="s-advanced-attacks" data-label="3.3 Advanced Attacks">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <h3 class="prose">Differential Cryptanalysis</h3>
+      <p class="prose">A <strong>Chosen-Plaintext Attack</strong> technique. The attacker selects plaintext pairs (P, P') with a specific XOR difference &#916;P = P &#8853; P', encrypts both, and analyzes how that difference propagates through the cipher's S-boxes. The S-box is not perfectly non-linear — some input differences map to output differences with higher probability than random. By collecting enough (P, P', C, C') pairs and tracing the probable differential paths, the last-round subkeys can be statistically recovered.</p>
+      <div class="worked-example">
+        <div class="we-title">Concept: Differential Propagation</div>
+        <div class="cipher-grid">Attacker chooses: &#916;P = 0x0080_0000 (one bit set)
+Encrypts 2^47 pairs (P, P&#8853;&#916;P) through DES
+Observes output differences &#916;C
+Traces most-probable differential characteristic through 15 rounds
+Recovers Round 16 subkey with high probability
+Repeat for other subkey bits &#8594; full key recovered</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Linear Cryptanalysis</h3>
+      <p class="prose">A <strong>Known-Plaintext Attack</strong>. The attacker finds a linear approximation equation relating plaintext bits, ciphertext bits, and key bits with probability p &#8800; 0.5. If p > 0.5, the approximation holds more often than chance. With enough (P, C) pairs, statistical analysis reveals key bits. Introduced by Mitsuru Matsui in 1993; he broke full 16-round DES using 2&#179;&#787; known plaintexts.</p>
+
+      <h3 class="prose" style="margin-top:20px">Birthday Attack (against Hash Functions)</h3>
+      <p class="prose">By the Birthday Paradox, in a group of 23 people, there's a 50% chance two share a birthday. For an n-bit hash, you need only ~2&#8319;&#8260;&#178; random inputs to find a collision with 50% probability (not 2&#8319; as naively expected). This is why a 128-bit hash (MD5) is broken: 2&#8310;&#8308; operations to find a collision is feasible on modern hardware.</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Hash</th><th>Output Size</th><th>Collisions Require (Birthday)</th><th>Preimage Requires</th></tr></thead>
+        <tbody>
+          <tr><td>MD5</td><td>128 bits</td><td>~2&#8310;&#8308; (broken in seconds)</td><td>~2&#185;&#178;&#8312;</td></tr>
+          <tr><td>SHA-1</td><td>160 bits</td><td>~2&#8312;&#8304; (SHAttered 2017)</td><td>~2&#185;&#8310;&#8304;</td></tr>
+          <tr><td>SHA-256</td><td>256 bits</td><td>~2&#185;&#178;&#8312; (computationally infeasible)</td><td>~2&#178;&#8309;&#8310;</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:20px">Rainbow Table Attack</h3>
+      <p class="prose">Precomputed tables mapping hash outputs back to plaintext passwords. Instead of brute-forcing at attack time, the work is done once, stored (terabytes), and lookups are instant. <strong>Defeated by salting:</strong> a unique random string appended to each password before hashing means the entire table must be recomputed for every individual salt &mdash; computationally impossible.</p>
+
+      <h3 class="prose" style="margin-top:20px">Replay Attack</h3>
+      <p class="prose">An attacker captures a valid encrypted transmission (e.g., an authenticated login packet) and retransmits it later to replay the same authenticated action without knowing the content. <strong>Defeated by:</strong> Nonces (unique random numbers per session), timestamps, and sequence numbers.</p>
+
+      <h3 class="prose" style="margin-top:20px">Man-in-the-Middle (MitM)</h3>
+      <p class="prose">The attacker positions themselves between two communicating parties, intercepting and relaying (possibly modifying) all communications. Both parties believe they are communicating directly. <strong>Defeated by:</strong> Authentication via digital certificates (PKI) &mdash; the server proves its identity, making impersonation cryptographically impossible.</p>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Padding Oracle Attacks (POODLE, BEAST)</div>
+      <p class="prose">Padding oracle attacks exploit CBC mode padding validation. When AES-CBC decryption produces invalid PKCS#7 padding, the server returns a specific error. An attacker can submit modified ciphertext blocks, observe which ones produce &quot;valid padding&quot; errors (vs &quot;invalid padding&quot;), and byte-by-byte deduce the plaintext without the key. <strong>BEAST (2011)</strong> exploited TLS 1.0 CBC with predictable IVs. <strong>POODLE (2014)</strong> exploited SSLv3 CBC. Both forced TLS upgrades. Defense: use AEAD ciphers (AES-GCM) that authenticate before decrypting, eliminating the padding oracle entirely.</p>
+    </div>
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Differential cryptanalysis is a CPA. What two things must the attacker choose and observe?<div class="recall-answer">Choose: plaintext pairs (P, P') with a specific XOR difference ΔP = P ⊕ P'. Observe: corresponding ciphertext pairs (C, C') and their difference ΔC = C ⊕ C'. By analyzing which ΔC values occur with higher-than-random probability, the attacker traces differential characteristics backward through S-boxes to deduce round subkeys.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> For a 128-bit hash (MD5), how many operations does a birthday attack require to find a collision?<div class="recall-answer">~2^64 operations (birthday bound = 2^(n/2) where n=128). This is computationally feasible on modern hardware — MD5 collisions have been computed in seconds since 2004. By contrast, SHA-256 has a 2^128 birthday bound, which remains secure.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> Why can't a pre-computed rainbow table crack a properly salted password hash?<div class="recall-answer">A salt is a unique random string added to each password before hashing: H(password || salt). The rainbow table would need to be recomputed separately for every possible salt value — for a 128-bit random salt, that requires 2^128 × table_size storage. The computation is completely infeasible, making salted hashes immune to precomputation attacks.</div></div>
+    <button class="reveal-btn" onclick="">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary">
+    <ul>
+      <li>Differential cryptanalysis (CPA): exploits input-difference→output-difference bias in S-boxes; broke DES with 2^47 chosen plaintexts</li>
+      <li>Linear cryptanalysis (KPA): finds linear approximations of cipher with probability ≠ 0.5; broke DES with 2^43 known plaintexts</li>
+      <li>Birthday attack: collision in n-bit hash needs only 2^(n/2) inputs (not 2^n) — MD5 (128-bit) is broken, SHA-256 (256-bit) safe at 2^128</li>
+      <li>Rainbow tables: precomputed hash→plaintext chains; defeated entirely by adding a unique random salt before hashing</li>
+      <li>Padding oracle attacks (BEAST/POODLE): adaptive CCA exploiting CBC error messages; defense = AEAD ciphers (AES-GCM)</li>
+    </ul>
+  </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.4 SIDE-CHANNEL -->
+  <section id="s-sidechannel" data-search-section="side channel attack timing power analysis electromagnetic acoustic DPA SPA">
+    <div class="section-heading">
+      <h2 class="prose">3.4 Side-Channel Attacks
+        <button class="bookmark-btn" data-id="s-sidechannel" data-label="3.4 Side-Channel">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Side-Channel Attack</div>
+        Attacks the <strong>physical implementation</strong> of a cryptosystem, not the mathematical algorithm. Even if AES is mathematically perfect, the silicon chip running it leaks information through timing, power consumption, electromagnetic radiation, and sound.
+      </div>
+      <table class="data-table reveal">
+        <thead><tr><th>Type</th><th>What is Measured</th><th>How Keys Leak</th><th>Real Case</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Timing Attack</strong></td>
+            <td>CPU execution time per operation</td>
+            <td>if(key_bit==1){multiply()} takes longer than no-op. Time differences reveal key bits.</td>
+            <td>Kocher (1995) extracted RSA keys via network decryption timing. OpenSSL had timing bug in ECDSA.</td>
+          </tr>
+          <tr>
+            <td><strong>Simple Power Analysis (SPA)</strong></td>
+            <td>Single power trace of chip</td>
+            <td>Square-and-multiply: &apos;multiply&apos; step is visible as a power spike. One trace reveals key bit pattern.</td>
+            <td>Smart card RSA private key extraction via oscilloscope.</td>
+          </tr>
+          <tr>
+            <td><strong>Differential Power Analysis (DPA)</strong></td>
+            <td>Statistical correlation across 1000s of traces</td>
+            <td>Attacker guesses key bits, predicts intermediate values, correlates with power traces. Works even through noise.</td>
+            <td>Smart card AES keys extracted in hours by Kocher et al. (1999). Affects most unprotected chips.</td>
+          </tr>
+          <tr>
+            <td><strong>Electromagnetic (EM)</strong></td>
+            <td>Radio frequency emissions</td>
+            <td>CPU circuitry emits EM proportional to data-dependent switching activity.</td>
+            <td>AES keys extracted from laptop using $50 SDR antenna from 1 meter away.</td>
+          </tr>
+          <tr>
+            <td><strong>Acoustic</strong></td>
+            <td>High-frequency sound (coil whine)</td>
+            <td>Capacitors on CPU/VRM emit ultrasonic frequencies proportional to processing load.</td>
+            <td>RSA key extracted from a laptop using a smartphone microphone (Ben-Gurion University, 2013).</td>
+          </tr>
+          <tr>
+            <td><strong>Cache-Timing (Spectre/Meltdown class)</strong></td>
+            <td>CPU cache access times</td>
+            <td>Cache hits take ~4ns; cache misses take ~100ns. Measuring memory access patterns reveals secret data.</td>
+            <td>Spectre (2018): reads kernel memory from user space via speculative execution + cache timing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Fault Injection Attacks</div>
+      <p class="prose">Beyond passively measuring leakage, <strong>fault injection</strong> actively disrupts chip operation: glitching the power supply causes random bit-flips in the computation. By deliberately causing a faulty AES encryption and comparing it to the correct ciphertext, Differential Fault Analysis (DFA) can recover the key in as few as 2 faulty computations. Bank ATM cards, embedded HSMs, and FPGA-based crypto need physical tamper protection against this.</p>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Microarchitectural Attacks (Spectre, Meltdown)</div>
+      <p class="prose">Spectre and Meltdown (2018) represent a new class of side-channel attacks exploiting <strong>speculative execution</strong> and <strong>branch prediction</strong> in modern CPUs. Spectre tricks the CPU&apos;s branch predictor into speculatively executing code that accesses privileged memory. Although the speculative result is discarded by the CPU, it leaves a fingerprint in the L1/L2 cache. By precisely measuring cache access times (the Flush+Reload technique), user-space code can read kernel memory addresses. This breaks the OS memory isolation boundary &mdash; entirely in software, no physical access needed. Patches required changes to OS kernels, compilers, and microcode, causing 5-30% performance regressions.</p>
+    </div>
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> What is the key difference between SPA and DPA in terms of number of traces required?<div class="recall-answer">SPA uses a SINGLE power trace and extracts key bits from visually distinct features (e.g., the square-multiply pattern in RSA). DPA collects THOUSANDS of noisy traces and uses statistical correlation to separate signal from noise — it works even when individual traces are too noisy to interpret directly.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> How did Spectre use cache timing to read kernel memory from user space?<div class="recall-answer">Spectre exploited CPU speculative execution: a user-space program trained the branch predictor to speculatively execute code that accessed privileged kernel memory. The CPU rolled back the speculative result, but left a fingerprint in the L1/L2 cache. By measuring access times (cache hits ≈4ns vs misses ≈100ns), the attacker inferred which cache lines were touched, revealing the kernel memory contents.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> Why is acoustic cryptanalysis possible without touching the target device?<div class="recall-answer">CPU voltage regulators and capacitors emit ultrasonic frequencies (10-150 kHz) proportional to the computational load. Since RSA and AES have data-dependent power consumption patterns, the acoustic emissions carry key-dependent signatures. Ben-Gurion University (2013) extracted RSA keys using a smartphone microphone placed near a laptop running GnuPG decryption.</div></div>
+    <button class="reveal-btn" onclick="">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary">
+    <ul>
+      <li>Side-channel attacks exploit physical leakage (timing, power, EM, acoustic, cache) — not algorithm weakness</li>
+      <li>SPA: single trace reveals key from visible patterns (square-multiply in RSA)</li>
+      <li>DPA: statistical correlation across thousands of traces; works through noise; strongest practical attack on smart cards</li>
+      <li>Cache-timing (Spectre/Meltdown): speculative execution + Flush+Reload technique reads privileged memory from user space</li>
+      <li>Acoustic cryptanalysis: CPU coil whine carries key-dependent signatures extractable with a $50 microphone</li>
+    </ul>
+  </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.5 COUNTERMEASURES -->
+  <section id="s-countermeasures" data-search-section="countermeasures constant time masking blinding hardware security">
+    <div class="section-heading">
+      <h2 class="prose">3.5 Countermeasures Against Side-Channel Attacks
+        <button class="bookmark-btn" data-id="s-countermeasures" data-label="3.5 Countermeasures">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <table class="data-table reveal">
+        <thead><tr><th>Countermeasure</th><th>How it Works</th><th>Defends Against</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Constant-Time Programming</strong></td>
+            <td>All cryptographic operations execute in exactly the same number of CPU cycles regardless of key bits. No branches based on secret data.</td>
+            <td>Timing attacks</td>
+          </tr>
+          <tr>
+            <td><strong>Masking (Secret Sharing)</strong></td>
+            <td>Internal variables split into random shares: x = x1 &#8853; x2 (random mask). Every operation applied to shares. Mask removed at end. Power trace of one share is statistically independent of the secret.</td>
+            <td>DPA, SPA</td>
+          </tr>
+          <tr>
+            <td><strong>Blinding (RSA)</strong></td>
+            <td>Before RSA decryption, multiply ciphertext by a random value r: C&apos; = C&#215;r&#7497; mod n. Decrypt C&apos;, then divide by r. Power trace reveals C&apos;, not C.</td>
+            <td>Timing, power analysis against RSA</td>
+          </tr>
+          <tr>
+            <td><strong>Faraday Cage / TEMPEST Shielding</strong></td>
+            <td>Metal enclosure blocks EM emissions. Used in classified government systems (TEMPEST-certified hardware).</td>
+            <td>EM attacks</td>
+          </tr>
+          <tr>
+            <td><strong>Hardware Security Modules (HSM)</strong></td>
+            <td>Dedicated tamper-resistant chips. Keys never leave the HSM. Physical tamper triggers key destruction. Used by banks, CAs.</td>
+            <td>Physical access, fault injection, all side-channel</td>
+          </tr>
+          <tr>
+            <td><strong>Noise Addition (Power)</strong></td>
+            <td>Random dummy operations inserted to add noise to power traces, defeating DPA correlation.</td>
+            <td>SPA, DPA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> What does "constant-time programming" require for a conditional branch based on a secret key bit?<div class="recall-answer">Both branches (true and false) must execute in EXACTLY the same number of CPU cycles. In practice this means: no early returns based on secret data, no table lookups with secret-indexed memory addresses, and replacing if-else with bitwise operations. Example: instead of if(bit) result=A; else result=B; use result = (A & mask) | (B & ~mask) where mask = -bit (all 1s or all 0s).</div></div>
+    <div class="recall-question"><strong>Q2.</strong> Explain RSA blinding and why it defeats timing attacks.<div class="recall-answer">Before decryption, multiply ciphertext by a random value: C' = C × r^e mod n. Decrypt C' to get M' = M × r, then divide by r to recover M. The timing of the decryption now depends on the random C', not the actual ciphertext C. An attacker measuring timing sees random variation — the correlation with the secret key is broken.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> What is the "masking" countermeasure and which attacks does it defeat?<div class="recall-answer">Masking (secret sharing) splits every internal variable into random shares: a secret value x is stored as (x₁, x₂) where x = x₁ ⊕ x₂ and x₁ is uniformly random. All operations are applied to both shares. The power consumption of each share is statistically independent of x, defeating DPA and SPA — an attacker sees only the random mask, not the secret.</div></div>
+    <button class="reveal-btn" onclick="">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary">
+    <ul>
+      <li>Constant-time programming: eliminate all secret-data-dependent branches and memory accesses to defeat timing attacks</li>
+      <li>Masking: split secrets into random XOR shares — each share leaks no information about the secret individually</li>
+      <li>RSA blinding: multiply ciphertext by random value before decryption — timing signature randomized, key unrecoverable</li>
+      <li>HSMs: tamper-resistant hardware — keys never leave the device, physical access triggers key destruction</li>
+      <li>TEMPEST/Faraday cage: blocks EM emanations; required for classified government cryptographic systems</li>
+    </ul>
+  </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.6 DATA STATES -->
+  <section id="s-datastates" data-search-section="data at rest transit use encryption disk TLS SGX TEE FHE">
+    <div class="section-heading">
+      <h2 class="prose">3.6 Data at Rest, in Transit, and in Use
+        <button class="bookmark-btn" data-id="s-datastates" data-label="3.6 Data States">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">The Three States of Data</div>
+        A holistic security architecture protects data in all three states. Failure in any one state can compromise everything. Your encrypted disk is useless if the data is stolen from RAM while being processed.
+      </div>
+      <table class="data-table reveal">
+        <thead><tr><th>State</th><th>Definition</th><th>Threats</th><th>Cryptographic Solution</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Data at Rest</strong></td>
+            <td>Data stored on hard drives, SSDs, databases, cloud storage, USB drives</td>
+            <td>Physical theft of device, compromised backups, insider access to storage</td>
+            <td><strong>Full Disk Encryption (FDE)</strong> with AES-256-XTS. Transparent Database Encryption (TDE). Encrypted backups.</td>
+            <td>BitLocker (Windows), FileVault (macOS), LUKS (Linux), AWS S3 SSE</td>
+          </tr>
+          <tr>
+            <td><strong>Data in Transit</strong></td>
+            <td>Data moving across networks: internet, LAN, Wi-Fi, cellular</td>
+            <td>Packet sniffing, ARP poisoning, Wi-Fi eavesdropping, MitM attacks</td>
+            <td><strong>TLS 1.3</strong> for web/API traffic. IPsec VPNs for network-level. MACsec for LAN.</td>
+            <td>HTTPS, SSH, WireGuard VPN, Signal, WhatsApp</td>
+          </tr>
+          <tr>
+            <td><strong>Data in Use</strong></td>
+            <td>Data currently loaded in CPU registers, L1/L2 cache, or RAM for active processing</td>
+            <td>Memory-scraping malware, cold-boot attacks (freezing RAM), compromised hypervisor, Spectre/Meltdown</td>
+            <td><strong>Trusted Execution Environments (TEE)</strong>: Intel SGX, ARM TrustZone, AMD SEV. Hardware-encrypted RAM enclaves the OS cannot read. <strong>FHE</strong> (computationally expensive but eliminates plaintext in RAM).</td>
+            <td>Apple Secure Enclave (Face ID data), Intel SGX (cloud computing), Azure Confidential Computing</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Cold Boot Attack:</strong> DRAM retains data for seconds to minutes after power loss (especially when cooled with liquid nitrogen). An attacker can shut down a running computer, spray RAM with freezing agent, move the RAM to another machine, and dump memory contents including encryption keys. Defense: key material should never be stored unmasked in RAM; use hardware key derivation.</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Intel SGX (Software Guard Extensions)</div>
+      <p class="prose">Intel SGX creates hardware-isolated memory regions called <strong>enclaves</strong>. Code running inside an enclave is encrypted and integrity-protected by the CPU itself. Even the OS, hypervisor, or BIOS cannot read enclave memory. The CPU decrypts enclave pages only inside the processor die, after verifying the enclave measurement (a hash of its code). Remote parties can <strong>attest</strong> to the enclave&apos;s integrity: the CPU produces a signed quote proving which code is running in the enclave. Used by cloud providers for confidential computing: processing sensitive data (medical records, financial data) on untrusted cloud servers without the cloud provider being able to see the data.</p>
+    </div>
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> A laptop with BitLocker enabled is stolen. Which of the three data states is protected and which is NOT?<div class="recall-answer">Protected: Data at Rest. BitLocker (AES-XTS) encrypts the disk — a thief cannot read files without the BitLocker key. NOT protected: Data in Use (if the laptop was running and unlocked, RAM contains plaintext), Data in Transit (BitLocker doesn't encrypt network traffic).</div></div>
+    <div class="recall-question"><strong>Q2.</strong> How does Intel SGX protect data in use, and what threat does it protect against?<div class="recall-answer">SGX creates hardware-encrypted memory enclaves. The CPU encrypts/decrypts enclave memory inside the processor die itself — even the OS, hypervisor, or BIOS cannot read enclave contents. This protects against: compromised OS kernel, malicious cloud hypervisors, and physical RAM scraping. Even the cloud provider hosting the VM cannot see data processed in an SGX enclave.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> What is a cold boot attack and which data state does it affect?<div class="recall-answer">A cold boot attack targets Data in Use. DRAM retains contents for seconds to minutes after power loss (especially when cooled with liquid nitrogen). An attacker powers off a running machine, freezes the RAM sticks, transplants them to another system, and dumps the memory — recovering encryption keys, credentials, and plaintext data. Defense: immediate RAM zeroing on power loss (requires hardware support).</div></div>
+    <button class="reveal-btn" onclick="">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary">
+    <ul>
+      <li>Data at Rest: on disk/SSD — protected by FDE (BitLocker/AES-XTS). Threat: physical theft of device</li>
+      <li>Data in Transit: moving over networks — protected by TLS 1.3. Threat: packet sniffing, ARP poisoning, MitM</li>
+      <li>Data in Use: in CPU/RAM — protected by TEE (Intel SGX, ARM TrustZone). Threat: cold-boot, Spectre, compromised hypervisor</li>
+      <li>FHE (Fully Homomorphic Encryption) theoretically computes on encrypted data without decryption — currently 1000-10000x slower than plaintext computation</li>
+      <li>Holistic security requires protection in ALL three states — failure in any one can compromise everything</li>
+    </ul>
+  </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.7 LEGAL -->
+  <section id="s-legal" data-search-section="legal ethical GDPR export control crypto wars backdoor surveillance privacy">
+    <div class="section-heading">
+      <h2 class="prose">3.7 Legal &amp; Ethical Issues in Cryptography
+        <button class="bookmark-btn" data-id="s-legal" data-label="3.7 Legal Issues">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <h3 class="prose">GDPR and Encryption</h3>
+      <p class="prose">The EU General Data Protection Regulation (GDPR, 2018), Article 32, explicitly requires organizations to implement &ldquo;pseudonymisation and encryption of personal data&rdquo; as a technical security measure. A critical legal benefit: <strong>if encrypted data is breached but the encryption keys remain secure, EU regulators may not consider it a reportable data breach</strong> (encrypted data is &ldquo;unintelligible&rdquo; to unauthorized parties). This saves companies from the mandatory 72-hour breach notification and potential fines of up to 4% of global annual revenue.</p>
+
+      <h3 class="prose" style="margin-top:20px">Export Control (Wassenaar Arrangement)</h3>
+      <p class="prose">Cryptography is classified as a <strong>&ldquo;dual-use&rdquo; technology</strong> &mdash; it has both civilian and military applications. Until 1996, the US classified encryption software above 40-bit keys as munitions, restricting export. Today, under the Wassenaar Arrangement (multi-nation treaty), strong cryptography can be exported to most countries but is still controlled for export to embargoed nations (North Korea, Iran, Cuba, Syria). This is why older browsers showed 40-bit &ldquo;export-grade&rdquo; cipher suites (the FREAK and Logjam attacks exploited these in 2015).</p>
+
+      <h3 class="prose" style="margin-top:20px">The &ldquo;Crypto Wars&rdquo; and Backdoor Debate</h3>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Government Position:</strong> Law enforcement needs &ldquo;exceptional access&rdquo; or &ldquo;backdoors&rdquo; to encrypted communications to investigate terrorists and criminals. Examples: FBI vs Apple (2016 San Bernardino iPhone), EU proposed CSAM scanning in end-to-end encrypted messages.</div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Cryptographic Community Consensus:</strong> Mathematical backdoors cannot distinguish between &ldquo;good guys&rdquo; and &ldquo;bad guys.&rdquo; Any backdoor will be discovered and exploited by malicious actors. The Clipper Chip (1993 US proposal) was broken within months. Weakening encryption makes everyone less secure &mdash; including governments themselves. The only solution is strong encryption with no backdoors.</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Ethical Issues</h3>
+      <table class="data-table">
+        <thead><tr><th>Issue</th><th>Ethical Tension</th></tr></thead>
+        <tbody>
+          <tr><td>End-to-end encryption</td><td>Privacy for all users vs. law enforcement inability to monitor criminals</td></tr>
+          <tr><td>Cryptocurrency anonymity</td><td>Financial privacy vs. money laundering and tax evasion</td></tr>
+          <tr><td>Zero-day vulnerabilities</td><td>Researchers disclosing to vendors vs. governments stockpiling for offense (EternalBlue became WannaCry)</td></tr>
+          <tr><td>Key escrow</td><td>Business need for key recovery vs. creating centralized attack targets</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: EARN IT Act &amp; Cryptographic Surveillance</div>
+      <p class="prose">The US EARN IT Act (2020, 2022, 2024 versions) would allow Congress to impose conditions on tech companies&apos; legal immunity for user content &mdash; conditions that critics argue could functionally mandate client-side scanning of encrypted messages before encryption occurs. This &ldquo;client-side scanning&rdquo; approach was proposed by Apple for CSAM detection in 2021 and then withdrawn after massive backlash. Cryptographers argue client-side scanning is a backdoor by another name: any system that can scan plaintext before encryption and report certain content to authorities can be abused to scan for any content. The cryptographic and human rights communities consistently oppose such systems.</p>
+    </div>
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Under GDPR, if a company's encrypted database is stolen but keys remain secure, do they need to report the breach?<div class="recall-answer">Likely not. GDPR Article 33 requires notification only if the breach "is likely to result in a risk to the rights and freedoms of natural persons." Since encrypted data is unintelligible without the key, regulators (including the CNIL and ICO) have confirmed that properly encrypted data breaches may not require the mandatory 72-hour notification — though this is case-by-case.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> What was wrong with the Clipper Chip proposal (1993)?<div class="recall-answer">The US government proposed the Clipper Chip: hardware encryption using the Skipjack algorithm with a government-held key escrow. Every encrypted communication would have a "law enforcement exceptional access" copy of the session key. Problems: (1) Matt Blaze found a backdoor bypass in the protocol within months. (2) A backdoor accessible to "good guys" is mathematically accessible to everyone — foreign intelligence, hackers, corrupt officials. The proposal died but the debate continues today.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> What is the "dual-use" classification of cryptography and why does it matter?<div class="recall-answer">Cryptography is classified as a dual-use technology — it has civilian applications (HTTPS, banking) and military ones (secure communications, weapons guidance). This is why strong encryption was classified as a munition until 1996 in the US. Today's Wassenaar Arrangement still restricts export of strong crypto to certain countries, though most commercial use is now freely exportable. This history explains "export-grade" cipher suites in SSL that enabled FREAK and Logjam attacks.</div></div>
+    <button class="reveal-btn" onclick="">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary">
+    <ul>
+      <li>GDPR Article 32: encryption is an explicit technical requirement; encrypted breaches may avoid mandatory notification</li>
+      <li>Wassenaar Arrangement: crypto is "dual-use" — strong encryption still restricted for export to embargoed nations</li>
+      <li>Crypto Wars (1990s–present): governments want "exceptional access"; cryptographers prove mathematical backdoors cannot be limited to authorized users</li>
+      <li>Clipper Chip (1993): key escrow proposal broken within months — example of why backdoors always fail</li>
+      <li>Client-side scanning (Apple, EU CSAM) = backdoor-by-another-name: scans plaintext before encryption, allowing surveillance scope to be expanded silently</li>
+    </ul>
+  </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 3.8 MCQs -->
+  <section id="s-mcq3" data-search-section="unit 3 practice MCQ cryptanalysis">
+    <div class="section-heading">
+      <h2 class="prose">3.8 Practice MCQs &mdash; Unit 3 (15 Questions)
+        <button class="bookmark-btn" data-id="s-mcq3" data-label="3.8 MCQs">&#128278;</button>
+      </h2>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q1. An attacker has only intercepted encrypted messages and no other information. This is classified as:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q1"> (a) Known-Plaintext Attack</label>
+        <label><input type="radio" name="m3q1"> (b) Chosen-Plaintext Attack</label>
+        <label><input type="radio" name="m3q1"> (c) Ciphertext-Only Attack</label>
+        <label><input type="radio" name="m3q1"> (d) Chosen-Ciphertext Attack</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Ciphertext-Only Attack (COA).</strong> The weakest attack model &mdash; the attacker only has ciphertexts. They must use statistical analysis (frequency analysis, index of coincidence) to deduce the key or plaintext without any known plaintext pairs.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q2. The SHAttered attack (2017) demonstrated the first practical collision in which hash function?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q2"> (a) MD5</label>
+        <label><input type="radio" name="m3q2"> (b) SHA-256</label>
+        <label><input type="radio" name="m3q2"> (c) SHA-1</label>
+        <label><input type="radio" name="m3q2"> (d) SHA-3</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) SHA-1.</strong> Google&apos;s Project Zero team produced two different PDF files with the identical SHA-1 hash, proving SHA-1 collision resistance is broken. Cost: approximately $110,000 in cloud GPU compute. SHA-1 was already deprecated before this but the attack proved it practically.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q3. Differential Power Analysis (DPA) differs from Simple Power Analysis (SPA) in that DPA:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q3"> (a) Uses a single power trace with visible key-dependent features</label>
+        <label><input type="radio" name="m3q3"> (b) Uses statistical correlation across thousands of noisy power traces</label>
+        <label><input type="radio" name="m3q3"> (c) Measures the total energy consumed per computation</label>
+        <label><input type="radio" name="m3q3"> (d) Requires physical damage to the chip</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> DPA is a statistical attack: the attacker collects thousands of power traces, guesses key bits, predicts intermediate values, and computes correlation with power traces. The correct key guess produces a sharp spike in correlation. Works even when individual traces are extremely noisy.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q4. Rainbow Table attacks against password hashes are defeated by:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q4"> (a) Using SHA-256 instead of MD5</label>
+        <label><input type="radio" name="m3q4"> (b) Adding a unique random salt to each password before hashing</label>
+        <label><input type="radio" name="m3q4"> (c) Hashing passwords multiple times</label>
+        <label><input type="radio" name="m3q4"> (d) Encrypting the hash database</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Salting.</strong> A unique random salt makes every user&apos;s hash unique even if they use the same password. Pre-computed rainbow tables become useless because they&apos;d need to be recomputed for every individual salt &mdash; computationally infeasible.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q5. Which data state is protected by Full Disk Encryption (FDE)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q5"> (a) Data in Use</label>
+        <label><input type="radio" name="m3q5"> (b) Data in Transit</label>
+        <label><input type="radio" name="m3q5"> (c) Data at Rest</label>
+        <label><input type="radio" name="m3q5"> (d) All three states equally</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Data at Rest.</strong> FDE encrypts data on the storage medium (hard drive, SSD). It protects against physical theft of the device. Once the OS is running and you&apos;re logged in, data is decrypted in RAM (data in use) and communicated unencrypted unless TLS is used (data in transit).</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q6. Under GDPR Article 32, what is a key legal benefit of encrypting personal data?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q6"> (a) Encryption eliminates all legal liability</label>
+        <label><input type="radio" name="m3q6"> (b) A breach of encrypted data where keys remain secure may not require mandatory notification</label>
+        <label><input type="radio" name="m3q6"> (c) Encrypted databases do not need to comply with GDPR</label>
+        <label><input type="radio" name="m3q6"> (d) Companies can charge users for encryption services</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Under GDPR, a breach of encrypted data where the keys remained secure may not be considered a reportable breach, as the stolen data is &ldquo;unintelligible&rdquo; to the attacker. This avoids the 72-hour notification requirement and potential fines up to 4% of global annual revenue.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q7. What is the primary argument against cryptographic backdoors for law enforcement?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q7"> (a) Backdoors increase encryption complexity</label>
+        <label><input type="radio" name="m3q7"> (b) A backdoor cannot distinguish between authorized and unauthorized users &mdash; anyone who finds it can use it</label>
+        <label><input type="radio" name="m3q7"> (c) Law enforcement does not need encrypted data</label>
+        <label><input type="radio" name="m3q7"> (d) Backdoors only work on symmetric encryption</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Any cryptographic backdoor is a vulnerability that can be discovered and exploited by criminals, foreign intelligence, and hackers &mdash; not just authorized law enforcement. The NSA&apos;s EternalBlue exploit was stolen and used to create WannaCry ransomware, damaging hospitals worldwide.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q8. Constant-time programming is a countermeasure specifically designed to prevent:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q8"> (a) Power analysis attacks</label>
+        <label><input type="radio" name="m3q8"> (b) Timing attacks</label>
+        <label><input type="radio" name="m3q8"> (c) Differential cryptanalysis</label>
+        <label><input type="radio" name="m3q8"> (d) Rainbow table attacks</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Timing attacks.</strong> Constant-time code ensures all paths through the cryptographic code execute in exactly the same time regardless of the input or key, eliminating the time-based information leakage that timing attacks exploit.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q9. Differential cryptanalysis is classified as which type of attack?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q9"> (a) Ciphertext-Only Attack</label>
+        <label><input type="radio" name="m3q9"> (b) Known-Plaintext Attack</label>
+        <label><input type="radio" name="m3q9"> (c) Chosen-Plaintext Attack</label>
+        <label><input type="radio" name="m3q9"> (d) Chosen-Ciphertext Attack</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Chosen-Plaintext Attack.</strong> The attacker selects specific plaintext pairs with chosen XOR differences and submits them to an encryption oracle. The structured input is what makes differential cryptanalysis possible &mdash; random inputs would not reveal the differential characteristics.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q10. Data &ldquo;in use&rdquo; in CPU registers can be protected using:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q10"> (a) TLS encryption</label>
+        <label><input type="radio" name="m3q10"> (b) AES disk encryption</label>
+        <label><input type="radio" name="m3q10"> (c) Trusted Execution Environments (TEE) like Intel SGX</label>
+        <label><input type="radio" name="m3q10"> (d) HMAC authentication codes</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Intel SGX / TEE.</strong> SGX creates hardware-encrypted memory enclaves that not even the OS can read. FHE theoretically allows computation on encrypted data without ever decrypting in RAM, but is currently too slow for most applications.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q11. The Birthday Paradox implies that finding a collision in an n-bit hash function requires approximately:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q11"> (a) 2&#8319; operations</label>
+        <label><input type="radio" name="m3q11"> (b) n operations</label>
+        <label><input type="radio" name="m3q11"> (c) 2&#8319;&#8260;&#178; operations</label>
+        <label><input type="radio" name="m3q11"> (d) n&#178; operations</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) 2&#8319;&#8260;&#178; operations.</strong> This is why a 128-bit hash (MD5) provides only 2&#8310;&#8308; collision resistance &mdash; breaking it is feasible. SHA-256 provides 2&#185;&#178;&#8312; collision resistance, which remains secure. This also explains why quantum computers halve hash security (Grover&apos;s algorithm gives 2&#8319;&#8260;&#178; pre-image resistance).</div>
+    </div>
+
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q12. Linear cryptanalysis is which attack model, and what does an attacker need from it?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q12"> (a) CPA — chosen plaintexts are encrypted and their differences analyzed</label>
+        <label><input type="radio" name="m3q12"> (b) KPA — known plaintext-ciphertext pairs to find a linear approximation holding with probability ≠ 0.5</label>
+        <label><input type="radio" name="m3q12"> (c) CCA — decryption oracle used to recover subkeys</label>
+        <label><input type="radio" name="m3q12"> (d) COA — only ciphertexts, analyzing index of coincidence</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) KPA.</strong> Linear cryptanalysis (Matsui, 1993) is a known-plaintext attack. The attacker finds a linear equation: P[bits] ⊕ C[bits] ⊕ K[bits] = 0 holding with probability p > 0.5. With 2^43 known plaintexts, the statistical bias in p reveals key bits. This directly broke 16-round DES — the first practical attack on the full cipher.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff">&#128308; Hard</span>Q13. RSA blinding defeats timing attacks by introducing which mathematical transformation before decryption?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q13"> (a) C' = C ⊕ r (XOR with random r)</label>
+        <label><input type="radio" name="m3q13"> (b) C' = C × r^e mod n, decrypt C', then divide result by r</label>
+        <label><input type="radio" name="m3q13"> (c) C' = C + r mod n (additive masking)</label>
+        <label><input type="radio" name="m3q13"> (d) C' = C mod r (reduce modulus)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> RSA blinding: before decryption, compute C' = C × r^e mod n. Decrypt: M' = (C')^d mod n = M × r. Then remove blinding: M = M' × r^(-1) mod n. The timing now correlates with random C', not actual C — the side-channel signal is completely randomized. r is a new random value for each operation.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q14. Differential Fault Analysis (DFA) against AES can recover the full key from as few as how many faulty encryptions?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q14"> (a) 2^56 faulty encryptions</label>
+        <label><input type="radio" name="m3q14"> (b) 2 faulty encryptions (compared with one correct ciphertext)</label>
+        <label><input type="radio" name="m3q14"> (c) 2^32 faulty encryptions</label>
+        <label><input type="radio" name="m3q14"> (d) 1000 faulty encryptions</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) 2 faulty encryptions.</strong> DFA against AES (Giraud, 2004): inject a fault at Round 8 to flip one byte in the State. Compare faulty ciphertext to correct ciphertext — the difference pattern in the final round reveals the Round 10 subkey byte. Repeating for all 16 bytes with ~32-50 faults recovers the full 128-bit AES key. This is why HSMs and secure chips need tamper-detection to immediately erase keys upon physical disturbance.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff">&#128128; Expert</span>Q15. The Spectre-v1 attack uses which combination of CPU microarchitectural features?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m3q15"> (a) Out-of-order execution + TLB flush-reload</label>
+        <label><input type="radio" name="m3q15"> (b) Speculative execution (branch prediction) + cache side-channel (Flush+Reload)</label>
+        <label><input type="radio" name="m3q15"> (c) Hardware prefetching + row hammer bit flips</label>
+        <label><input type="radio" name="m3q15"> (d) Hyperthreading + L3 cache contention</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Speculative execution + Flush+Reload cache timing.</strong> Spectre-v1 mistrains the branch predictor to speculatively execute: <code>if(x < array1_size) y = array2[array1[x] * 4096]</code> with out-of-bounds x. The CPU speculatively loads secret data (array1[x]) and uses it to index array2 — bringing one of 256 cache lines into L1. CPU detects the bounds check failure and rolls back, but the cache state persists. Attacker measures all 256 possible array2 accesses — the one that's a cache hit (fast) reveals the secret byte. Patch: LFENCE barrier after bounds check.</div>
+    </div>
+
+</section>
+</div>
+</main>
+<div id="mode-panel">
+  <button class="mode-btn active" data-mode="all">&#128218; All</button>
+  <button class="mode-btn uni-btn" data-mode="uni">&#127891; Uni</button>
+  <button class="mode-btn gate-btn" data-mode="gate">&#9889; Extra</button>
+  <button class="mode-btn adv-btn" data-mode="advanced">&#128300; Adv</button>
+</div>
+<div id="tts-panel">
+  <div class="tts-controls">
+    <button class="tts-btn" id="tts-play">&#9654;</button>
+    <button class="tts-btn" id="tts-stop">&#9209;</button>
+    <div class="tts-speed"><span>Speed</span><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><span id="tts-rate-label">1.0x</span></div>
+  </div>
+  <div class="tts-voice"><select id="tts-voice-select"><option>Loading...</option></select></div>
+</div>
+<div id="search-modal"><div class="search-box"><div class="search-input-wrap"><span class="s-icon">&#128269;</span><input id="search-input" type="text" placeholder="Search Unit 3..."></div><div id="search-results"></div></div></div>
+<div id="toast-container"></div>
+<script src="../assets/js/state.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/modes.js"></script>
+<script src="../assets/js/tts.js"></script>
+<script src="../assets/js/print.js"></script>
+<script src="../assets/js/notes.js"></script>
+<script src="../assets/js/glossary.js"></script>
+</body></html>

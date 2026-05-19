@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Arpit">
+  <title>Unit 2 — Cryptographic Protocols | Crypto MiniBook</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/chapter.css">
+  <link rel="stylesheet" href="../assets/css/timer.css">
+  
+</head>
+<body>
+<div id="progress-bar"></div>
+<header id="main-header">
+  <div class="header-left">
+    <button id="sidebar-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-icon">A&#9889;</div>
+      <div class="brand-text"><span class="main">Crypto MiniBook</span><span class="sub">Unit 2: Protocols</span></div>
+    </div>
+  </div>
+  <span class="header-chapter-title"></span>
+  <div class="header-right">
+    <button id="search-btn" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button id="tts-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+    <button id="print-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span class="print-label">PDF</span></button>
+    <button id="reading-mode-btn" class="icon-btn" aria-pressed="false">&#128214;</button>
+    <button id="theme-toggle" class="icon-btn"></button>
+  </div>
+</header>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="../index.html" class="sidebar-link">&#127968; Home</a>
+      <a href="../progress.html" class="sidebar-link">&#128202; Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Chapters</div>
+      <a href="unit1.html" class="sidebar-link">&#128272; Unit 1 &#8212; Foundations</a>
+      <a href="unit2.html" class="sidebar-link active">&#128220; Unit 2 &#8212; Protocols</a>
+      <a href="unit3.html" class="sidebar-link">&#128373; Unit 3 &#8212; Cryptanalysis</a>
+      <a href="unit4.html" class="sidebar-link">&#128640; Unit 4 &#8212; Advanced</a>
+      <a href="unit5.html" class="sidebar-link">&#128187; Unit 5 &#8212; Practicals</a>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-section-label">Bookmarks</div><div id="bookmarks-list"></div></div>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-brand-mark"><div class="mark">A&#9889;</div><span>Arpit &middot; Crypto MiniBook 2026</span></div></div>
+</aside>
+<main id="main-content">
+<div class="content-inner">
+
+  <div class="chapter-hero">
+    <div class="chapter-num">&#128220; Unit 2</div>
+    <h1 class="chapter-title">Cryptographic Protocols &amp; Practices</h1>
+    <p class="chapter-desc">Key exchange algorithms, digital signatures, PKI, SSL/TLS, and secure email. How cryptographic primitives from Unit 1 combine into real-world security protocols.</p>
+  </div>
+
+  <div class="toc-card">
+    <h3>&#128203; Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#s-dh" class="toc-item"><span class="toc-num">2.1</span>Diffie-Hellman Key Exchange</a>
+      <a href="#s-ecdh" class="toc-item"><span class="toc-num">2.2</span>ECDH &amp; Ephemeral DH</a>
+      <a href="#s-signatures" class="toc-item"><span class="toc-num">2.3</span>Digital Signatures (RSA, DSA, ECDSA)</a>
+      <a href="#s-certs" class="toc-item"><span class="toc-num">2.4</span>Digital Certificates &amp; X.509</a>
+      <a href="#s-pki" class="toc-item"><span class="toc-num">2.5</span>Public Key Infrastructure (PKI)</a>
+      <a href="#s-tls" class="toc-item"><span class="toc-num">2.6</span>TLS / SSL Protocol</a>
+      <a href="#s-pfs" class="toc-item"><span class="toc-num">2.7</span>Perfect Forward Secrecy</a>
+      <a href="#s-pgp" class="toc-item"><span class="toc-num">2.8</span>PGP &amp; S/MIME (Secure Email)</a>
+      <a href="#s-mcq2" class="toc-item"><span class="toc-num">2.9</span>Practice MCQs (22 Q)</a>
+    </div>
+  </div>
+
+  <!-- 2.1 DH -->
+  <section id="s-dh" data-search-section="diffie hellman key exchange discrete logarithm prime generator secret">
+    <div class="section-heading">
+      <h2 class="prose">2.1 Diffie-Hellman Key Exchange
+        <button class="bookmark-btn" data-id="s-dh" data-label="2.1 Diffie-Hellman">&#128278;</button>
+      </h2>
+    </div>
+    <div class="prereq-box">
+      <div class="prereq-title">&#128218; Prerequisite</div>
+      Modular exponentiation from Unit 1 Section 1.0. Recall: computing <span class="math-inline">g&#739; mod p</span> is easy; finding x given g&#739; mod p is hard (Discrete Logarithm Problem).
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Diffie-Hellman Key Exchange (Diffie &amp; Hellman, 1976)</div>
+        Solves the fundamental problem: <strong>how do two parties agree on a secret key over an insecure public channel without ever transmitting the key?</strong> Security is based on the computational hardness of the <strong>Discrete Logarithm Problem (DLP)</strong>.
+      </div>
+      <h3 class="prose">Protocol Steps</h3>
+      <ol class="prose">
+        <li><strong>Public agreement:</strong> Alice and Bob publicly agree on a large prime <strong>p</strong> and a generator <strong>g</strong> (a primitive root modulo p). These are public knowledge — Eve knows them too.</li>
+        <li><strong>Private choices:</strong> Alice chooses a secret integer <em>a</em>. Bob chooses a secret integer <em>b</em>. These are NEVER shared.</li>
+        <li><strong>Public values:</strong> Alice computes <span class="math-inline">A = g&#7491; mod p</span> and sends A to Bob. Bob computes <span class="math-inline">B = g&#7495; mod p</span> and sends B to Alice.</li>
+        <li><strong>Shared secret:</strong> Alice computes <span class="math-inline">S = B&#7491; mod p</span>. Bob computes <span class="math-inline">S = A&#7495; mod p</span>. They get the same secret!</li>
+      </ol>
+      <div class="formula-box">
+        <div class="formula-label">Why the shared secrets match</div>
+        Alice: S = B&#7491; mod p = (g&#7495;)&#7491; mod p = g&#7491;&#7495; mod p<br>
+        Bob:   S = A&#7495; mod p = (g&#7491;)&#7495; mod p = g&#7491;&#7495; mod p<br>
+        Both = g&#7491;&#7495; mod p &#10003;<br><br>
+        Eve sees: p, g, A, B — but must solve A = g&#7491; mod p for a. This is the DLP. Infeasible for large p.
+      </div>
+      <div class="worked-example">
+        <div class="we-title">Numerical Example (small values for illustration)</div>
+        <div class="cipher-grid">Public: p = 23, g = 5
+
+Alice: a = 6,  A = 5&#8310; mod 23 = 15625 mod 23 = 8
+Bob:   b = 15, B = 5&#185;&#8309; mod 23 = ... = 19
+
+Alice sends A=8 to Bob, Bob sends B=19 to Alice.
+
+Alice: S = 19&#8310; mod 23 = 47045881 mod 23 = 2
+Bob:   S = 8&#185;&#8309; mod 23 = ... = 2
+
+Shared Secret = 2 &#10003; (Eve only knows 23, 5, 8, 19 — cannot find 2)</div>
+      </div>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>DH is unauthenticated!</strong> Pure DH has no way to verify WHO you are talking to. Eve can intercept, establish separate DH sessions with both Alice and Bob, and relay messages. This is the Man-in-the-Middle (MitM) attack — covered in Section 2.5. DH is always combined with digital signatures in practice (e.g., in TLS, the server signs its DH parameters with its RSA/ECDSA certificate).</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: DH Parameter Sizes &amp; Logjam Attack</div>
+      <p class="prose">For DH, the prime p must be large: at least 2048 bits for modern security (analogous to RSA). In 2015, researchers discovered the <strong>Logjam attack</strong>: many servers were configured to use 512-bit or 768-bit "export-grade" DH primes — small enough that governments (and well-funded attackers) precomputed discrete logarithms for the most common primes. A server and client could be coerced into "downgrading" to weak DH. Fix: use 2048-bit+ primes, or better, switch to <strong>ECDH</strong> (Section 2.2) which is both more secure and faster.</p>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Index Calculus &mdash; Breaking DLP</div>
+      <p class="prose">The best classical algorithm for solving DLP over multiplicative groups is the <strong>Index Calculus</strong> method, running in sub-exponential time: L<sub>p</sub>[1/3, c] where c &asymp; 1.923. This is why DH requires primes of 2048+ bits to be secure. The Index Calculus exploits the multiplicative structure of Z<sub>p</sub>&#42; by expressing discrete logs of unknown elements as linear combinations of logs of small &ldquo;factor base&rdquo; primes (a process called &ldquo;sieving&rdquo;). ECDLP has no analogous sub-exponential attack &mdash; hence ECC is preferred. The best known ECDLP algorithm is Pollard&#39;s rho, running in O(&radic;n) &mdash; purely exponential in the key size.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: DDH Assumption &mdash; Formal Security Foundation of DH</div>
+      <p class="prose">DH security rests on a hierarchy of three assumptions, each strictly stronger than the next:</p>
+      <div class="formula-box">
+        <div class="formula-label">DH Assumption Hierarchy (hardest to solve &rarr; easiest)</div>
+        <strong>DLP</strong>: Given g<sup>a</sup> mod p, find a<br>
+        <strong>CDH</strong>: Given g<sup>a</sup>, g<sup>b</sup>, compute g<sup>ab</sup><br>
+        <strong>DDH</strong>: Distinguish (g<sup>a</sup>, g<sup>b</sup>, g<sup>ab</sup>) from (g<sup>a</sup>, g<sup>b</sup>, g<sup>c</sup>) for random c<br><br>
+        <small>DLP hard &rArr; CDH hard &rArr; DDH hard (NOT reversible). Most DH proofs use DDH. DDH fails over Z<sub>p</sub>&#42; with smooth p&minus;1 (Legendre symbol test) &mdash; hence DH primes must be safe primes (p=2q+1, q prime).</small>
+      </div>
+      <p class="prose">The <strong>DDH assumption</strong> is the basis for ElGamal encryption and Cramer-Shoup (first CCA2-secure scheme under a standard assumption). Over prime-order elliptic curve groups, DDH is believed to hold unconditionally &mdash; making ECDH provably secure under a weaker assumption than DLP. The hierarchy matters: breaking CDH doesn&#39;t require breaking DLP, and breaking DDH doesn&#39;t require breaking CDH.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> In DH with p=23, g=5, a=6, A=8 is public. Why can Eve not compute the shared secret from p,g,A,B alone?<div class="recall-answer">Eve needs to solve A = g^a mod p for a (the Discrete Logarithm Problem). For small p=23 this is trivial, but for 2048-bit primes the DLP is computationally infeasible. The best classical algorithm (Index Calculus) runs in sub-exponential time L_p[1/3, 1.923] — still requires centuries for 2048-bit primes.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> What is the Logjam attack and how is it prevented?<div class="recall-answer">Logjam (2015) downgraded DH to 512-bit export-grade primes by intercepting the TLS handshake. Attackers precomputed discrete logs for the most common weak primes. Prevention: use 2048-bit+ primes, or switch to ECDH (P-256 or X25519) which has no analogous sub-exponential attack.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> DH is vulnerable to MitM — how do real protocols prevent this?<div class="recall-answer">The server signs its DH public parameters with its long-term RSA/ECDSA certificate key. The client verifies this signature against the server's X.509 certificate. Eve cannot forge the signature without the server's private key, so even if she intercepts the DH exchange, authentication fails.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>DH security rests on the DLP: given g^a mod p, finding a is computationally infeasible for 2048-bit primes</li>
+    <li>DH provides no authentication — always combined with signatures (ECDSA/RSA) in practice</li>
+    <li>Logjam: 512-bit export-grade DH broken by precomputation; fix = 2048-bit primes or ECDH</li>
+    <li>DDH assumption (stronger than DLP) is the formal security basis for ElGamal and Cramer-Shoup schemes</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.2 ECDH -->
+  <section id="s-ecdh" data-search-section="ECDH elliptic curve Diffie Hellman ephemeral forward secrecy">
+    <div class="section-heading">
+      <h2 class="prose">2.2 ECDH &amp; Ephemeral Key Exchange
+        <button class="bookmark-btn" data-id="s-ecdh" data-label="2.2 ECDH">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose"><strong>ECDH (Elliptic Curve Diffie-Hellman)</strong> is the same concept as DH but performed on an elliptic curve group instead of a multiplicative integer group. Because ECDLP is harder than DLP, ECDH achieves the same security with much smaller parameters (256-bit vs 2048-bit keys).</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>Classic DH</th><th>ECDH</th></tr></thead>
+        <tbody>
+          <tr><td>Group Operation</td><td>Modular exponentiation (Z<sub>p</sub>&#42;)</td><td>Elliptic Curve point multiplication</td></tr>
+          <tr><td>Hard Problem</td><td>Discrete Logarithm (DLP)</td><td>Elliptic Curve Discrete Logarithm (ECDLP)</td></tr>
+          <tr><td>Key Size (128-bit security)</td><td>3072 bits</td><td>256 bits</td></tr>
+          <tr><td>Performance</td><td>Slower</td><td>~10x faster at equivalent security</td></tr>
+          <tr><td>Use in TLS 1.3</td><td>Not recommended</td><td>Mandatory (ECDHE)</td></tr>
+        </tbody>
+      </table>
+      <p class="prose"><strong>Ephemeral DH / ECDHE:</strong> The &ldquo;E&rdquo; in ECDHE stands for Ephemeral &mdash; a brand-new key pair is generated for every single connection and deleted immediately after. This provides <strong>Perfect Forward Secrecy</strong> (covered in Section 2.7).</p>
+
+      <h3 class="prose" style="margin-top:20px">ECDHE Full Step-by-Step &amp; HKDF Key Derivation</h3>
+      <div class="worked-example">
+        <div class="we-title">ECDHE in TLS 1.3 (Curve25519 / X25519)</div>
+        <div class="cipher-grid">Step 1: Server generates ephemeral EC key pair
+  server_priv = random scalar s  (256-bit random integer)
+  server_pub  = s &times; G            (point on Curve25519 = 32 bytes)
+
+Step 2: Client generates ephemeral EC key pair
+  client_priv = random scalar c
+  client_pub  = c &times; G
+
+Step 3: Key exchange
+  Both send their public points (32 bytes each) in the TLS Hello messages.
+
+Step 4: Shared ECDH output
+  Both compute: ecdh_output = c &times; (s &times; G) = s &times; (c &times; G) = cs&times;G
+  Result: same 32-byte x-coordinate of the shared point
+
+Step 5: Key Derivation via HKDF (RFC 5869)
+  Raw ECDH output is NOT directly used as a key (may be biased, low entropy bits)
+  HKDF-Extract: PRK = HMAC-SHA256(salt, ecdh_output)   &larr; normalize to uniform 256-bit
+  HKDF-Expand:  key = HMAC-SHA256(PRK, info || 0x01)   &larr; expand to desired key length
+
+  TLS 1.3 derives: handshake_traffic_secret, app_traffic_secret, resumption_master_secret
+  Each derivation uses a different &ldquo;label&rdquo; string so all keys are independent.</div>
+      </div>
+      <p class="prose"><strong>Why not use raw ECDH output directly?</strong> The x-coordinate of a curve point has structure: the MSB is often 0 for many curves, and small-subgroup attacks can force the output to a predictable value if the implementation skips cofactor multiplication. HKDF removes all structure by hashing through HMAC, ensuring any 256-bit output is cryptographically uniform and independent of other keys derived from the same ECDH exchange.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: X3DH &mdash; Signal Protocol Initial Key Agreement</div>
+      <p class="prose">The <strong>Extended Triple Diffie-Hellman (X3DH)</strong> protocol (Marlinspike &amp; Perrin, 2016) enables asynchronous key agreement &mdash; Alice can establish a shared secret with Bob even when Bob is <em>offline</em>. Bob pre-publishes a &ldquo;key bundle&rdquo; to a server containing four long-lived and ephemeral public keys.</p>
+      <div class="formula-box">
+        <div class="formula-label">X3DH Key Agreement (Alice initiates, Bob offline)</div>
+        Bob publishes: IK<sub>B</sub> (identity), SPK<sub>B</sub> (signed prekey), OPK<sub>B</sub> (one-time prekey)<br>
+        Alice has: IK<sub>A</sub> (identity), EK<sub>A</sub> (ephemeral key, generated fresh)<br><br>
+        Alice computes 4 ECDH exchanges:<br>
+        DH1 = ECDH(IK<sub>A</sub>, SPK<sub>B</sub>) &nbsp; &larr; Alice identity &times; Bob signed prekey<br>
+        DH2 = ECDH(EK<sub>A</sub>, IK<sub>B</sub>) &nbsp; &larr; Alice ephemeral &times; Bob identity<br>
+        DH3 = ECDH(EK<sub>A</sub>, SPK<sub>B</sub>) &larr; Alice ephemeral &times; Bob signed prekey<br>
+        DH4 = ECDH(EK<sub>A</sub>, OPK<sub>B</sub>) &larr; Alice ephemeral &times; Bob one-time prekey<br><br>
+        Master Secret = KDF(DH1 &Vert; DH2 &Vert; DH3 &Vert; DH4)<br>
+        <small>Bob computes the same 4 DH values when he comes online &rarr; identical master secret. OPK ensures one-time-pad-like forward secrecy for this session.</small>
+      </div>
+      <p class="prose">X3DH provides: <strong>mutual authentication</strong> (both identity keys involved), <strong>forward secrecy</strong> (ephemeral key deleted after), <strong>deniability</strong> (no certificate-style non-repudiation &mdash; either party could have forged the session), and <strong>offline initiation</strong>. After X3DH, the Double Ratchet Algorithm takes over, deriving a new encryption key for each message independently.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Why does ECDH achieve 128-bit security with only a 256-bit key, while classic DH needs 3072 bits?<div class="recall-answer">The best attack on ECDLP is Pollard's rho at O(√n) — purely exponential in key size. For n=2^256, that's 2^128 operations. The best DLP attack (Index Calculus) is sub-exponential, requiring a much larger group (3072-bit prime) to achieve the same 2^128 security level.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> Why is raw ECDH output not used directly as an encryption key?<div class="recall-answer">The x-coordinate of the shared EC point has mathematical structure (e.g., leading bits tend toward 0 on some curves) and small-subgroup attacks may force it to predictable values. HKDF-Extract hashes it through HMAC-SHA256, producing a uniformly random PRK with no structure, from which multiple independent keys can be derived with HKDF-Expand.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> In X3DH (Signal Protocol), why is the one-time prekey (OPK) critical for forward secrecy?<div class="recall-answer">The OPK is a single-use ephemeral key Bob uploads in advance. Once used in DH4, the server deletes it. Even if Bob's identity key (IK_B) and signed prekey (SPK_B) are later compromised, DH4 cannot be recomputed — making this session's master secret uniquely forward-secret. Without OPK, all sessions sharing the same 3-key bundle would be retroactively decryptable if those keys were exposed.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>ECDH: same math as DH but on elliptic curves — 256-bit key vs 3072-bit for equivalent 128-bit security</li>
+    <li>ECDHE (ephemeral): new key pair per session → Perfect Forward Secrecy; mandatory in TLS 1.3</li>
+    <li>HKDF: ECDH output → HMAC-SHA256 → uniform PRK → multiple independent session keys</li>
+    <li>X3DH: 4 ECDH exchanges enable asynchronous key agreement; one-time prekey ensures per-session forward secrecy</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.3 DIGITAL SIGNATURES -->
+  <section id="s-signatures" data-search-section="digital signatures RSA DSA ECDSA signing verification non-repudiation authentication">
+    <div class="section-heading">
+      <h2 class="prose">2.3 Digital Signatures (RSA, DSA, ECDSA)
+        <button class="bookmark-btn" data-id="s-signatures" data-label="2.3 Digital Signatures">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Digital Signature</div>
+        A digital signature provides: <strong>Authentication</strong> (who sent it?), <strong>Integrity</strong> (was it modified?), and <strong>Non-repudiation</strong> (the sender cannot deny sending it). It is created using the sender&#39;s <strong>private key</strong> and verified using their <strong>public key</strong>.
+      </div>
+      <h3 class="prose">How RSA Digital Signatures Work</h3>
+      <div class="worked-example">
+        <div class="we-title">Signing and Verification Process</div>
+        <div class="cipher-grid">SIGNING (Alice sends document to Bob):
+  1. Alice computes hash: h = SHA-256(Document)
+  2. Alice encrypts hash with her PRIVATE KEY: Sig = h&#7496; mod n
+  3. Alice sends: (Document, Sig)
+
+VERIFICATION (Bob receives):
+  1. Bob computes hash of received document: h1 = SHA-256(Document)
+  2. Bob decrypts signature with Alice&#39;s PUBLIC KEY: h2 = Sig&#7497; mod n
+  3. If h1 == h2: Signature VALID &#10003; (document is from Alice, not tampered)
+     If h1 != h2: Signature INVALID &#10007; (tampered or wrong sender)</div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why hash first?</strong> Two reasons: (1) RSA can only encrypt data smaller than the key size (~245 bytes for RSA-2048). You cannot directly sign a 1 GB file. (2) Hashing is fast — SHA-256 hashing a 1 GB file takes milliseconds. RSA signing the 256-bit hash takes microseconds. Direct RSA signing would take hours.</div>
+      </div>
+      <h3 class="prose" style="margin-top:20px">DSA vs ECDSA vs RSA Signatures</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>RSA Signature</th><th>DSA</th><th>ECDSA</th></tr></thead>
+        <tbody>
+          <tr><td>Hard Problem</td><td>Integer Factorization</td><td>Discrete Logarithm</td><td>EC Discrete Logarithm</td></tr>
+          <tr><td>Can also Encrypt?</td><td>&#9989; Yes</td><td>&#10060; Sign only</td><td>&#10060; Sign only</td></tr>
+          <tr><td>Key Size (128-bit sec)</td><td>3072 bits</td><td>3072 bits</td><td>256 bits</td></tr>
+          <tr><td>Nonce Requirement</td><td>Optional (PSS padding)</td><td>&#9888; Must be random per-sign</td><td>&#9888; Must be random per-sign</td></tr>
+          <tr><td>Speed</td><td>Slow sign, fast verify</td><td>Fast sign, slow verify</td><td>Very fast sign &amp; verify</td></tr>
+          <tr><td>Used In</td><td>TLS certs, PKI, PGP</td><td>Legacy US Gov systems</td><td>TLS 1.3, Bitcoin, SSH</td></tr>
+        </tbody>
+      </table>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>ECDSA/DSA Nonce Reuse is Fatal.</strong> If the same random nonce k is used for two different ECDSA signatures, an attacker can algebraically recover the private key. This exact flaw broke the Sony PlayStation 3 in 2010 (a constant nonce was used for firmware signing). Always use a cryptographically secure random k per signature.</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: EdDSA &amp; Ed25519 &mdash; The Modern Standard</div>
+      <p class="prose"><strong>EdDSA (Edwards-curve Digital Signature Algorithm)</strong> using <strong>Ed25519</strong> (Curve25519 in Edwards form) is rapidly replacing ECDSA. Key advantages: deterministic (no random nonce needed &mdash; k is derived from the private key and message via a hash), constant-time by design (no side-channel timing leaks), faster than ECDSA, and the signature is always 64 bytes. Used by OpenSSH default keys, Signal protocol, and Ethereum validator signing.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: BLS Signatures &mdash; Pairing-Based Aggregation</div>
+      <p class="prose"><strong>BLS (Boneh-Lynn-Shacham) signatures</strong> (2001) are built on bilinear pairings &mdash; a cryptographic map e: G<sub>1</sub> &times; G<sub>2</sub> &rarr; G<sub>T</sub> between elliptic curve groups. The key property: multiple signatures on different messages from different signers can be <strong>aggregated</strong> into a single constant-size signature, verifiable in one pairing operation.</p>
+      <div class="formula-box">
+        <div class="formula-label">BLS Signature Scheme (over pairing-friendly curve, e.g. BLS12-381)</div>
+        KeyGen: sk = random x; pk = x &middot; G (generator point)<br>
+        Sign(sk, m): &sigma; = sk &middot; H(m) &nbsp; where H: {0,1}* &rarr; G<sub>1</sub><br>
+        Verify(pk, m, &sigma;): check e(&sigma;, G) == e(H(m), pk)<br><br>
+        <strong>Aggregation:</strong> For n signers with sigs &sigma;<sub>1</sub>&hellip;&sigma;<sub>n</sub>:<br>
+        &sigma;<sub>agg</sub> = &sigma;<sub>1</sub> + &sigma;<sub>2</sub> + &hellip; + &sigma;<sub>n</sub> (single elliptic curve point!)<br>
+        Verify: e(&sigma;<sub>agg</sub>, G) == &prod; e(H(m<sub>i</sub>), pk<sub>i</sub>)<br>
+        <small>n signatures (each 48 bytes on BLS12-381) reduce to one 48-byte aggregate &mdash; saving 47&times;48 = 2256 bytes for 48 validators.</small>
+      </div>
+      <p class="prose">BLS aggregation is used in <strong>Ethereum 2.0 Proof-of-Stake</strong>: each block contains thousands of validator attestations. Without BLS, storing all signatures would be prohibitive. With BLS, all attestations for a slot aggregate into a single 96-byte signature. BLS is also used in Chia, Filecoin, and threshold signature schemes where no single party holds the full private key (threshold-t-of-n signing via secret sharing).</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Why is the message hashed before RSA signing, instead of signing the full message?<div class="recall-answer">Two reasons: (1) RSA can only operate on data smaller than the key size (~245 bytes for RSA-2048). A 1 GB document cannot be RSA-signed directly. (2) Hashing is fast (SHA-256 of 1 GB takes milliseconds), while RSA is slow. Sign the 256-bit hash → microseconds per signature regardless of document size.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> How did nonce reuse in ECDSA break the Sony PlayStation 3?<div class="recall-answer">Sony used a constant nonce k for all PS3 firmware ECDSA signatures. From any two signatures (r₁,s₁) and (r₂,s₂) on messages z₁,z₂: since r₁=r₂ (same k), solve: k = (z₁-z₂)/(s₁-s₂) mod q, then d = (s·k - z)/r mod q. The private key d was recovered, allowing anyone to sign arbitrary PS3 firmware as Sony.</div></div>
+    <div class="recall-question"><strong>Q3.</strong> What advantage does Ed25519 (EdDSA) have over ECDSA regarding nonce generation?<div class="recall-answer">Ed25519 is deterministic — the nonce k is derived as k = H(private_key || message), never requiring a random number generator. This eliminates the catastrophic nonce reuse vulnerability entirely. It's also constant-time by design (resistant to timing attacks) and produces 64-byte signatures regardless of message size.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>Digital signatures provide Authentication, Integrity, and Non-repudiation (AIN)</li>
+    <li>Sign with PRIVATE key; verify with PUBLIC key (opposite of encryption)</li>
+    <li>Hash before signing: RSA size limit (~245 bytes) + performance (SHA-256 is fast)</li>
+    <li>ECDSA/DSA nonce reuse is fatal: two signatures with same k → private key recovery (PS3 hack)</li>
+    <li>Ed25519 (EdDSA): deterministic nonce, constant-time, 64-byte sigs — modern standard replacing ECDSA</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.4 CERTIFICATES -->
+  <section id="s-certs" data-search-section="digital certificate X.509 fields serial validity subject public key signature CA">
+    <div class="section-heading">
+      <h2 class="prose">2.4 Digital Certificates &amp; X.509
+        <button class="bookmark-btn" data-id="s-certs" data-label="2.4 Certificates">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Digital Certificate (X.509)</div>
+        A digital certificate is an electronic document that <strong>binds a public key to an identity</strong>, signed by a trusted Certificate Authority (CA). It answers: "I claim to own this public key — here is a trusted third party verifying that claim."
+      </div>
+      <h3 class="prose">X.509 v3 Certificate Fields</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Field</th><th>Content</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Version</strong></td><td>X.509 version (v3 allows extensions)</td><td>v3</td></tr>
+          <tr><td><strong>Serial Number</strong></td><td>Unique ID assigned by CA</td><td>0A:BC:D3:...</td></tr>
+          <tr><td><strong>Signature Algorithm</strong></td><td>Algorithm CA used to sign this cert</td><td>sha256WithRSAEncryption</td></tr>
+          <tr><td><strong>Issuer</strong></td><td>Distinguished Name of the CA</td><td>CN=DigiCert Global CA, O=DigiCert Inc</td></tr>
+          <tr><td><strong>Validity</strong></td><td>Not Before / Not After dates</td><td>2024-01-01 to 2025-01-01</td></tr>
+          <tr><td><strong>Subject</strong></td><td>Identity this cert belongs to</td><td>CN=www.google.com, O=Google LLC</td></tr>
+          <tr><td><strong>Subject Public Key Info</strong></td><td>The actual public key + algorithm</td><td>RSA 2048-bit or EC P-256</td></tr>
+          <tr><td><strong>Extensions (v3)</strong></td><td>Subject Alternative Names (SANs), Key Usage</td><td>DNS:*.google.com, DNS:google.com</td></tr>
+          <tr><td><strong>Signature Value</strong></td><td>CA&#39;s digital signature over all above fields</td><td>3082 0101 02... (binary)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Subject Alternative Names (SANs):</strong> Modern browsers ignore the "Common Name" field entirely. They only look at SANs for domain matching. A certificate must list every domain it covers in SANs (e.g., google.com, www.google.com, apis.google.com). Wildcard SANs (*.google.com) cover one subdomain level.</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Certificate Revocation: CRL vs OCSP vs OCSP Stapling</h3>
+      <p class="prose">When a private key is compromised, the certificate must be invalidated BEFORE it expires:</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Method</th><th>How It Works</th><th>Problem</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>CRL</strong><br>(Certificate Revocation List)</td>
+            <td>CA publishes a list of all revoked cert serial numbers. Client downloads the entire list.</td>
+            <td>Lists can grow to gigabytes. Downloaded infrequently (stale). Huge latency on first check.</td>
+          </tr>
+          <tr>
+            <td><strong>OCSP</strong><br>(Online Certificate Status Protocol)</td>
+            <td>Client sends a real-time query to CA: "Is cert #XYZ valid?" Gets tiny Good/Revoked response.</td>
+            <td>CA learns which websites you visit (privacy). Adds latency per connection. CA must be always online.</td>
+          </tr>
+          <tr>
+            <td><strong>OCSP Stapling</strong></td>
+            <td>Server periodically fetches its own OCSP response from CA and "staples" it to the TLS handshake.</td>
+            <td>Best of both worlds. No client-to-CA communication. Time-stamped CA response proves validity. Standard in modern TLS.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Certificate Transparency (CT)</div>
+      <p class="prose"><strong>Certificate Transparency</strong> is a public, append-only audit log of all certificates ever issued. When a CA issues a certificate, it must submit it to public CT logs. Browsers like Chrome require all TLS certificates to be logged in at least two CT logs. This prevents rogue CAs from issuing unauthorized certificates silently — anyone can query the logs and detect if a certificate was issued for their domain without their knowledge. This caught several CA compromises, including the DigiNotar breach (2011) where attackers issued fraudulent certs for *.google.com.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.5 PKI -->
+  <section id="s-pki" data-search-section="PKI public key infrastructure CA certificate authority registration authority chain of trust root intermediate">
+    <div class="section-heading">
+      <h2 class="prose">2.5 Public Key Infrastructure (PKI)
+        <button class="bookmark-btn" data-id="s-pki" data-label="2.5 PKI">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">PKI — Public Key Infrastructure</div>
+        The framework of policies, hardware, software, people, and procedures needed to manage digital certificates and public-key encryption. It creates and maintains a web of trust between entities on the internet.
+      </div>
+      <h3 class="prose">PKI Components</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Component</th><th>Role</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Root CA</strong></td><td>The ultimate trust anchor. Its certificate is self-signed. Kept offline in a vault.</td><td>DigiCert Root CA, Let&#39;s Encrypt ISRG Root X1</td></tr>
+          <tr><td><strong>Intermediate CA</strong></td><td>Signed by Root CA. Issues end-entity certs day-to-day. If compromised, can be revoked without replacing the root.</td><td>DigiCert TLS RSA SHA256 2020 CA1</td></tr>
+          <tr><td><strong>Registration Authority (RA)</strong></td><td>Verifies the identity of the entity requesting a certificate before the CA issues it.</td><td>Domain Validation (DV): verify you control the domain. Extended Validation (EV): verify the legal entity.</td></tr>
+          <tr><td><strong>Certificate Repository</strong></td><td>Stores and distributes certificates and CRLs.</td><td>LDAP directories, HTTPS endpoints</td></tr>
+          <tr><td><strong>End Entity</strong></td><td>The website/server/person that owns the certificate.</td><td>www.example.com, user@company.com</td></tr>
+        </tbody>
+      </table>
+      <h3 class="prose" style="margin-top:20px">Chain of Trust Verification</h3>
+      <p class="prose">When your browser connects to a website, it receives a certificate chain: End-Entity Cert &#8594; Intermediate CA Cert &#8594; Root CA Cert. The browser:</p>
+      <ol class="prose">
+        <li>Verifies the Root CA cert is in its built-in trust store (browsers and OS ship with ~100-150 trusted root CAs).</li>
+        <li>Verifies the Intermediate CA cert was signed by the Root CA.</li>
+        <li>Verifies the End-Entity cert was signed by the Intermediate CA.</li>
+        <li>Checks the cert&#39;s validity dates, domain name, and revocation status.</li>
+        <li>If all checks pass, the padlock icon appears.</li>
+      </ol>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Man-in-the-Middle via Fake Certificate:</strong> Eve intercepts Alice&#39;s DH parameters and sends her own public key. She decrypts Alice&#39;s messages, re-encrypts them with Bob&#39;s key, and forwards. Neither Alice nor Bob knows. <strong>Solution:</strong> The server&#39;s DH parameters are signed by its RSA/ECDSA certificate, which is verified against a trusted CA chain. Eve cannot forge a signature without the private key.</div>
+      </div>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> TLS 1.3 completes in 1 RTT vs TLS 1.2's 2 RTT. What makes this possible?<div class="recall-answer">TLS 1.3 sends the key_share (ECDHE public key) in the ClientHello itself, so the server can compute the shared secret and start encrypting immediately after ServerHello. TLS 1.2 required a separate negotiation round before exchanging key material. TLS 1.3 also dropped all weak cipher suites, eliminating negotiation overhead.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> What is the risk of TLS 1.3's 0-RTT resumption and how is it mitigated?<div class="recall-answer">0-RTT data is vulnerable to replay attacks — an attacker can re-send recorded 0-RTT packets to trigger the same server-side action again. Mitigation: (1) only use 0-RTT for idempotent requests (GET, not POST/payment). (2) Server tracks seen session ticket nonces in a distributed cache to reject replays. RFC 8446 explicitly warns 0-RTT has "weaker security properties."</div></div>
+    <div class="recall-question"><strong>Q3.</strong> Parse this TLS cipher suite: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384<div class="recall-answer">ECDHE = key exchange via Ephemeral ECDH (provides PFS). RSA = server authentication (server cert is RSA). AES_256_GCM = bulk AEAD encryption using AES-256 in GCM mode (combined encrypt+authenticate). SHA384 = HMAC-SHA384 for key derivation PRF. In TLS 1.3, cipher suites are simplified to just 5 options (e.g., TLS_AES_256_GCM_SHA384) because key exchange and auth are always ECDHE/cert.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>TLS 1.3: 1-RTT handshake, mandatory ECDHE (PFS), only 5 AEAD cipher suites, removed RC4/MD5/SHA-1/RSA-KeyTransport</li>
+    <li>TLS 1.2: 2-RTT, 300+ cipher suites (many weak), optional PFS</li>
+    <li>mTLS: both client AND server present X.509 certs — used in microservices, Zero Trust architectures</li>
+    <li>Certificate pinning: hardcode expected cert hash in app — prevents MitM even with rogue CA</li>
+    <li>HKDF key schedule: every derived key binds to transcript hash → tampering with handshake immediately produces wrong keys</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.6 TLS -->
+  <section id="s-tls" data-search-section="TLS SSL handshake cipher suite certificate key exchange HTTPS">
+    <div class="section-heading">
+      <h2 class="prose">2.6 SSL / TLS Protocol
+        <button class="bookmark-btn" data-id="s-tls" data-label="2.6 TLS">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">TLS (Transport Layer Security)</div>
+        The successor to SSL. Provides a secure channel over the network (creating HTTPS). Uses asymmetric crypto for authentication/key exchange, symmetric crypto for bulk encryption, and hash functions for integrity. TLS 1.3 is the current standard (2018). TLS 1.0 and 1.1 are deprecated.
+      </div>
+      <h3 class="prose">TLS 1.3 Handshake (Simplified)</h3>
+      <div class="cipher-grid">Client ----ClientHello (TLS 1.3, supported cipher suites, key_share: ECDHE public)----> Server
+Server <---ServerHello (chosen cipher, key_share: Server ECDHE public)----
+Server <---Certificate (server X.509 cert)----
+Server <---CertificateVerify (signature over handshake using server private key)----
+Server <---Finished (HMAC over handshake transcript)----
+
+[Client verifies cert chain, verifies CertificateVerify signature]
+[Both derive symmetric keys from ECDHE shared secret]
+
+Client ----Finished (HMAC)----> Server
+[Encrypted Application Data flows here -- just 1 RTT!]</div>
+
+      <p class="prose"><strong>TLS 1.3 vs TLS 1.2 improvements:</strong></p>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>TLS 1.2</th><th>TLS 1.3</th></tr></thead>
+        <tbody>
+          <tr><td>Handshake RTT</td><td>2 RTT</td><td>1 RTT (0-RTT optional)</td></tr>
+          <tr><td>Key Exchange</td><td>RSA or DHE/ECDHE</td><td>Only ECDHE (PFS mandatory)</td></tr>
+          <tr><td>Cipher Suites</td><td>300+ (many weak ones)</td><td>5 (all strong, all AEAD)</td></tr>
+          <tr><td>Forward Secrecy</td><td>Optional</td><td>Mandatory</td></tr>
+          <tr><td>Deprecated Algorithms</td><td>RC4, MD5, SHA-1, DES allowed</td><td>All removed</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:16px">TLS Cipher Suite Naming</h3>
+      <p class="prose">Example: <code>TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</code></p>
+      <table class="data-table">
+        <thead><tr><th>Part</th><th>Value</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Key Exchange</td><td>ECDHE</td><td>Ephemeral ECDH — provides PFS</td></tr>
+          <tr><td>Authentication</td><td>RSA</td><td>Server cert is RSA — verifies identity</td></tr>
+          <tr><td>Bulk Cipher</td><td>AES_256_GCM</td><td>AES-256 in GCM mode — AEAD</td></tr>
+          <tr><td>MAC/PRF</td><td>SHA384</td><td>HMAC-SHA384 for integrity + key derivation</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: TLS 0-RTT &amp; Replay Risk</div>
+      <p class="prose">TLS 1.3 supports <strong>0-RTT resumption</strong>: a client that has previously connected can send encrypted data on the very first packet, before the handshake completes. This eliminates the latency cost of TLS entirely for repeat visitors. The tradeoff: 0-RTT data is vulnerable to <strong>replay attacks</strong>. An attacker can re-send recorded 0-RTT data to the server. For this reason, 0-RTT must only be used for idempotent requests (GET, not POST) and servers must implement anti-replay measures (ticket nonce tracking).</p>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Mutual TLS (mTLS) &amp; Certificate Pinning</div>
+      <p class="prose">Standard TLS only authenticates the <em>server</em> to the client. <strong>Mutual TLS (mTLS)</strong> requires the <em>client</em> to also present a certificate, authenticating both ends. The server sends a <code>CertificateRequest</code> message in the handshake; the client responds with its own X.509 certificate signed by a CA the server trusts.</p>
+      <table class="data-table">
+        <thead><tr><th>Feature</th><th>Standard TLS</th><th>Mutual TLS (mTLS)</th></tr></thead>
+        <tbody>
+          <tr><td>Who is authenticated?</td><td>Server only (via cert)</td><td>Both server AND client (via certs)</td></tr>
+          <tr><td>Use Case</td><td>Public HTTPS websites</td><td>API-to-API, microservices, Zero Trust</td></tr>
+          <tr><td>Client auth method</td><td>Username/password in HTTP layer</td><td>X.509 certificate at TLS layer</td></tr>
+          <tr><td>Who issues client cert?</td><td>N/A</td><td>Internal PKI or CA managed by the org</td></tr>
+          <tr><td>Used by</td><td>Every HTTPS site</td><td>Kubernetes, Istio service mesh, AWS API GW</td></tr>
+        </tbody>
+      </table>
+      <p class="prose"><strong>Certificate Pinning:</strong> An app hardcodes the expected server certificate (or its public key hash) and refuses any connection that doesn&#39;t present that exact cert &mdash; even if the cert is signed by a trusted CA. Used by mobile apps (Twitter, Google), prevents MitM even with rogue CA certificates. Downside: updates require app re-release if cert changes. Modern practice: <em>public key pinning</em> (pin the key hash, not the cert) so cert rotation doesn&#39;t break pins.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: TLS 1.3 Formal Security &mdash; OPTLS &amp; Key Schedule</div>
+      <p class="prose">TLS 1.3&#39;s security was formally analyzed in the <strong>OPTLS</strong> framework (Krawczyk &amp; Wee, 2015) and the miTLS project, proving security under the DDH and PRF assumptions. Unlike TLS 1.2 (which required 2 round-trips and had no formal proof), TLS 1.3&#39;s handshake is proven secure against key-compromise impersonation, forward secrecy violations, and unknown key-share attacks.</p>
+      <div class="formula-box">
+        <div class="formula-label">TLS 1.3 Key Schedule (HKDF-based)</div>
+        Early Secret = HKDF-Extract(0, PSK or 0)<br>
+        Handshake Secret = HKDF-Extract(ECDHE output, Early Secret derivative)<br>
+        Master Secret = HKDF-Extract(0, Handshake Secret derivative)<br><br>
+        client_handshake_traffic_secret = HKDF-Expand-Label(HS, &ldquo;c hs traffic&rdquo;, Hello hash)<br>
+        server_handshake_traffic_secret = HKDF-Expand-Label(HS, &ldquo;s hs traffic&rdquo;, Hello hash)<br>
+        application_traffic_secret_0   = HKDF-Expand-Label(MS, &ldquo;c ap traffic&rdquo;, handshake hash)<br>
+        <small>Each HKDF derivation binds the new key to the transcript hash &mdash; a modification of any handshake message immediately produces incorrect keys on both sides, providing handshake integrity.</small>
+      </div>
+      <p class="prose"><strong>0-RTT formal security:</strong> The OPTLS analysis shows 0-RTT provides only <em>weak forward secrecy</em> &mdash; if the PSK is compromised, past 0-RTT data is revealed. This is an intentional tradeoff: RFC 8446 explicitly labels 0-RTT as &ldquo;weaker security properties&rdquo; and mandates server-side anti-replay (session ticket nonce tracking in a distributed cache).</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.7 PFS -->
+  <section id="s-pfs" data-search-section="perfect forward secrecy ephemeral key session key compromise past sessions">
+    <div class="section-heading">
+      <h2 class="prose">2.7 Perfect Forward Secrecy (PFS)
+        <button class="bookmark-btn" data-id="s-pfs" data-label="2.7 PFS">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Perfect Forward Secrecy (PFS)</div>
+        A property of a key exchange protocol where the compromise of long-term private keys does NOT compromise past session keys. Each session uses a unique ephemeral key that is deleted after the session. Past encrypted traffic remains secure even if the server&#39;s certificate private key is later stolen.
+      </div>
+      <div class="worked-example">
+        <div class="we-title">Without PFS (Static RSA Key Exchange — old TLS 1.2)</div>
+        <div class="cipher-grid">Client encrypts pre-master secret with Server RSA public key.
+Server decrypts with Server RSA private key.
+
+If NSA records ALL traffic for 10 years, then steals Server RSA key:
+&#8594; They can decrypt ALL recorded sessions retroactively. &#10007;</div>
+      </div>
+      <div class="worked-example">
+        <div class="we-title">With PFS (ECDHE — TLS 1.3)</div>
+        <div class="cipher-grid">Server generates NEW ECDHE key pair for EVERY connection.
+Session key derived from ephemeral ECDHE exchange.
+Ephemeral private key DELETED immediately after handshake.
+
+Server RSA cert only signs the ECDHE parameters (authentication).
+If NSA records traffic, then steals Server RSA key later:
+&#8594; They verify the handshake signatures but cannot decrypt traffic.
+&#8594; The ephemeral ECDHE private keys are gone forever. &#10003;</div>
+      </div>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Formal PFS &amp; Key-Compromise Impersonation (KCI)</div>
+      <p class="prose">Formally (G&uuml;nther, 1990 / Bellare-Rogaway model): a protocol provides <strong>Perfect Forward Secrecy</strong> if the session key of any completed session remains computationally indistinguishable from random even after all long-term private keys are revealed. This requires ephemeral key material that is: (1) freshly generated per session, (2) independent of long-term keys, and (3) securely deleted after use.</p>
+      <div class="formula-box">
+        <div class="formula-label">PFS vs Key-Compromise Impersonation (KCI)</div>
+        <strong>PFS failure</strong>: Long-term key K<sub>lt</sub> revealed &rarr; past sessions decryptable<br>
+        <strong>KCI attack</strong>: Adversary with K<sub>lt</sub> impersonates other party in FUTURE sessions<br><br>
+        ECDHE solves PFS: sk<sub>session</sub> is independent of K<sub>lt</sub><br>
+        TLS 1.3 resists KCI: client Finished = MAC over full transcript &rarr; impersonator<br>
+        &nbsp;&nbsp;can&#39;t forge without client&#39;s ephemeral key, even holding server cert key<br>
+        <small>Why secure deletion matters: OS garbage collectors, swap files, and RAM may retain deleted keys. Secure deletion requires explicit memory zeroing: OPENSSL_cleanse(), SecureZeroMemory(). HSMs never export private keys &mdash; strongest PFS guarantee.</small>
+      </div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.8 PGP -->
+  <section id="s-pgp" data-search-section="PGP pretty good privacy SMIME web of trust email encryption Radix64 session key">
+    <div class="section-heading">
+      <h2 class="prose">2.8 PGP &amp; S/MIME — Secure Email
+        <button class="bookmark-btn" data-id="s-pgp" data-label="2.8 PGP">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">PGP — Pretty Good Privacy (Phil Zimmermann, 1991)</div>
+        Standard email ends-to-end encryption. PGP uses a hybrid approach: fast symmetric encryption for the message, slow asymmetric encryption only for the session key. Creates the famous <code>-----BEGIN PGP MESSAGE-----</code> blocks.
+      </div>
+      <h3 class="prose">How PGP Encrypts a Message</h3>
+      <ol class="prose">
+        <li><strong>Compress:</strong> Message is compressed (reduces size, removes statistical patterns).</li>
+        <li><strong>Generate Session Key:</strong> A random 256-bit AES session key is created.</li>
+        <li><strong>Encrypt Message:</strong> Compressed message encrypted symmetrically with the AES session key.</li>
+        <li><strong>Encrypt Session Key:</strong> The AES session key encrypted with the recipient&#39;s RSA public key.</li>
+        <li><strong>Bundle:</strong> (Encrypted Session Key + Encrypted Message) concatenated.</li>
+        <li><strong>Radix-64 / Base64:</strong> Binary bundle encoded to printable ASCII for email transport.</li>
+      </ol>
+      <p class="prose"><strong>Why use a session key?</strong> RSA can only encrypt small amounts of data (&lt;245 bytes for RSA-2048). A 1MB email cannot be RSA-encrypted directly. By encrypting only the tiny 256-bit session key with RSA, and the full message with fast AES, PGP achieves both security and performance.</p>
+
+      <h3 class="prose" style="margin-top:20px">Trust Models: Web of Trust vs PKI</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>PGP (Web of Trust)</th><th>S/MIME (PKI / CA Trust)</th></tr></thead>
+        <tbody>
+          <tr><td>Structure</td><td>Decentralized. Users sign each other&#39;s keys at key-signing parties.</td><td>Centralized. Commercial CAs issue S/MIME certs.</td></tr>
+          <tr><td>Key Storage</td><td>Local key rings (public keyring, secret keyring)</td><td>X.509 certs tied to email client</td></tr>
+          <tr><td>Trust Established</td><td>Direct trust or through a chain of mutually trusted friends</td><td>CA validates domain or identity</td></tr>
+          <tr><td>Revocation</td><td>Difficult — key server propagation not guaranteed</td><td>CRL/OCSP — standard, reliable</td></tr>
+          <tr><td>Use Case</td><td>Open source developers, journalists, activists</td><td>Enterprise, legal, financial email</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>PGP Trust Levels:</strong> Ultimate (your own key), Full (you directly verified this person&#39;s key), Marginal (somewhat trusted). A key is considered valid if: signed by you (ultimate), OR signed by 1 fully-trusted person, OR signed by 2+ marginally-trusted people.</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Signal Protocol — Modern Secure Messaging</div>
+      <p class="prose">The <strong>Signal Protocol</strong> (used in WhatsApp, Signal, Facebook Messenger) solves PGP&#39;s key management complexity. It uses <strong>X3DH (Extended Triple Diffie-Hellman)</strong> for initial key agreement and the <strong>Double Ratchet Algorithm</strong> for forward secrecy in each message. The Double Ratchet combines a Diffie-Hellman ratchet (new key pair every few messages) with a symmetric-key ratchet (KDF chain). This provides both forward secrecy (past messages safe if key compromised) and break-in recovery (future messages safe after an attacker loses access).</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 2.9 MCQ -->
+  <section id="s-mcq2" data-search-section="unit 2 MCQ practice questions protocols">
+    <div class="section-heading">
+      <h2 class="prose">2.9 Practice MCQs &mdash; Unit 2 (22 Questions)
+        <button class="bookmark-btn" data-id="s-mcq2" data-label="2.9 MCQs">&#128278;</button>
+      </h2>
+      <p class="prose" style="font-size:0.85rem;color:var(--tx-muted);margin-top:4px">Difficulty: &#127802; Easy &nbsp;|&nbsp; &#127841; Medium &nbsp;|&nbsp; &#128308; Hard &nbsp;|&nbsp; &#128128; Expert</p>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q1. In Diffie-Hellman, Alice sends A = g&#7491; mod p. What does Eve need to find the shared secret?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q1"> (a) Only p and g</label>
+        <label><input type="radio" name="m2q1"> (b) She must solve the Discrete Logarithm Problem to find a from A</label>
+        <label><input type="radio" name="m2q1"> (c) She only needs B (Bob&#39;s public value)</label>
+        <label><input type="radio" name="m2q1"> (d) She uses Alice&#39;s certificate</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Eve knows p, g, A, and B (all public). To compute the shared secret S = g&#7491;&#7495; mod p, she needs either a or b. Finding a from A = g&#7491; mod p is the DLP — computationally infeasible for large p.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q2. A digital signature uses the sender&#39;s private key to sign and the recipient uses what to verify?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q2"> (a) Sender&#39;s private key</label>
+        <label><input type="radio" name="m2q2"> (b) Recipient&#39;s public key</label>
+        <label><input type="radio" name="m2q2"> (c) Sender&#39;s public key</label>
+        <label><input type="radio" name="m2q2"> (d) A shared symmetric key</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Sender&#39;s public key.</strong> The sender signs with their PRIVATE key. Anyone with the sender&#39;s PUBLIC key can verify. This is the reverse of encryption (where recipient&#39;s PUBLIC key encrypts, PRIVATE key decrypts).</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q3. The "E" in ECDHE stands for:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q3"> (a) Encrypted</label>
+        <label><input type="radio" name="m2q3"> (b) Extended</label>
+        <label><input type="radio" name="m2q3"> (c) Ephemeral</label>
+        <label><input type="radio" name="m2q3"> (d) Exponential</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Ephemeral.</strong> A new key pair is generated for every TLS session and discarded after. This provides Perfect Forward Secrecy — past sessions remain secure even if the long-term certificate private key is later compromised.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q4. Which certificate revocation mechanism allows the web server itself to provide fresh revocation status during the TLS handshake?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q4"> (a) CRL (Certificate Revocation List)</label>
+        <label><input type="radio" name="m2q4"> (b) OCSP (Online Certificate Status Protocol)</label>
+        <label><input type="radio" name="m2q4"> (c) OCSP Stapling</label>
+        <label><input type="radio" name="m2q4"> (d) Certificate Pinning</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) OCSP Stapling.</strong> The server fetches a signed, time-stamped OCSP response from the CA and staples it to the TLS handshake. No client-to-CA query needed, solving both the latency and privacy issues of plain OCSP.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q5. In PGP, why is a random session key generated for each message?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q5"> (a) RSA is too slow to encrypt large messages directly</label>
+        <label><input type="radio" name="m2q5"> (b) The session key provides authentication</label>
+        <label><input type="radio" name="m2q5"> (c) PGP does not support AES</label>
+        <label><input type="radio" name="m2q5"> (d) The session key replaces the need for a public key</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(a)</strong> RSA can only directly encrypt ~245 bytes (for RSA-2048). A full email cannot be RSA-encrypted. PGP generates a random AES session key, encrypts the message with fast AES, and only encrypts the small session key with RSA. This hybrid approach gives RSA&#39;s key-distribution benefits with AES&#39;s speed.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q6. What does the Root CA certificate use to prove its own authenticity?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q6"> (a) It is signed by a super-root authority</label>
+        <label><input type="radio" name="m2q6"> (b) It is self-signed — trusted because it is pre-installed in OS/browser trust stores</label>
+        <label><input type="radio" name="m2q6"> (c) It is validated by OCSP in real time</label>
+        <label><input type="radio" name="m2q6"> (d) It uses a Web of Trust model</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Self-signed, pre-installed.</strong> Root CA certs are self-signed (they sign themselves). Their trustworthiness comes from being pre-installed in browser and OS trust stores — a manual, curated process by browser vendors and OS makers. There is no higher authority above root CAs.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q7. TLS 1.3 mandates which property for all key exchanges?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q7"> (a) RSA key transport</label>
+        <label><input type="radio" name="m2q7"> (b) Perfect Forward Secrecy via ECDHE</label>
+        <label><input type="radio" name="m2q7"> (c) Static DH parameters</label>
+        <label><input type="radio" name="m2q7"> (d) 4096-bit RSA keys</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Perfect Forward Secrecy via ECDHE.</strong> TLS 1.3 completely removed static RSA key transport. All key exchanges use ephemeral ECDHE. This means PFS is mandatory for all TLS 1.3 connections.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q8. The ECDSA PlayStation 3 hack demonstrated which critical vulnerability?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q8"> (a) Weak elliptic curve selection</label>
+        <label><input type="radio" name="m2q8"> (b) Reuse of the random nonce k, allowing private key recovery</label>
+        <label><input type="radio" name="m2q8"> (c) SHA-1 collision in the signature</label>
+        <label><input type="radio" name="m2q8"> (d) Brute force of 256-bit keys</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Nonce reuse.</strong> Sony used a constant nonce k for all PS3 firmware ECDSA signatures. From two signatures using the same k, attackers computed: k = (z1-z2)/(s1-s2) and then the private key d = (s&#183;k - z)/r. All PS3 firmwares were now signable by anyone.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q9. In PKI, what is the role of the Registration Authority (RA)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q9"> (a) It signs all digital certificates</label>
+        <label><input type="radio" name="m2q9"> (b) It verifies the identity of certificate requesters before the CA issues a cert</label>
+        <label><input type="radio" name="m2q9"> (c) It maintains the Certificate Revocation List</label>
+        <label><input type="radio" name="m2q9"> (d) It stores the private keys of all users</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> The RA handles identity verification (e.g., checking domain control for DV certs, or legal documentation for EV certs). Once verification is complete, the RA instructs the CA to issue the certificate. The CA focuses only on signing.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q10. What is the key advantage of PGP&#39;s "Web of Trust" over PKI?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q10"> (a) It uses stronger cryptographic algorithms</label>
+        <label><input type="radio" name="m2q10"> (b) It is decentralized — no single trusted authority required</label>
+        <label><input type="radio" name="m2q10"> (c) Certificate revocation is more reliable</label>
+        <label><input type="radio" name="m2q10"> (d) It is compatible with all email clients</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Decentralized.</strong> PKI requires trusting commercial CAs. If a CA is compromised (like DigiNotar in 2011), all its certs become suspect. PGP&#39;s Web of Trust distributes trust — you trust people you know personally, building a network without any single point of failure.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q11. Which X.509 v3 extension field do modern browsers use to match a certificate to a domain name?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q11"> (a) Common Name (CN)</label>
+        <label><input type="radio" name="m2q11"> (b) Issuer field</label>
+        <label><input type="radio" name="m2q11"> (c) Subject Alternative Name (SAN)</label>
+        <label><input type="radio" name="m2q11"> (d) Serial Number</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Subject Alternative Name (SAN).</strong> Modern browsers (Chrome since 2017, all others now) ignore the CN field for domain validation entirely. Only the SAN extension is checked. A single cert can cover multiple domains via multiple SAN entries.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q12. What does "Radix-64" encoding in PGP solve?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q12"> (a) It compresses the message before encryption</label>
+        <label><input type="radio" name="m2q12"> (b) It converts binary ciphertext to printable ASCII for email transport</label>
+        <label><input type="radio" name="m2q12"> (c) It provides additional encryption beyond AES</label>
+        <label><input type="radio" name="m2q12"> (d) It generates the random session key</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Email (SMTP) was originally designed for 7-bit ASCII text. Binary data (ciphertext) cannot pass through email servers unchanged. Radix-64 (Base64 + CRC checksum) converts binary to printable ASCII, producing the <code>-----BEGIN PGP MESSAGE-----</code> block that survives email transport.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#127841; Medium</span>Q13. Why must raw ECDH shared output be processed through HKDF before use as an encryption key?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q13"> (a) ECDH output is too short to use as a key directly</label>
+        <label><input type="radio" name="m2q13"> (b) The x-coordinate of the shared point may have structural bias and low-entropy bits; HKDF normalizes it to uniform randomness</label>
+        <label><input type="radio" name="m2q13"> (c) HKDF adds additional encryption on top of ECDH</label>
+        <label><input type="radio" name="m2q13"> (d) ECDH only works over 128-bit values, not 256-bit</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Structural bias and low-entropy bits.</strong> The raw ECDH output (x-coordinate of the shared curve point) has mathematical structure: the MSB is often 0, and small-subgroup attacks may force predictable values. HKDF-Extract (an HMAC-based hash) removes all structure, producing a uniformly random PRK. HKDF-Expand then derives multiple independent keys (handshake key, traffic key, resumption key) from a single ECDH exchange with different labels.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q14. In the DDH (Decisional Diffie-Hellman) assumption, an adversary must distinguish between which two distributions?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q14"> (a) (g<sup>a</sup>, g<sup>b</sup>, g<sup>a+b</sup>) vs (g<sup>a</sup>, g<sup>b</sup>, g<sup>c</sup>)</label>
+        <label><input type="radio" name="m2q14"> (b) (g<sup>a</sup>, g<sup>b</sup>, g<sup>ab</sup>) vs (g<sup>a</sup>, g<sup>b</sup>, g<sup>c</sup>)</label>
+        <label><input type="radio" name="m2q14"> (c) (g<sup>a</sup>, a, g<sup>ab</sup>) vs (g<sup>a</sup>, b, g<sup>c</sup>)</label>
+        <label><input type="radio" name="m2q14"> (d) (g<sup>a</sup> mod p, g<sup>b</sup> mod q) vs (g<sup>c</sup> mod p, g<sup>d</sup> mod q)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> DDH asks: is the third element the real DH output g<sup>ab</sup>, or a random g<sup>c</sup>? If an adversary can distinguish these with non-negligible probability, DDH is broken. DDH being hard means the DH shared secret looks like a random group element &mdash; this is why DH provides semantic security for protocols built on it (like ElGamal). Note: DDH is believed true over prime-order EC groups but is FALSE over Z<sub>p</sub>* with smooth p&minus;1.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q15. In X3DH (Signal Protocol), why is the <em>one-time prekey</em> (OPK) included in addition to the identity and signed prekeys?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q15"> (a) To provide server-side authentication of Bob&#39;s identity</label>
+        <label><input type="radio" name="m2q15"> (b) To enable Bob to be offline and still receive messages</label>
+        <label><input type="radio" name="m2q15"> (c) To provide one-time-use forward secrecy: even if all other keys are compromised, the OPK ensures this session&#39;s master secret is unique</label>
+        <label><input type="radio" name="m2q15"> (d) To verify the signature on the signed prekey</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) One-time forward secrecy.</strong> The OPK is a single-use ephemeral key uploaded by Bob in advance. Once Alice uses it in DH4, the server deletes it. Even if Bob&#39;s identity key and signed prekey are later compromised, DH4 (which used the OPK) cannot be recomputed &mdash; making this session&#39;s master secret uniquely forward secret. Without OPK, multiple sessions could share the same 3-key bundle, enabling retrospective decryption if those keys are later exposed.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128128; Expert</span>Q16. BLS signature aggregation uses a bilinear pairing e: G<sub>1</sub>&times;G<sub>2</sub>&rarr;G<sub>T</sub>. When verifying an aggregate signature &sigma;<sub>agg</sub> = &sigma;<sub>1</sub>+&hellip;+&sigma;<sub>n</sub>, which equation must hold?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q16"> (a) e(&sigma;<sub>agg</sub>, G) = e(H(m<sub>1</sub>)&middot;&hellip;&middot;H(m<sub>n</sub>), pk<sub>agg</sub>)</label>
+        <label><input type="radio" name="m2q16"> (b) e(&sigma;<sub>agg</sub>, G) = &prod;<sub>i</sub> e(H(m<sub>i</sub>), pk<sub>i</sub>)</label>
+        <label><input type="radio" name="m2q16"> (c) e(G, &sigma;<sub>agg</sub>) = e(pk<sub>agg</sub>, H(m<sub>agg</sub>))</label>
+        <label><input type="radio" name="m2q16"> (d) &sigma;<sub>agg</sub><sup>e</sup> mod n = &prod;<sub>i</sub> H(m<sub>i</sub>)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) e(&sigma;<sub>agg</sub>, G) = &prod;<sub>i</sub> e(H(m<sub>i</sub>), pk<sub>i</sub>).</strong> By bilinearity: e(&sigma;<sub>agg</sub>, G) = e(&sum;&sigma;<sub>i</sub>, G) = &prod; e(&sigma;<sub>i</sub>, G) = &prod; e(sk<sub>i</sub>&middot;H(m<sub>i</sub>), G) = &prod; e(H(m<sub>i</sub>), sk<sub>i</sub>&middot;G) = &prod; e(H(m<sub>i</sub>), pk<sub>i</sub>). This single pairing equation verifies ALL n signatures simultaneously, enabling Ethereum 2.0 to aggregate thousands of validator attestations into one 96-byte signature.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#127841; Medium</span>Q17. In Mutual TLS (mTLS), what is the key difference from standard TLS that makes it suitable for microservice authentication?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q17"> (a) mTLS uses a stronger cipher suite than standard TLS</label>
+        <label><input type="radio" name="m2q17"> (b) The client also presents an X.509 certificate, authenticating the client&#39;s identity at the transport layer without application-layer credentials</label>
+        <label><input type="radio" name="m2q17"> (c) mTLS uses symmetric keys instead of asymmetric keys</label>
+        <label><input type="radio" name="m2q17"> (d) mTLS eliminates the need for a Certificate Authority</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Client certificate authentication at the transport layer.</strong> Standard TLS only authenticates the server; the client is authenticated at the application layer (passwords, tokens). mTLS authenticates both sides via X.509 certs during the TLS handshake &mdash; before any application data is exchanged. This makes it ideal for microservice-to-microservice authentication in Zero Trust architectures (Kubernetes, Istio) where every service must prove its identity at every connection.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q18. In TLS 1.3&#39;s HKDF key schedule, modifying any single byte of the ClientHello message causes which effect?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q18"> (a) The handshake fails only after the server decrypts the Finished message</label>
+        <label><input type="radio" name="m2q18"> (b) All derived keys diverge immediately since each derivation binds to the transcript hash — client and server produce different traffic keys</label>
+        <label><input type="radio" name="m2q18"> (c) Only the resumption master secret is affected; the handshake traffic keys remain the same</label>
+        <label><input type="radio" name="m2q18"> (d) The cipher suite negotiation fails but the ECDHE exchange succeeds normally</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) All derived keys diverge.</strong> TLS 1.3&#39;s HKDF-Expand-Label derivations include the running transcript hash as input. A modified ClientHello produces a different transcript hash, which propagates into every HKDF derivation: handshake_traffic_secret, server_handshake_traffic_secret, and all application_traffic_secrets become different on client and server. The Finished MAC (which commits to the full transcript) will then fail verification &mdash; providing cryptographic binding of all keys to the exact transcript, preventing handshake tampering.</div>
+    </div>
+
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q19. Why does TLS 1.3 reduce the number of cipher suites from 300+ (TLS 1.2) to just 5?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q19"> (a) TLS 1.3 only supports RSA key exchange</label>
+        <label><input type="radio" name="m2q19"> (b) TLS 1.3 separates key exchange from cipher suite — all suites are AEAD-only; legacy algorithms (RC4, DES, SHA-1) removed entirely</label>
+        <label><input type="radio" name="m2q19"> (c) IETF chose the 5 most popular suites by industry vote</label>
+        <label><input type="radio" name="m2q19"> (d) TLS 1.3 uses pre-shared keys for all cipher suites</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> TLS 1.3 decoupled key exchange (always ECDHE) and authentication (always cert-based) from the cipher suite. Cipher suites now specify ONLY the AEAD bulk cipher + HKDF hash. All 5 suites are AEAD (authenticated encryption), eliminating the CBC padding oracle and stream cipher vulnerabilities that plagued TLS 1.2's 300+ suite zoo.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff">&#128308; Hard</span>Q20. In X3DH, Alice computes 4 ECDH values (DH1–DH4). Which specifically binds Bob's long-term identity to Alice's ephemeral key?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q20"> (a) DH1 = ECDH(IK_A, SPK_B)</label>
+        <label><input type="radio" name="m2q20"> (b) DH2 = ECDH(EK_A, IK_B)</label>
+        <label><input type="radio" name="m2q20"> (c) DH3 = ECDH(EK_A, SPK_B)</label>
+        <label><input type="radio" name="m2q20"> (d) DH4 = ECDH(EK_A, OPK_B)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) DH2 = ECDH(EK_A, IK_B).</strong> This exchange between Alice's ephemeral key and Bob's long-term identity key cryptographically binds the session to Bob's identity — ensuring only someone with IK_B's private key could have participated. DH1 binds Alice's identity to Bob's prekey, DH3 provides ephemeral-to-prekey linkage, and DH4 provides one-time forward secrecy. All four together provide mutual authentication and forward secrecy simultaneously.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q21. PGP's "Web of Trust" faces a key weakness compared to PKI. What is it?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q21"> (a) PGP uses weaker algorithms than PKIX certificates</label>
+        <label><input type="radio" name="m2q21"> (b) PGP key revocation is unreliable — revocation certs may not propagate to all keyservers, and revoked keys continue circulating</label>
+        <label><input type="radio" name="m2q21"> (c) PGP requires a paid CA subscription</label>
+        <label><input type="radio" name="m2q21"> (d) PGP cannot encrypt attachments</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Unreliable revocation.</strong> In PKI, OCSP/CRL revocation is standardized and clients check it actively. In PGP's Web of Trust, revocation certificates must be manually uploaded to keyservers, which do not automatically notify users holding the old key. A compromised PGP private key may remain "trusted" in other users' keyrings for years. This is one reason PGP adoption failed outside niche communities despite its cryptographic strength.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff">&#128128; Expert</span>Q22. Certificate Transparency (CT) prevents which specific attack that OCSP and CRL cannot?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m2q22"> (a) BEAST-style padding oracle attacks on TLS</label>
+        <label><input type="radio" name="m2q22"> (b) Silent issuance of fraudulent certificates by a rogue or compromised CA — detectable only via public audit log</label>
+        <label><input type="radio" name="m2q22"> (c) Replay attacks on TLS session tickets</label>
+        <label><input type="radio" name="m2q22"> (d) ECDSA nonce reuse in server certificates</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Silent fraudulent certificate issuance.</strong> OCSP/CRL only tell you if a KNOWN certificate is revoked — they cannot detect a certificate you don't know exists. CT logs are public and append-only: every issued certificate must be submitted. Domain owners can monitor CT logs for unauthorized certs. This caught the DigiNotar breach (2011) and Symantec mis-issuances (2015–2017), leading to Chrome distrusting Symantec entirely in 2018.</div>
+    </div>
+
+
+</section>
+</div>
+</main>
+<div id="mode-panel">
+  <button class="mode-btn active" data-mode="all">&#128218; All</button>
+  <button class="mode-btn uni-btn" data-mode="uni">&#127891; Uni</button>
+  <button class="mode-btn gate-btn" data-mode="gate">&#9889; Extra</button>
+  <button class="mode-btn adv-btn" data-mode="advanced">&#128300; Adv</button>
+</div>
+<div id="tts-panel">
+  <div class="tts-controls">
+    <button class="tts-btn" id="tts-play">&#9654;</button>
+    <button class="tts-btn" id="tts-stop">&#9209;</button>
+    <div class="tts-speed"><span>Speed</span><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><span id="tts-rate-label">1.0x</span></div>
+  </div>
+  <div class="tts-voice"><select id="tts-voice-select"><option>Loading...</option></select></div>
+</div>
+<div id="search-modal"><div class="search-box"><div class="search-input-wrap"><span class="s-icon">&#128269;</span><input id="search-input" type="text" placeholder="Search Unit 2..."></div><div id="search-results"></div></div></div>
+<div id="toast-container"></div>
+<script src="../assets/js/state.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/modes.js"></script>
+<script src="../assets/js/tts.js"></script>
+<script src="../assets/js/print.js"></script>
+<script src="../assets/js/notes.js"></script>
+<script src="../assets/js/glossary.js"></script>
+</body></html>

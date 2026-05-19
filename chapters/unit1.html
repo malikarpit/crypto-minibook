@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Arpit">
+  <title>Unit 1 — Foundations of Cryptography | Crypto MiniBook</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/chapter.css">
+  <link rel="stylesheet" href="../assets/css/timer.css">
+  
+</head>
+<body>
+<div id="progress-bar"></div>
+<header id="main-header">
+  <div class="header-left">
+    <button id="sidebar-toggle" class="icon-btn" title="Toggle Sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="brand-logo">
+      <div class="brand-icon">A&#9889;</div>
+      <div class="brand-text"><span class="main">Crypto MiniBook</span><span class="sub">Unit 1: Foundations</span></div>
+    </div>
+  </div>
+  <span class="header-chapter-title"></span>
+  <div class="header-right">
+    <button id="search-btn" class="icon-btn" title="Search (Ctrl+K)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <button id="tts-toggle" class="icon-btn" title="Read Aloud">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
+    </button>
+    <button id="print-btn" aria-label="Print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span class="print-label">PDF</span></button>
+    <button id="reading-mode-btn" class="icon-btn" aria-pressed="false">&#128214;</button>
+    <button id="theme-toggle" class="icon-btn"></button>
+  </div>
+</header>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="../index.html" class="sidebar-link"><span class="link-icon">&#127968;</span>Home</a>
+      <a href="../progress.html" class="sidebar-link"><span class="link-icon">&#128202;</span>Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Chapters</div>
+      <a href="unit1.html" class="sidebar-link active"><span class="link-icon">&#128272;</span>Unit 1 &#8212; Foundations</a>
+      <a href="unit2.html" class="sidebar-link"><span class="link-icon">&#128220;</span>Unit 2 &#8212; Protocols</a>
+      <a href="unit3.html" class="sidebar-link"><span class="link-icon">&#128373;</span>Unit 3 &#8212; Cryptanalysis</a>
+      <a href="unit4.html" class="sidebar-link"><span class="link-icon">&#128640;</span>Unit 4 &#8212; Advanced Trends</a>
+      <a href="unit5.html" class="sidebar-link"><span class="link-icon">&#128187;</span>Unit 5 &#8212; Practicals</a>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-section-label">Bookmarks</div><div id="bookmarks-list"></div></div>
+    <div class="sidebar-section"><div class="sidebar-section-label">My Notes</div><div id="notes-sidebar-list"></div></div>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-brand-mark"><div class="mark">A&#9889;</div><span>Arpit &middot; Crypto MiniBook 2026</span></div></div>
+</aside>
+<main id="main-content">
+<div class="content-inner">
+
+  <div class="chapter-hero">
+    <div class="chapter-num">&#128272; Unit 1</div>
+    <h1 class="chapter-title">Foundations of Cryptography</h1>
+    <p class="chapter-desc">From the mathematics of secrecy to modern encryption standards. Covers history, symmetric &amp; asymmetric cryptography, and cryptographic hash functions.</p>
+  </div>
+
+  <div class="toc-card">
+    <h3>&#128203; Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#s-prereq" class="toc-item"><span class="toc-num">1.0</span>Prerequisite Mathematics</a>
+      <a href="#s-history" class="toc-item"><span class="toc-num">1.1</span>History &amp; Principles (CIA Triad)</a>
+      <a href="#s-kerckhoffs" class="toc-item"><span class="toc-num">1.2</span>Kerckhoffs &amp; Shannon</a>
+      <a href="#s-classical" class="toc-item"><span class="toc-num">1.3</span>Classical Ciphers</a>
+      <a href="#s-otp" class="toc-item"><span class="toc-num">1.4</span>One-Time Pad &amp; Perfect Secrecy</a>
+      <a href="#s-feistel" class="toc-item"><span class="toc-num">1.5</span>Feistel Network</a>
+      <a href="#s-des" class="toc-item"><span class="toc-num">1.6</span>DES &amp; 3DES</a>
+      <a href="#s-modes" class="toc-item"><span class="toc-num">1.7</span>Block Cipher Modes</a>
+      <a href="#s-aes" class="toc-item"><span class="toc-num">1.8</span>AES In-Depth</a>
+      <a href="#s-rsa" class="toc-item"><span class="toc-num">1.9</span>RSA Cryptosystem</a>
+      <a href="#s-ecc" class="toc-item"><span class="toc-num">1.10</span>Elliptic Curve Cryptography</a>
+      <a href="#s-hash" class="toc-item"><span class="toc-num">1.11</span>Hash Functions &amp; HMAC</a>
+      <a href="#s-mcq" class="toc-item"><span class="toc-num">1.12</span>Practice MCQs (20 Q)</a>
+    </div>
+  </div>
+
+  <!-- ===================== 1.0 PREREQUISITE MATH ===================== -->
+  <section id="s-prereq" data-search-section="prerequisite mathematics xor modular arithmetic prime numbers binary">
+    <div class="section-heading">
+      <h2 class="prose">1.0 Prerequisite Mathematics
+        <button class="bookmark-btn" data-id="s-prereq" data-label="1.0 Prerequisite Math">&#128278;</button>
+      </h2>
+    </div>
+    <div class="prereq-box">
+      <div class="prereq-title">&#128218; Why This Section?</div>
+      <p class="prose">Cryptography is applied mathematics. Every algorithm in this unit is built on three mathematical ideas: binary operations, modular arithmetic, and number theory. This section gives you exactly what you need — no more, no less.</p>
+    </div>
+
+    <div class="mode-uni">
+      <h3 class="prose">XOR (Exclusive OR)</h3>
+      <p class="prose">XOR is the single most important operation in cryptography. It combines two bits according to one rule: <strong>same gives 0, different gives 1</strong>.</p>
+      <table class="data-table reveal">
+        <thead><tr><th>A</th><th>B</th><th>A XOR B</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <p class="prose"><strong>Key property:</strong> <span class="math-inline">A XOR K XOR K = A</span>. XOR with the same key twice restores the original. This is why XOR is used for both encryption AND decryption with the same key.</p>
+      <div class="worked-example">
+        <div class="we-title">Worked Example: XOR Encryption</div>
+        <p>Plaintext: <span class="math-inline">P = 1011 0101</span> &nbsp; Key: <span class="math-inline">K = 0110 1100</span></p>
+        <div class="cipher-grid">P = 1011 0101
+K = 0110 1100
+C = 1101 1001  (XOR, bit by bit)
+
+Decrypt: C XOR K = 1101 1001 XOR 0110 1100 = 1011 0101 = P &#10003;</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:24px">Modular Arithmetic</h3>
+      <p class="prose">Modular arithmetic is "clock arithmetic." <span class="math-inline">a mod n</span> gives the remainder when <em>a</em> is divided by <em>n</em>. The result is always between 0 and n-1.</p>
+      <div class="worked-example">
+        <div class="we-title">Examples</div>
+        <div class="cipher-grid">17 mod 5 = 2    (17 = 3&#215;5 + 2)
+25 mod 7 = 4    (25 = 3&#215;7 + 4)
+ 7 mod 7 = 0    (7 = 1&#215;7 + 0)
+-3 mod 5 = 2    (always positive: 5-3=2)</div>
+      </div>
+      <p class="prose"><strong>Modular addition:</strong> <span class="math-inline">(a + b) mod n</span> — used in Caesar cipher, Vigen&#232;re.</p>
+      <p class="prose"><strong>Modular exponentiation:</strong> <span class="math-inline">a<sup>b</sup> mod n</span> — the foundation of RSA and Diffie-Hellman. The key insight: it is easy to compute <span class="math-inline">g<sup>x</sup> mod p</span>, but extremely hard to reverse (find <em>x</em> given the result). This one-way difficulty is the Discrete Logarithm Problem.</p>
+
+      <h3 class="prose" style="margin-top:24px">Prime Numbers &amp; GCD</h3>
+      <p class="prose">A <strong>prime number</strong> is divisible only by 1 and itself (2, 3, 5, 7, 11, 13...). RSA security depends on the fact that multiplying two huge primes is easy, but factoring the product back into primes is computationally infeasible.</p>
+      <p class="prose"><strong>GCD (Greatest Common Divisor):</strong> <span class="math-inline">gcd(a, b)</span> is the largest number that divides both <em>a</em> and <em>b</em>. Two numbers are <strong>coprime</strong> if <span class="math-inline">gcd(a, b) = 1</span>. This is required for RSA key selection.</p>
+      <div class="worked-example">
+        <div class="we-title">Euler's Totient Function &#966;(n)</div>
+        <p>&#966;(n) counts how many integers from 1 to n are coprime with n.</p>
+        <div class="cipher-grid">&#966;(7)  = 6   (all of 1,2,3,4,5,6 — since 7 is prime)
+&#966;(p)  = p-1  (for any prime p)
+&#966;(pq) = (p-1)(q-1)  (for two distinct primes p, q)
+&#966;(15) = &#966;(3&#215;5) = 2&#215;4 = 8</div>
+        <p style="margin-top:8px">This formula is critical for RSA key generation.</p>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Extended Euclidean Algorithm</div>
+      <p class="prose">To find the modular inverse of <em>e</em> mod &#966;(n) (needed for RSA private key <em>d</em>), we use the Extended Euclidean Algorithm. It finds integers <em>x</em> and <em>y</em> such that <span class="math-inline">ax + by = gcd(a, b)</span>.</p>
+      <div class="worked-example">
+        <div class="we-title">Find d: inverse of e=17 mod &#966;(n)=3120</div>
+        <div class="cipher-grid">We need: 17d &#8801; 1 (mod 3120)
+Apply extended Euclidean:
+3120 = 183&#215;17 + 9
+  17 = 1&#215;9 + 8
+   9 = 1&#215;8 + 1
+Back-substitute: 1 = 9 - 1&#215;8
+                   = 9 - 1&#215;(17 - 9) = 2&#215;9 - 17
+                   = 2&#215;(3120 - 183&#215;17) - 17
+                   = 2&#215;3120 - 367&#215;17
+So d = -367 mod 3120 = 2753
+Verify: 17 &#215; 2753 = 46801 = 15&#215;3120 + 1 &#10003;</div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.1 HISTORY & PRINCIPLES ===================== -->
+  <section id="s-history" data-search-section="history cryptography CIA triad confidentiality integrity availability principles">
+    <div class="section-heading">
+      <h2 class="prose">1.1 History &amp; Principles of Cryptography
+        <button class="bookmark-btn" data-id="s-history" data-label="1.1 History & Principles">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose"><strong>Cryptography</strong> (Greek: <em>kryptos</em> = hidden, <em>graphein</em> = to write) is the science of securing communication so that only intended parties can read it. Its counterpart, <strong>Cryptanalysis</strong>, is the science of breaking cryptographic systems. Together they form <strong>Cryptology</strong>.</p>
+      <div class="def-box">
+        <div class="def-term">Core Terminology</div>
+        <p><strong>Plaintext (P):</strong> Original readable message.<br>
+        <strong>Ciphertext (C):</strong> Scrambled, unreadable output.<br>
+        <strong>Encryption:</strong> <span class="math-inline">C = E(K, P)</span><br>
+        <strong>Decryption:</strong> <span class="math-inline">P = D(K, C)</span><br>
+        <strong>Key (K):</strong> The secret parameter that controls encryption/decryption.</p>
+      </div>
+      <h3 class="prose">Timeline of Cryptography</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Era</th><th>Cipher / Development</th><th>Key Innovation</th></tr></thead>
+        <tbody>
+          <tr><td>~1900 BCE</td><td>Egyptian hieroglyphic substitution</td><td>First known secret writing</td></tr>
+          <tr><td>~400 BCE</td><td>Spartan Scytale</td><td>Transposition using a rod</td></tr>
+          <tr><td>~58 BCE</td><td>Caesar Cipher</td><td>Systematic substitution with a key</td></tr>
+          <tr><td>~900 CE</td><td>Al-Kindi's treatise</td><td>First description of frequency analysis</td></tr>
+          <tr><td>1467</td><td>Vigen&#232;re Cipher</td><td>Polyalphabetic — defeats frequency analysis</td></tr>
+          <tr><td>1917</td><td>Vernam One-Time Pad</td><td>Theoretically perfect secrecy</td></tr>
+          <tr><td>1940s</td><td>Enigma Machine (WW2)</td><td>Electromechanical polyalphabetic — broken by Turing</td></tr>
+          <tr><td>1949</td><td>Shannon's "Communication Theory of Secrecy Systems"</td><td>Mathematical foundation of modern crypto</td></tr>
+          <tr><td>1977</td><td>DES, RSA</td><td>First public standards; public-key revolution</td></tr>
+          <tr><td>2001</td><td>AES</td><td>Modern standard, replaces DES</td></tr>
+          <tr><td>2024</td><td>NIST PQC Standards (Kyber, Dilithium)</td><td>Post-quantum cryptography</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:24px">The CIA Triad — Core Security Goals</h3>
+      <p class="prose">Every cryptographic system is designed to protect one or more of these three properties:</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Property</th><th>Meaning</th><th>Threat</th><th>Crypto Solution</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Confidentiality</strong></td><td>Only authorized parties can read the data</td><td>Eavesdropping, sniffing</td><td>Encryption (AES, RSA)</td></tr>
+          <tr><td><strong>Integrity</strong></td><td>Data has not been altered in transit/storage</td><td>Tampering, bit-flipping</td><td>Hash functions, MACs, digital signatures</td></tr>
+          <tr><td><strong>Availability</strong></td><td>Data/systems are accessible when needed</td><td>DDoS, ransomware</td><td>Redundancy, backups (not purely crypto)</td></tr>
+        </tbody>
+      </table>
+      <p class="prose">Modern systems add two more goals: <strong>Authentication</strong> (proving who you are — achieved via digital certificates) and <strong>Non-repudiation</strong> (you cannot deny having sent a message — achieved via digital signatures).</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>ATM Example (Exam Favourite):</strong> PIN confidentiality = encryption. Transaction amount not altered = integrity. ATM always working = availability. Bank verifies your card = authentication. You cannot deny a withdrawal you made = non-repudiation.</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: The STRIDE Threat Model</div>
+      <p class="prose">Beyond CIA, the STRIDE framework categorizes threats that cryptography directly counters:</p>
+      <table class="data-table">
+        <thead><tr><th>STRIDE Letter</th><th>Threat</th><th>Cryptographic Countermeasure</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S</strong>poofing</td><td>Pretending to be someone else</td><td>Digital Certificates + Authentication</td></tr>
+          <tr><td><strong>T</strong>ampering</td><td>Modifying data in transit</td><td>HMAC, Digital Signatures</td></tr>
+          <tr><td><strong>R</strong>epudiation</td><td>Denying you did something</td><td>Digital Signatures (Non-repudiation)</td></tr>
+          <tr><td><strong>I</strong>nformation Disclosure</td><td>Unauthorized data access</td><td>Encryption (AES, TLS)</td></tr>
+          <tr><td><strong>D</strong>enial of Service</td><td>Making systems unavailable</td><td>Rate limiting, redundancy</td></tr>
+          <tr><td><strong>E</strong>levation of Privilege</td><td>Gaining unauthorized access</td><td>Access Control + PKI</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> State Kerckhoffs's Principle and explain why it matters for modern cryptography.<div class="recall-answer">Kerckhoffs's Principle: A cryptosystem must be secure even if everything about the system EXCEPT the key is public knowledge. This matters because: (1) algorithms eventually leak or are reverse-engineered; (2) security through obscurity creates single points of failure; (3) public algorithms undergo global scrutiny (AES was tested by thousands of cryptographers for 5 years before standardization).</div></div>
+    <div class="recall-question"><strong>Q2.</strong> What is Shannon's confusion-diffusion framework?<div class="recall-answer">Confusion: obscure the relationship between key and ciphertext (S-boxes in AES/DES achieve this via non-linear substitution). Diffusion: spread the influence of one plaintext bit across many ciphertext bits (ShiftRows + MixColumns in AES spread each byte across all 16 bytes over 2 rounds). Together they prevent statistical analysis of ciphertext from revealing key or plaintext patterns.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>Cryptography goals: Confidentiality, Integrity, Authentication, Non-repudiation (CIA + N)</li>
+    <li>Kerckhoffs's Principle: security depends only on key secrecy, NOT algorithm secrecy</li>
+    <li>Shannon's framework: Confusion (S-boxes) + Diffusion (permutations) → secure block ciphers</li>
+    <li>Historical milestone: Enigma broke by Turing/Bletchley because it relied on operational security, not mathematical hardness</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.2 KERCKHOFFS & SHANNON ===================== -->
+  <section id="s-kerckhoffs" data-search-section="kerckhoffs principle shannon maxim security obscurity confusion diffusion">
+    <div class="section-heading">
+      <h2 class="prose">1.2 Kerckhoffs&#39;s Principle &amp; Shannon&#39;s Design Laws
+        <button class="bookmark-btn" data-id="s-kerckhoffs" data-label="1.2 Kerckhoffs & Shannon">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Kerckhoffs&#39;s Principle (1883)</div>
+        <em>"A cryptographic system should be secure even if everything about the system, except the key, is public knowledge."</em>
+        <p style="margin-top:8px">Auguste Kerckhoffs stated 6 principles for military ciphers. The 2nd — now called Kerckhoffs&#39;s Principle — is the foundation of modern crypto design. AES, RSA, and all modern algorithms are <strong>completely public</strong>. Only the key is secret.</p>
+      </div>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Security through Obscurity = FAILURE.</strong> Proprietary/secret algorithms cannot be vetted by the public. They will be reverse-engineered. Once the algorithm is exposed, the entire system is broken forever — you cannot change it without replacing every device. Only ephemeral keys should be secret.</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Shannon&#39;s Two Design Properties</h3>
+      <p class="prose">Claude Shannon (1949) defined two properties that every secure cipher must have:</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Property</th><th>Definition</th><th>Goal</th><th>How it&#39;s achieved in AES</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Confusion</strong></td>
+            <td>Makes the relationship between key and ciphertext as complex as possible</td>
+            <td>Prevent deducing the key from ciphertext statistics</td>
+            <td>SubBytes (S-box substitution) — non-linear</td>
+          </tr>
+          <tr>
+            <td><strong>Diffusion</strong></td>
+            <td>Spreads the influence of each plaintext bit across many ciphertext bits (Avalanche Effect)</td>
+            <td>Destroy statistical patterns from plaintext</td>
+            <td>ShiftRows + MixColumns — linear permutation</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Avalanche Effect:</strong> In a well-designed cipher, flipping a single bit in the plaintext or key should change approximately 50% of the ciphertext bits. DES and AES both exhibit this. It makes mathematical pattern analysis useless.</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Perfect Secrecy (Shannon, 1949)</div>
+      <p class="prose">Shannon mathematically defined <strong>Perfect Secrecy</strong>: a cipher has perfect secrecy if the ciphertext gives <em>zero</em> information about the plaintext. Formally: <span class="math-inline">P(M | C) = P(M)</span> — knowing the ciphertext does not change the probability of any plaintext.</p>
+      <p class="prose">Shannon proved that perfect secrecy requires the key to be at least as long as the message and uniformly random — which is exactly the One-Time Pad. No computationally-bound cipher (like AES) achieves perfect secrecy; they achieve <em>computational</em> security — breaking them takes more resources than any attacker possesses.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.3 CLASSICAL CIPHERS ===================== -->
+  <section id="s-classical" data-search-section="classical ciphers caesar playfair vigenere transposition substitution frequency analysis">
+    <div class="section-heading">
+      <h2 class="prose">1.3 Classical Ciphers
+        <button class="bookmark-btn" data-id="s-classical" data-label="1.3 Classical Ciphers">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose">Classical ciphers are historically important and still appear in exams. They establish the two fundamental operations — <strong>substitution</strong> (replace letters) and <strong>transposition</strong> (rearrange letters) — that modern block ciphers use in every round.</p>
+
+      <h3 class="prose">Caesar Cipher (Shift Cipher)</h3>
+      <p class="prose">Each letter is shifted by a fixed number <em>k</em>. With 26 letters, the entire key space is only 25 — trivially brute-forced.</p>
+      <div class="formula-box">
+        <div class="formula-label">Caesar Cipher Formula</div>
+        Encryption: <span class="math-inline">C = (P + k) mod 26</span><br>
+        Decryption: <span class="math-inline">P = (C - k) mod 26</span>
+      </div>
+      <div class="worked-example">
+        <div class="we-title">Example: Encrypt "HELLO" with k=3</div>
+        <div class="cipher-grid">H(7) + 3 = K(10)
+E(4) + 3 = H(7)
+L(11)+ 3 = O(14)
+L(11)+ 3 = O(14)
+O(14)+ 3 = R(17)
+Result: KHOOR</div>
+      </div>
+      <p class="prose"><strong>Vulnerability:</strong> Only 25 possible keys. Also broken by <strong>frequency analysis</strong> — in English, E, T, A, O, I, N are most common. The most frequent letter in ciphertext likely maps to E.</p>
+
+      <h3 class="prose" style="margin-top:24px">Playfair Cipher (Polygram Substitution)</h3>
+      <p class="prose">Encrypts pairs of letters (digraphs) using a 5&#215;5 grid built from a keyword. Combines I/J into one cell. Beats simple frequency analysis since there are 26&#215;26 = 676 possible digraphs vs 26 single letters.</p>
+      <div class="worked-example">
+        <div class="we-title">Grid construction: keyword MONARCHY</div>
+        <div class="cipher-grid">Fill grid with keyword (no repeats), then remaining alphabet:
+M O N A R
+C H Y B D
+E F G I K
+L P Q S T
+U V W X Z</div>
+        <p style="margin-top:10px"><strong>Rules for each digraph (e.g., "HS"):</strong><br>
+        1. Same row: take letter immediately to the right (wrap).<br>
+        2. Same column: take letter immediately below (wrap).<br>
+        3. Rectangle: each letter takes the corner on its own row at the opposite column.<br><br>
+        H is at (row2, col2), S is at (row4, col4). They form a rectangle.<br>
+        H &#8594; same row, opposite col = (row2, col4) = <strong>B</strong><br>
+        S &#8594; same row, opposite col = (row4, col2) = <strong>P</strong><br>
+        "HS" encrypts to <strong>"BP"</strong>.</p>
+      </div>
+
+      <h3 class="prose" style="margin-top:24px">Vigen&#232;re Cipher (Polyalphabetic)</h3>
+      <p class="prose">Uses a repeating keyword — each letter of the keyword sets the shift for the corresponding plaintext letter. This smooths out letter frequencies, defeating simple frequency analysis.</p>
+      <div class="worked-example">
+        <div class="we-title">Keyword: KEY (k=10, e=4, y=24) &nbsp;|&nbsp; Plaintext: CRYPTOGRAPHY</div>
+        <div class="cipher-grid">Plain:  C(2)  R(17) Y(24) P(15) T(19) O(14) G(6)  R(17) A(0)  P(15) H(7)  Y(24)
+Key:    K(10) E(4)  Y(24) K(10) E(4)  Y(24) K(10) E(4)  Y(24) K(10) E(4)  Y(24)
+Cipher: M(12) V(21) W(22) Z(25) X(23) M(12) Q(16) V(21) Y(24) Z(25) L(11) W(22)
+Result: MVWZXMQVYZLW</div>
+      </div>
+
+      <div class="worked-example">
+        <div class="we-title">Vigen&egrave;re Decryption: Ciphertext MVWZXMQVYZLW | Key: KEY</div>
+        <div class="cipher-grid">Decryption formula: P = (C - K + 26) mod 26
+
+Cipher: M(12) V(21) W(22) Z(25) X(23) M(12) Q(16) V(21) Y(24) Z(25) L(11) W(22)
+Key:    K(10) E(4)  Y(24) K(10) E(4)  Y(24) K(10) E(4)  Y(24) K(10) E(4)  Y(24)
+Plain:  C(2)  R(17) Y(24) P(15) T(19) O(14) G(6)  R(17) A(0)  P(15) H(7)  Y(24)
+
+Step-by-step (tricky mod-26 wrap shown):
+W(22) - Y(24) = -2  &rarr; -2 + 26 = 24 = Y  &larr; must add 26 when result &lt; 0
+M(12) - Y(24) = -12 &rarr; -12 + 26 = 14 = O
+
+Result: CRYPTOGRAPHY &#10003;</div>
+      </div>
+      <p class="prose"><strong>Broken by:</strong> Kasiski test (find repeated sequences to guess key length) + index of coincidence. Once key length is known, it reduces to Caesar ciphers.</p>
+
+      <h3 class="prose" style="margin-top:24px">Transposition Ciphers</h3>
+      <p class="prose">Letters are <em>rearranged</em>, not replaced. Two common types:</p>
+      <div class="worked-example">
+        <div class="we-title">Rail Fence Cipher (depth=3)</div>
+        <div class="cipher-grid">Message: WEAREDISCOVEREDFLEEATONCE
+Rail 1 (top):    W . . . E . . . I . . . V . . . D . . . E . . . E
+Rail 2 (middle): . E . A . E . D . S . O . E . E . F . E . A . O . C .
+Rail 3 (bottom): . . R . . . C . . . O . . . R . . . L . . . T . . . N
+Read rows: WEIVEDEEAEDSOEEFEAOCRCORLT N
+Result: WEIVEDEEAEDSOEEFEAOCRCORLT N</div>
+      </div>
+      <div class="worked-example">
+        <div class="we-title">Columnar Transposition (Key: HACK = order 2-1-3-4)</div>
+        <div class="cipher-grid">Key:     H  A  C  K
+Order:   2  1  3  4
+Message: D  E  F  E
+         N  D  T  H
+         E  E  A  S
+         T  X  X  X  (padded)
+Read by column alphabetical order (A=col1, C=col2, H=col3, K=col4):
+A: EDEX  |  C: FTAX  |  H: DNET  |  K: EHSX
+Ciphertext: EDEX FTAX DNET EHSX</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Index of Coincidence</div>
+      <p class="prose">The <strong>Index of Coincidence (IC)</strong> measures how non-uniform a text&#39;s letter distribution is. English has IC &#8776; 0.065. Random text has IC &#8776; 0.038. By computing the IC of ciphertext at different offsets (e.g., every 3rd letter, every 4th), the key length is revealed when IC spikes toward 0.065 — because you&#39;ve aligned letters encrypted with the same shift, restoring English statistics.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: ADFGVX Cipher (WW1)</div>
+      <p class="prose">Used by the German Army in WW1. A two-step cipher: first a Polybius square substitution using only the letters A, D, F, G, V, X (chosen because they sound distinct in Morse code), then a columnar transposition. Broken by French cryptanalyst Georges Painvin in 1918. It represents the historical peak of manual cipher design — combining substitution AND transposition in a single system, a concept AES still uses today.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Why does frequency analysis break Caesar and simple substitution ciphers but NOT Vigenère?<div class="recall-answer">Caesar and substitution maintain letter frequency distribution — 'E' appears ~13% in English, so the most common ciphertext letter is 'E' encrypted. Vigenère uses a repeating keyword, applying different shifts to each position. This flattens frequency distribution across multiple alphabets — unless the key period k is found (Kasiski test), at which point individual Caesar ciphers are analyzed separately.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> The Vigenère cipher with a random, non-repeating key of the same length as the message becomes what?<div class="recall-answer">The One-Time Pad (OTP). When the key is truly random, never reused, and as long as the message, Vigenère provides perfect secrecy — proven by Shannon (1949). No amount of ciphertext analysis can reveal the plaintext without the key, because every possible plaintext of that length is equally likely given the ciphertext.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>Caesar cipher (shift by k): broken by frequency analysis in seconds — only 25 possible keys</li>
+    <li>Substitution cipher: 26! ≈ 4×10^26 keys but frequency analysis reduces to trivial puzzle</li>
+    <li>Vigenère (polyalphabetic): resists simple frequency analysis; broken by Kasiski test (find key period) + frequency analysis per column</li>
+    <li>OTP (Vigenère with random key = message length): provably unbreakable (Shannon, 1949)</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.4 ONE-TIME PAD ===================== -->
+  <section id="s-otp" data-search-section="one time pad perfect secrecy vernam XOR key reuse">
+    <div class="section-heading">
+      <h2 class="prose">1.4 One-Time Pad &amp; Perfect Secrecy
+        <button class="bookmark-btn" data-id="s-otp" data-label="1.4 One-Time Pad">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">One-Time Pad (Vernam Cipher, 1917)</div>
+        The only cipher mathematically proven to be <strong>unbreakable</strong>. Each bit of plaintext is XOR&#39;d with a corresponding bit of a truly random key. Proved perfectly secret by Shannon in 1949.
+      </div>
+      <div class="formula-box">
+        <div class="formula-label">OTP Formula</div>
+        Encryption: <span class="math-inline">C<sub>i</sub> = P<sub>i</sub> &#8853; K<sub>i</sub></span><br>
+        Decryption: <span class="math-inline">P<sub>i</sub> = C<sub>i</sub> &#8853; K<sub>i</sub></span>
+      </div>
+      <h3 class="prose">Four Strict Requirements (All must be met)</h3>
+      <ol class="prose">
+        <li>The key must be <strong>truly random</strong> (hardware random number generator, not pseudorandom).</li>
+        <li>The key must be <strong>at least as long as the plaintext</strong>.</li>
+        <li>The key must <strong>never be reused</strong> — not even a single bit overlap.</li>
+        <li>The key must be kept <strong>completely secret</strong>.</li>
+      </ol>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Key reuse destroys OTP security.</strong> If C1 = P1&#8853;K and C2 = P2&#8853;K, then C1&#8853;C2 = P1&#8853;P2. The key disappears, and the attacker has the XOR of two plaintexts — which can be broken using statistical methods (crib-dragging).</div>
+      </div>
+      <p class="prose"><strong>Why isn&#39;t OTP used everywhere?</strong> The <em>key distribution problem</em>. To securely send a 1 GB video, you need a 1 GB key shared beforehand through a separate secure channel — making the original secure channel redundant. It is used in practice for very short, high-security communications (e.g., nuclear command systems historically used OTP-based systems).</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.5 FEISTEL NETWORK ===================== -->
+  <section id="s-feistel" data-search-section="feistel network symmetric structure DES rounds subkeys encryption decryption">
+    <div class="section-heading">
+      <h2 class="prose">1.5 The Feistel Network Architecture
+        <button class="bookmark-btn" data-id="s-feistel" data-label="1.5 Feistel Network">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Feistel Network</div>
+        A symmetric block cipher structure designed by Horst Feistel at IBM in the 1970s. Forms the basis of DES, Blowfish, Twofish, and many others. Its key brilliance: <strong>encryption and decryption use the exact same algorithm</strong> — only the subkeys are applied in reverse order.
+      </div>
+      <h3 class="prose">How One Round Works</h3>
+      <ol class="prose">
+        <li>Split the 64-bit block into two 32-bit halves: <strong>Left (L)</strong> and <strong>Right (R)</strong>.</li>
+        <li>Pass Right half through a complex function <strong>f(R, K<sub>i</sub>)</strong> using the round&#39;s subkey.</li>
+        <li>XOR the output of f with the Left half.</li>
+        <li>Swap: the old Right becomes the new Left; the XOR result becomes the new Right.</li>
+      </ol>
+      <div class="formula-box">
+        <div class="formula-label">Feistel Round i Equations</div>
+        L<sub>i</sub> = R<sub>i-1</sub><br>
+        R<sub>i</sub> = L<sub>i-1</sub> &#8853; f(R<sub>i-1</sub>, K<sub>i</sub>)
+      </div>
+      <p class="prose"><strong>Decryption:</strong> Run the same structure but feed subkeys in reverse order (K<sub>16</sub>, K<sub>15</sub>, ..., K<sub>1</sub>). This symmetry means a single hardware implementation handles both encrypt and decrypt.</p>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Key Insight:</strong> The f-function does NOT need to be invertible! Even if f is a one-way function, the Feistel structure guarantees that decryption works perfectly. This is why S-boxes in DES can be highly non-linear (increasing security) without needing to be reversible.</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Non-Feistel Alternatives</div>
+      <table class="data-table">
+        <thead><tr><th>Structure</th><th>Used In</th><th>Key Difference</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Feistel Network</strong></td><td>DES, 3DES, Blowfish</td><td>Half-block processed per round; same circuit for enc/dec</td></tr>
+          <tr><td><strong>SPN (Substitution-Permutation Network)</strong></td><td>AES, PRESENT</td><td>Entire block processed; separate inverse operations needed for decryption</td></tr>
+          <tr><td><strong>Lai-Massey</strong></td><td>IDEA</td><td>Uses modular addition and multiplication instead of XOR</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Luby-Rackoff Theorem — Formal Feistel Security</div>
+      <p class="prose">The <strong>Luby-Rackoff theorem (1988)</strong> is the foundational security proof for Feistel networks. It proves: if f<sub>1</sub>, f<sub>2</sub>, f<sub>3</sub> are independent pseudorandom functions (PRFs), then a 3-round Feistel is a <strong>pseudorandom permutation (PRP)</strong> — indistinguishable from a truly random permutation under chosen-plaintext attack. Extending to 4 rounds yields a <strong>strong PRP</strong> — secure even under adaptive chosen-ciphertext attack (CCA2).</p>
+      <div class="formula-box">
+        <div class="formula-label">Security Bound (informal)</div>
+        Adv<sup>PRP</sup>(F<sub>3</sub>) &le; 2 &middot; Adv<sup>PRF</sup>(f) + q&sup2;/2<sup>n</sup><br>
+        <small>q = adversary queries, n = block size. The birthday term q&sup2;/2<sup>n</sup> forces n &ge; 128 bits for modern security — a key reason AES uses 128-bit blocks.</small>
+      </div>
+      <p class="prose">DES uses 16 rounds — far beyond the 4-round theoretical minimum — providing a large security margin. Patarin (2004) later strengthened the bound for 6-round Feistels to <em>beyond-birthday security</em>: O(2<sup>2n/3</sup>) queries instead of O(2<sup>n/2</sup>), used in wide-block constructions like BEAR/LION for full-disk encryption. The Luby-Rackoff framework also explains why reducing DES to 8 rounds makes it breakable with 2<sup>37</sup> chosen plaintexts: fewer rounds means the PRF security of each f-function doesn't compound sufficiently.</p>
+      <div class="callout tip"><span class="callout-icon">&#128300;</span><div><strong>Citation:</strong> Luby, M. &amp; Rackoff, C. (1988). "How to construct pseudorandom permutations from pseudorandom functions." <em>SIAM Journal on Computing, 17(2)</em>, 373–386. One of the most cited papers in provable cryptography.</div></div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.6 DES & 3DES ===================== -->
+  <section id="s-des" data-search-section="DES data encryption standard S-box subkey PC1 PC2 triple 3DES meet middle">
+    <div class="section-heading">
+      <h2 class="prose">1.6 Data Encryption Standard (DES) &amp; Triple-DES
+        <button class="bookmark-btn" data-id="s-des" data-label="1.6 DES & 3DES">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">DES (Data Encryption Standard)</div>
+        Adopted by NIST in 1977. IBM&#39;s Lucifer cipher, modified by the NSA. A <strong>16-round Feistel network</strong>. Block size: <strong>64 bits</strong>. Key input: 64 bits, but every 8th bit is a parity bit &#8594; effective key strength: <strong>56 bits</strong>.
+      </div>
+      <h3 class="prose">DES Key Schedule: Generating 16 Subkeys</h3>
+      <ol class="prose">
+        <li><strong>PC-1 (Permuted Choice 1):</strong> The 64-bit key is fed through PC-1, which drops all 8 parity bits, producing a 56-bit key. This 56-bit result is split into two 28-bit halves: C and D.</li>
+        <li><strong>Left Circular Shift:</strong> Each round, C and D are shifted left by 1 or 2 positions according to a fixed shift schedule: rounds 1,2,9,16 shift by 1; all others shift by 2.</li>
+        <li><strong>PC-2 (Permuted Choice 2):</strong> The shifted C+D (56 bits) passes through PC-2, which selects 48 bits to form the round subkey K<sub>i</sub>.</li>
+      </ol>
+
+      <h3 class="prose" style="margin-top:20px">The DES f-Function (4 Steps)</h3>
+      <ol class="prose">
+        <li><strong>Expansion (E-box):</strong> 32-bit R is expanded to 48 bits by duplicating 16 specific bits. Provides diffusion — each output bit depends on 2 input bits.</li>
+        <li><strong>Key Mixing:</strong> The 48-bit expanded R is XOR&#39;d with the 48-bit round subkey K<sub>i</sub>.</li>
+        <li><strong>Substitution (S-boxes):</strong> Split the 48 bits into eight 6-bit chunks. Each chunk passes through one of 8 different S-boxes (lookup tables), compressing 6 bits to 4 bits. This provides <strong>non-linear confusion</strong>.</li>
+        <li><strong>Permutation (P-box):</strong> The 32 output bits are rearranged by a fixed permutation. Provides diffusion — spreads S-box outputs across all positions for the next round.</li>
+      </ol>
+
+      <h3 class="prose" style="margin-top:20px">How DES S-Boxes Work</h3>
+      <p class="prose">An S-box takes a 6-bit input <span class="math-inline">b<sub>1</sub>b<sub>2</sub>b<sub>3</sub>b<sub>4</sub>b<sub>5</sub>b<sub>6</sub></span>. The outer bits b<sub>1</sub>b<sub>6</sub> select the <em>row</em>; the inner bits b<sub>2</sub>b<sub>3</sub>b<sub>4</sub>b<sub>5</sub> select the <em>column</em>.</p>
+      <div class="worked-example">
+        <div class="we-title">S-Box 1: Input = 011011</div>
+        <div class="cipher-grid">Outer bits: b1=0, b6=1 &#8594; Row = 01 binary = Row 1
+Inner bits: b2b3b4b5 = 1101 binary = Column 13
+Look up S-box 1, Row 1, Col 13 = 5
+4-bit output = 0101</div>
+        <p style="margin-top:8px;font-style:italic;color:var(--tx-muted)">The DES designers hardcoded specific S-box values in the 1970s to resist Differential Cryptanalysis — a technique the public did not discover until 1990!</p>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Weaknesses of DES</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Weakness</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>56-bit key too short</strong></td><td>2&#179;&#8322; possible keys. EFF&#39;s "Deep Crack" (1998, $250,000) brute-forced DES in 56 hours. Cloud computing today can do it in hours for pennies.</td></tr>
+          <tr><td><strong>Weak Keys (4)</strong></td><td>If all C or D bits are 0 or all 1s, every subkey is identical. E(K, E(K, M)) = M — encryption twice restores plaintext.</td></tr>
+          <tr><td><strong>Semi-Weak Keys (6 pairs)</strong></td><td>Key pairs where E(K1, M) = D(K2, M). Encrypting with one is the same as decrypting with the other.</td></tr>
+          <tr><td><strong>Small block size (64 bits)</strong></td><td>Birthday attack becomes practical after encrypting ~2&#178;&#178; blocks (~32 GB) with the same key — called the SWEET32 attack.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:20px">Triple DES (3DES) &amp; Meet-in-the-Middle Attack</h3>
+      <p class="prose"><strong>Why not Double DES?</strong> Naive double encryption <span class="math-inline">C = E(K2, E(K1, P))</span> seems to give 112-bit security. But the <strong>Meet-in-the-Middle (MitM) Attack</strong> reduces this to just 2&#8309;&#8311; operations:</p>
+      <div class="worked-example">
+        <div class="we-title">Meet-in-the-Middle Attack on Double DES</div>
+        <ol>
+          <li>With a known (P, C) pair, encrypt P with all 2&#8309;&#8310; possible K1 values. Store all 2&#8309;&#8310; intermediate results in a table.</li>
+          <li>Decrypt C with all 2&#8309;&#8310; possible K2 values.</li>
+          <li>Find a match. Complexity = 2&#8309;&#8310; + 2&#8309;&#8310; = 2&#8309;&#8311; — far less than 2&#185;&#185;&#178;.</li>
+        </ol>
+      </div>
+      <div class="formula-box">
+        <div class="formula-label">3DES Formula (EDE Mode)</div>
+        C = E(K3, D(K2, E(K1, P)))<br>
+        <small>If K1=K2=K3, falls back to single DES (backward compatibility). Effective security: 112 bits. Deprecated by NIST in 2017, disallowed after 2023.</small>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: DES Subkey Generation — Python Code</div>
+      <p class="prose">Your practical (from <code>des.py</code>) implements the full DES key schedule. Here is the annotated flow:</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — DES Subkey Generation (from your practical)</span><button class="code-copy">Copy</button></div>
+        <pre><code>SHIFT_SCHEDULE = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]  # shifts per round
+
+def generate_subkeys(key_hex):
+    key_bin = hex_to_bin(key_hex)   # Convert hex key to 64-bit binary
+    key_56  = permute(key_bin, PC1) # PC-1: drop 8 parity bits &#8594; 56 bits
+
+    C = key_56[0:28]  # Left 28 bits
+    D = key_56[28:56] # Right 28 bits
+
+    for i in range(16):  # 16 rounds
+        # Left circular shift by schedule amount
+        C = shift_left(C, SHIFT_SCHEDULE[i])
+        D = shift_left(D, SHIFT_SCHEDULE[i])
+        # PC-2: select 48 bits from 56 to form subkey
+        key_48 = permute(C + D, PC2)
+        subkeys.append(key_48)
+        print(f"Round {i+1}: {bin_to_hex(key_48)}")</code></pre>
+      </div>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Differential Cryptanalysis Against DES</div>
+      <p class="prose">Differential Cryptanalysis (DC), discovered publicly by Biham and Shamir (1990) but secretly known to the NSA in the 1970s, is a Chosen-Plaintext Attack. An attacker selects pairs of plaintexts with a specific XOR difference &#916;P and encrypts them. By analyzing how &#916;P propagates through S-boxes with known probabilities (the <em>differential</em>), the attacker can statistically recover round subkeys. Full DES requires 2&#8310;&#8311; chosen plaintexts for DC &#8212; 8-round DES requires only 2&#179;&#188; pairs.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: 2DES MITM Formal Complexity &amp; Hellman&#39;s Time-Memory Tradeoff</div>
+      <p class="prose">The Meet-in-the-Middle (MITM) attack proves that <em>key concatenation does not multiply security</em>. Given a known (P, C) pair, the attacker builds table T = {E(K<sub>1</sub>, P) &rarr; K<sub>1</sub>} for all 2<sup>56</sup> values of K<sub>1</sub>, then for each K<sub>2</sub>, checks if D(K<sub>2</sub>, C) &isin; T. Total complexity: O(2<sup>57</sup>) time, O(2<sup>56</sup>) space. A second (P', C') pair eliminates false matches with overwhelming probability.</p>
+      <div class="formula-box">
+        <div class="formula-label">Complexity Summary</div>
+        2DES Brute Force: O(2<sup>112</sup>) time, O(1) space<br>
+        2DES MITM: O(2<sup>57</sup>) time, O(2<sup>56</sup>) space<br>
+        Hellman TMTO: T &middot; M&sup2; = N&sup2; where N = 2<sup>56</sup>. Setting T = M = 2<sup>37</sup>: break DES with 37 GB storage.<br>
+        <small>3DES EDE resists MITM: its Encrypt-Decrypt-Encrypt structure prevents intermediate values from aligning.</small>
+      </div>
+      <p class="prose"><strong>Real-world impact:</strong> distributed.net cracked a DES key in 22 hours using distributed MITM in 1999. Hellman&#39;s tradeoff is the theoretical foundation for rainbow tables. The result directly justified NIST&#39;s requirement for 128-bit minimum key sizes in AES &mdash; ensuring MITM still requires O(2<sup>64</sup>) space, making precomputed attacks economically infeasible.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> DES has 56-bit keys yet 64-bit key blocks. Where do the extra 8 bits go?<div class="recall-answer">The extra 8 bits (1 per byte) are parity check bits — used for error detection in key transmission, not encryption. They carry no security. This is why DES has only 2^56 ≈ 72 quadrillion possible keys, not 2^64. In 1998, EFF's "Deep Crack" ASIC exhausted all 2^56 keys in 22 hours and 15 minutes for the DES Cracking Contest.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> 3DES applies DES three times with keys K1, K2, K3 as E(K1, D(K2, E(K3, P))). Why not just use E(K1, E(K2, E(K3, P)))?<div class="recall-answer">The EDE (Encrypt-Decrypt-Encrypt) structure ensures backward compatibility: if K1=K2=K3, 3DES reduces to single DES. This allowed organizations to upgrade hardware incrementally. Additionally, the meet-in-the-middle attack on 2DES (with 2 keys, K1≠K2) reduces security to 2^56 — the same as DES! 3DES with 3 independent keys provides only ~112-bit effective security (still vulnerable to meet-in-the-middle on two of the three keys).</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>DES: 56-bit key (64-bit block, 8 parity bits), 16 Feistel rounds, broken in 22 hours (1998)</li>
+    <li>3DES-EDE: 112-bit effective security (3 keys), NIST deprecated 2017, prohibited 2024</li>
+    <li>DES broken by: exhaustive key search (brute force) and differential/linear cryptanalysis</li>
+    <li>S-boxes in DES: designed by IBM/NSA to resist differential cryptanalysis (unknown publicly until 1990)</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.7 BLOCK CIPHER MODES ===================== -->
+  <section id="s-modes" data-search-section="block cipher modes ECB CBC CFB OFB CTR initialization vector IV padding">
+    <div class="section-heading">
+      <h2 class="prose">1.7 Block Cipher Modes of Operation
+        <button class="bookmark-btn" data-id="s-modes" data-label="1.7 Block Cipher Modes">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose">A block cipher (DES: 64 bits, AES: 128 bits) only encrypts a fixed-size chunk. Modes of operation define how to securely handle messages larger than one block. Choosing the wrong mode is a critical real-world vulnerability.</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Mode</th><th>Equation</th><th>Pros</th><th>Cons</th><th>Use Case</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>ECB</strong><br><small>Electronic Codebook</small></td>
+            <td><span class="math-inline">C<sub>i</sub> = E(K, P<sub>i</sub>)</span></td>
+            <td>Parallelizable</td>
+            <td>Identical plaintext blocks &#8594; identical ciphertext (the "ECB Penguin" flaw). Leaks structural patterns.</td>
+            <td>&#10060; Never for multi-block data</td>
+          </tr>
+          <tr>
+            <td><strong>CBC</strong><br><small>Cipher Block Chaining</small></td>
+            <td><span class="math-inline">C<sub>i</sub> = E(K, P<sub>i</sub> &#8853; C<sub>i-1</sub>)</span><br>C<sub>0</sub> = IV</td>
+            <td>Hides patterns. Standard.</td>
+            <td>Sequential (not parallelizable). 1-bit error corrupts 2 blocks. IV must be random and unpredictable.</td>
+            <td>File encryption, IPsec, older TLS</td>
+          </tr>
+          <tr>
+            <td><strong>CFB</strong><br><small>Cipher Feedback</small></td>
+            <td><span class="math-inline">C<sub>i</sub> = P<sub>i</sub> &#8853; E(K, C<sub>i-1</sub>)</span></td>
+            <td>Self-synchronizing stream cipher. No padding needed.</td>
+            <td>Sequential. Error propagates 2 blocks.</td>
+            <td>Real-time streaming data</td>
+          </tr>
+          <tr>
+            <td><strong>OFB</strong><br><small>Output Feedback</small></td>
+            <td>O<sub>i</sub> = E(K, O<sub>i-1</sub>)<br><span class="math-inline">C<sub>i</sub> = P<sub>i</sub> &#8853; O<sub>i</sub></span></td>
+            <td>Bit errors don&#39;t propagate — a flipped bit in C only flips the corresponding bit in P.</td>
+            <td>If keystream is reused (same IV), all security is lost.</td>
+            <td>Satellite/noisy channels</td>
+          </tr>
+          <tr>
+            <td><strong>CTR</strong><br><small>Counter</small></td>
+            <td><span class="math-inline">C<sub>i</sub> = P<sub>i</sub> &#8853; E(K, Nonce||Counter)</span></td>
+            <td>Fully parallelizable. Random read-access. No padding.</td>
+            <td>Nonce must never be reused with same key (catastrophic).</td>
+            <td>High-speed networking, disk encryption (AES-GCM uses CTR)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>ECB Penguin:</strong> When a Linux penguin logo was encrypted using ECB mode, the ciphertext still clearly showed the penguin shape. Identical image blocks (same color) produced identical ciphertext blocks, perfectly preserving the image structure. This is why ECB is cryptographically broken for real data.</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Authenticated Encryption (AEAD)</div>
+      <p class="prose">Traditional modes only provide <em>confidentiality</em>. An attacker can still flip bits in the ciphertext and cause the decrypted plaintext to change (bit-flipping attack). <strong>Authenticated Encryption with Associated Data (AEAD)</strong> provides both confidentiality AND integrity in a single operation. <strong>AES-GCM</strong> (Galois/Counter Mode) is the most widely used AEAD — it is mandatory in TLS 1.3. It produces both a ciphertext AND an authentication tag. If a single bit of the ciphertext is altered, the tag verification fails and the data is discarded.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: AES-GCM Forbidden Attack &mdash; Nonce Reuse is Catastrophic</div>
+      <p class="prose">AES-GCM uses GHASH, a polynomial hash over GF(2<sup>128</sup>), for authentication. The secret GHASH key H = E(K, 0<sup>128</sup>) is derived from the encryption key. When two messages are encrypted with the <strong>same (Key, Nonce) pair</strong>, both ciphertexts share identical keystream and the same H. An attacker observing two (C<sub>1</sub>, T<sub>1</sub>) and (C<sub>2</sub>, T<sub>2</sub>) can form: T<sub>1</sub> &oplus; T<sub>2</sub> = GHASH<sub>H</sub>(C<sub>1</sub>) &oplus; GHASH<sub>H</sub>(C<sub>2</sub>). This difference is a polynomial equation in H over GF(2<sup>128</sup>), solvable in O(1) field operations &mdash; directly recovering H.</p>
+      <div class="formula-box">
+        <div class="formula-label">Forbidden Attack Recovery Chain (Joux, 2006)</div>
+        Observe: (C&#8321;, T&#8321;) and (C&#8322;, T&#8322;) encrypted with same nonce<br>
+        Compute: T&#8321; &oplus; T&#8322; = GHASH<sub>H</sub>(L&#8321;, C&#8321;) &oplus; GHASH<sub>H</sub>(L&#8322;, C&#8322;)<br>
+        This is a degree-&le;t polynomial in H &rarr; find roots over GF(2<sup>128</sup>)<br>
+        Recovered H allows forging tag T* for any chosen ciphertext C*<br>
+        <small>If ciphertexts are also known, CTR keystream reuse additionally leaks P&#8321; &oplus; P&#8322; &rarr; full plaintext recovery.</small>
+      </div>
+      <p class="prose"><strong>Real incidents:</strong> Amazon Kindle firmware (2013), WPA2 KRACK (2017), and multiple TLS implementations have suffered nonce-reuse vulnerabilities. <strong>Fix:</strong> Use <strong>AES-GCM-SIV (RFC 8452)</strong> &mdash; a nonce-misuse resistant AEAD that derives H from both the key and nonce, limiting nonce-reuse damage to revealing identical plaintexts only. Or use ChaCha20-Poly1305 which has a larger 96-bit nonce space and less catastrophic nonce-reuse consequences.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.8 AES ===================== -->
+  <section id="s-aes" data-search-section="AES advanced encryption standard SubBytes ShiftRows MixColumns AddRoundKey Rijndael SPN">
+    <div class="section-heading">
+      <h2 class="prose">1.8 Advanced Encryption Standard (AES)
+        <button class="bookmark-btn" data-id="s-aes" data-label="1.8 AES">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">AES (Rijndael Algorithm)</div>
+        Standardized by NIST in 2001. Block size: exactly <strong>128 bits</strong>. Key sizes: <strong>128, 192, or 256 bits</strong>. It is a <strong>Substitution-Permutation Network (SPN)</strong>, NOT a Feistel network. AES processes the entire 128-bit block in each round (not half like DES).
+      </div>
+      <h3 class="prose">AES vs DES — Key Differences</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>DES</th><th>AES</th></tr></thead>
+        <tbody>
+          <tr><td>Structure</td><td>Feistel Network (half block/round)</td><td>SPN (full block/round)</td></tr>
+          <tr><td>Block Size</td><td>64 bits</td><td>128 bits</td></tr>
+          <tr><td>Key Size</td><td>56 bits</td><td>128, 192, or 256 bits</td></tr>
+          <tr><td>Rounds</td><td>16</td><td>10 (128-bit), 12 (192-bit), 14 (256-bit)</td></tr>
+          <tr><td>S-Boxes</td><td>8 different 6&#8594;4 bit S-boxes (48&#8594;32 bits)</td><td>1 universal 8&#8594;8 bit S-box (algebraically derived)</td></tr>
+          <tr><td>Status</td><td>Deprecated</td><td>Current global standard</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:20px">The AES State Matrix</h3>
+      <p class="prose">AES treats the 128-bit block as a <strong>4&#215;4 matrix of bytes</strong> (the "State"). With 16 bytes (128 bits), each cell holds one byte.</p>
+      <div class="cipher-grid">State (4x4 bytes):
+[ a00 a01 a02 a03 ]   (Row 0)
+[ a10 a11 a12 a13 ]   (Row 1)
+[ a20 a21 a22 a23 ]   (Row 2)
+[ a30 a31 a32 a33 ]   (Row 3)
+Loaded column-by-column from input bytes.</div>
+
+      <h3 class="prose" style="margin-top:20px">The 4 Transformations Per AES Round</h3>
+      <div class="def-box">
+        <div class="def-term">Step 1: SubBytes (Confusion)</div>
+        Every byte in the State is independently replaced using a single 16&#215;16 lookup table — the <strong>AES S-box</strong>. It is non-linear, providing confusion. The S-box is mathematically constructed from the multiplicative inverse in GF(2&#8312;) followed by an affine transformation — making it algebraically opaque.
+      </div>
+      <div class="def-box" style="margin-top:12px">
+        <div class="def-term">Step 2: ShiftRows (Diffusion)</div>
+        Each row of the State is cyclically shifted left by its row index:<br>
+        Row 0: shift 0 (unchanged)<br>
+        Row 1: shift 1 byte left<br>
+        Row 2: shift 2 bytes left<br>
+        Row 3: shift 3 bytes left<br>
+        This ensures bytes from each column get spread across all 4 columns, achieving diffusion.
+      </div>
+      <div class="def-box" style="margin-top:12px">
+        <div class="def-term">Step 3: MixColumns (Maximum Diffusion)</div>
+        Each column of the State is treated as a 4-element vector and multiplied by a fixed 4&#215;4 matrix over GF(2&#8312;). Every byte in a column affects every other byte. After MixColumns, each output byte depends on all 4 input bytes of that column. This achieves the <strong>avalanche effect</strong>. <em>MixColumns is skipped in the final round to make the inverse structure symmetrical.</em>
+      </div>
+      <div class="def-box" style="margin-top:12px">
+        <div class="def-term">Step 4: AddRoundKey</div>
+        A simple bitwise XOR of the State with the 128-bit round subkey. This is the only step that uses the key. Decryption reverses each step: InvSubBytes, InvShiftRows, InvMixColumns, AddRoundKey (same, since XOR is its own inverse).
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">AES Round Structure</h3>
+      <div class="cipher-grid">Initial Round: AddRoundKey (with original key)
+
+For each of Rounds 1 to N-1:
+  1. SubBytes
+  2. ShiftRows
+  3. MixColumns
+  4. AddRoundKey
+
+Final Round (no MixColumns):
+  1. SubBytes
+  2. ShiftRows
+  3. AddRoundKey</div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Galois Field GF(2&#8312;) &mdash; The Math Behind AES</div>
+      <p class="prose">AES operations work in the <strong>Galois Field GF(2&#8312;)</strong> &mdash; the finite field of 256 elements (bytes 0x00&ndash;0xFF). Two key rules differ from ordinary arithmetic: <strong>Addition = XOR</strong> (no carries), <strong>Multiplication = polynomial multiplication modulo an irreducible polynomial</strong>. The AES irreducible polynomial is p(x) = x&#8312; + x&#8308; + x&#179; + x + 1 (hex: 0x11B). When a multiplication result overflows 8 bits, XOR with 0x1B (the lower 8 bits of 0x11B) reduces it back to one byte.</p>
+      <div class="worked-example">
+        <div class="we-title">GF(2&#8312;) Multiplication: xtime(b) = 0x02 &times; b</div>
+        <div class="cipher-grid">xtime(b): shift b left by 1 bit; if MSB was 1, XOR with 0x1B
+
+Example 1: 0x02 &times; 0x53 (MSB of 0x53 = 0101 0011 is 0 &rarr; no reduction)
+  Shift left: 0101 0011 &rarr; 1010 0110 = 0xA6
+  Result: 0x02 &times; 0x53 = 0xA6
+
+Example 2: 0x02 &times; 0x80 (MSB of 0x80 = 1000 0000 is 1 &rarr; reduction needed)
+  Shift left: 1000 0000 &rarr; 0000 0000 (dropped carry)
+  XOR 0x1B: 0000 0000 XOR 0001 1011 = 0001 1011 = 0x1B
+  Result: 0x02 &times; 0x80 = 0x1B
+
+MixColumns uses these operations: the first row of the MixColumns matrix is
+[0x02, 0x03, 0x01, 0x01]. Output byte = 0x02&times;b0 XOR 0x03&times;b1 XOR b2 XOR b3
+(where 0x03&times;b = xtime(b) XOR b)
+
+This ensures every output byte depends on ALL 4 input bytes &rarr; avalanche effect.</div>
+      </div>
+      <p class="prose">Why no weak keys in AES? The S-box is built from x<sup>&minus;1</sup> in GF(2&#8312;) followed by an affine map. Since GF(2&#8312;) is a field, every non-zero element has a multiplicative inverse &mdash; the S-box maps each byte to a unique other byte with no fixed points. This algebraic construction is why AES S-boxes have optimal differential and linear cryptanalysis resistance.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: AES Key Schedule &amp; Related-Key Attacks</div>
+      <p class="prose">The AES key schedule expands the original key (e.g., 128 bits) into 11 round keys (for AES-128) using a combination of SubWord (S-box on a 4-byte word), RotWord (circular left rotation), and XOR with round constants (Rcon). While AES-128 has no known practical attacks, a <strong>related-key attack</strong> (Biryukov and Khovratovich, 2009) can break AES-256 in 2<sup>111</sup> operations &mdash; significantly faster than brute force but still computationally infeasible. This attack exploits weaknesses in the AES-256 key schedule when attackers can query an oracle under related keys. AES-128 and AES-192 remain secure against all known attacks.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: XSL Algebraic Attack Controversy &amp; AES S-box Compact Form</div>
+      <p class="prose">The AES S-box has an unusually compact algebraic representation: S(x) = A &middot; x<sup>&minus;1</sup> &oplus; c over GF(2<sup>8</sup>), where A is a fixed 8&times;8 binary matrix and c = 0x63. This algebraic regularity led Courtois and Pieprzyk (2002) to propose the <strong>XSL (eXtended Sparse Linearization) attack</strong>, claiming AES could be broken by solving a system of ~8,000 multivariate quadratic (MQ) equations in ~1,600 variables per block. The MQ problem is NP-hard in general, but AES produces a highly structured, sparse system that might be exploitable.</p>
+      <div class="formula-box">
+        <div class="formula-label">AES S-box Algebraic Identity</div>
+        S(x) = A &middot; x<sup>inv</sup> &oplus; c &nbsp;&nbsp; where x<sup>inv</sup> = x<sup>254</sup> in GF(2<sup>8</sup>)<br>
+        (Fermat: |GF(2<sup>8</sup>)| = 256, so x<sup>255</sup> = 1 &rArr; x<sup>&minus;1</sup> = x<sup>254</sup>)<br>
+        Biclique attack (2011): 2<sup>126.1</sup> ops for AES-128 &mdash; trivially better than 2<sup>128</sup> brute force<br>
+        <small>Conclusion: AES has no structural algebraic weakness found in practice. XSL complexity claims were later shown to be overoptimistic due to rank deficiencies in the linearization step.</small>
+      </div>
+      <p class="prose">The cryptographic consensus: <strong>AES has no known practical algebraic break</strong>. The XSL controversy actually strengthened confidence in AES by motivating exhaustive public cryptanalysis. The biclique attack (2011) provides the best known improvement &mdash; reducing AES-128 from 2<sup>128</sup> to 2<sup>126.1</sup> operations &mdash; a difference so small it has no practical security implication. AES-128 is expected to remain secure for the foreseeable future against classical adversaries.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> AES has 4 operations per round. State each and its cryptographic purpose (confusion/diffusion).<div class="recall-answer">SubBytes (Confusion): non-linear byte substitution via S-box — breaks algebraic relationships between key and ciphertext. ShiftRows (Diffusion): cyclically shift rows left — ensures bytes from different columns mix. MixColumns (Diffusion): multiply each column by a fixed matrix over GF(2^8) — each byte influences all 4 bytes in the column. AddRoundKey (Key mixing): XOR with round key — only step that uses the key directly. Final round omits MixColumns.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> AES-128 has 10 rounds, AES-192 has 12, AES-256 has 14. Why more rounds for larger keys?<div class="recall-answer">More key material requires more mixing rounds to achieve full diffusion. AES-256's 256-bit key is expanded into 15 round keys (14 rounds + initial key addition). Counterintuitively, AES-256 has a known related-key attack (Biryukov-Khovratovich 2009) reducing security to 2^119 — weaker than AES-128 against related-key attacks. In practice this is not exploitable (related-key attacks require impossible assumptions about key generation).</div></div>
+    <div class="recall-question"><strong>Q3.</strong> Why must AES-CBC have a random (not predictable) IV for each message?<div class="recall-answer">If the IV is predictable (like a counter), an attacker who can submit messages for encryption can test whether their guess matches the plaintext. If IV_n is known in advance, attacker submits P' = P_guess ⊕ IV_n ⊕ IV_old. If E(P' ⊕ IV_n) = E(P_guess ⊕ IV_old) = previously seen ciphertext, the guess is confirmed. This is exactly the BEAST attack on TLS 1.0.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>AES rounds: SubBytes (confusion/non-linear), ShiftRows (inter-column diffusion), MixColumns (intra-column diffusion), AddRoundKey</li>
+    <li>AES-128=10 rounds, AES-192=12, AES-256=14. State = 4×4 matrix of bytes (128 bits)</li>
+    <li>AES modes: ECB (broken, no IV), CBC (random IV required, padding oracle risk), CTR (stream mode, no padding), GCM (AEAD: encrypt+authenticate, preferred)</li>
+    <li>Best known attack on AES-128: biclique (~2^126.1) — essentially still brute force</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.9 RSA ===================== -->
+  <section id="s-rsa" data-search-section="RSA Rivest Shamir Adleman public private key encryption decryption prime factorization euler totient">
+    <div class="section-heading">
+      <h2 class="prose">1.9 RSA Cryptosystem (Asymmetric Encryption)
+        <button class="bookmark-btn" data-id="s-rsa" data-label="1.9 RSA">&#128278;</button>
+      </h2>
+    </div>
+    <div class="prereq-box">
+      <div class="prereq-title">&#128218; Prerequisites for This Section</div>
+      Modular arithmetic, prime numbers, Euler&#39;s Totient &#966;(n), and the Extended Euclidean Algorithm — all covered in Section 1.0.
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">RSA (Rivest-Shamir-Adleman, 1977)</div>
+        The first practical public-key cryptosystem. Security is based on the computational hardness of <strong>Integer Factorization</strong>: multiplying two 1024-bit primes takes microseconds, but finding those primes given only their product requires billions of years on classical computers.
+      </div>
+
+      <h3 class="prose">RSA Key Generation — Step by Step</h3>
+      <ol class="prose">
+        <li>Select two large primes <strong>p</strong> and <strong>q</strong> (in practice, each 1024–2048 bits).</li>
+        <li>Compute modulus: <strong>n = p &#215; q</strong>. (n is public; p and q are destroyed after keygen.)</li>
+        <li>Compute Euler&#39;s Totient: <strong>&#966;(n) = (p &#8722; 1)(q &#8722; 1)</strong>.</li>
+        <li>Choose public exponent <strong>e</strong> such that 1 &lt; e &lt; &#966;(n) and gcd(e, &#966;(n)) = 1. Common value: <strong>e = 65537</strong> (0x10001 — has only two 1-bits, making modular exponentiation fast).</li>
+        <li>Compute private exponent <strong>d</strong> as the modular multiplicative inverse of e: <span class="math-inline">d &#8801; e&#8315;&#185; (mod &#966;(n))</span>, i.e., <span class="math-inline">d&#215;e &#8801; 1 (mod &#966;(n))</span>. Compute using Extended Euclidean Algorithm.</li>
+      </ol>
+      <div class="formula-box">
+        <div class="formula-label">RSA Keys &amp; Operations</div>
+        Public Key: (e, n)<br>
+        Private Key: (d, n)<br><br>
+        Encryption: <span class="math-inline">C = M<sup>e</sup> mod n</span><br>
+        Decryption: <span class="math-inline">M = C<sup>d</sup> mod n</span>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Why Does Decryption Work? (Euler&#39;s Theorem Proof)</h3>
+      <p class="prose">By key generation: <span class="math-inline">e &#215; d = 1 + k&#966;(n)</span> for some integer k. Decrypting:</p>
+      <div class="worked-example">
+        <div class="we-title">Mathematical Proof of RSA Correctness</div>
+        <div class="cipher-grid">C&#8336; = (M&#7497;)&#8336; = M&#7491;&#7496; = M&#185;&#8314;&#8490;&#981;(n)
+     = M&#185; &#215; (M&#981;(n))&#8490;
+
+By Euler&#39;s Theorem: M&#981;(n) &#8801; 1 (mod n)
+
+Therefore: M&#185; &#215; 1&#8490; = M (mod n)  &#10003;</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Complete Worked Numerical Example</h3>
+      <div class="worked-example">
+        <div class="we-title">RSA with small primes (p=61, q=53)</div>
+        <div class="cipher-grid">1. n   = 61 &#215; 53 = 3233
+2. &#966;(n) = 60 &#215; 52 = 3120
+3. e   = 17  (gcd(17,3120) = 1 &#10003;)
+4. d   = 2753 (17 &#215; 2753 = 46801 = 15&#215;3120 + 1 &#10003;)
+
+Public Key: (17, 3233)   Private Key: (2753, 3233)
+
+Encrypt M=65:  C = 65&#185;&#8311; mod 3233 = 2790
+Decrypt C=2790: M = 2790&#178;&#8311;&#8309;&#179; mod 3233 = 65 &#10003;</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Exam Worked Example (small values)</h3>
+      <div class="worked-example">
+        <div class="we-title">p=3, q=11, e=7, M=5</div>
+        <div class="cipher-grid">n = 3&#215;11 = 33
+&#966;(n) = 2&#215;10 = 20
+e = 7, gcd(7,20)=1 &#10003;
+Find d: 7d &#8801; 1 (mod 20) &#8594; 7&#215;3=21, 21 mod 20=1 &#8594; d=3
+
+Encrypt: C = 5&#8311; mod 33
+  5&#178; = 25
+  5&#178; mod 33 = 25
+  5&#8308; = 25&#178; = 625, 625 mod 33 = 625-18&#215;33=625-594=31
+  5&#8311; = 5&#8308;&#215;5&#178;&#215;5&#185; = 31&#215;25&#215;5 mod 33
+       = 775&#215;5 mod 33 = 3875 mod 33 = 14
+C = 14
+
+Decrypt: M = 14&#179; mod 33 = 2744 mod 33 = 5 &#10003;</div>
+      </div>
+
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>RSA is for key exchange, NOT bulk encryption.</strong> RSA 2048-bit is ~100x slower than AES. In practice (e.g., TLS, PGP), RSA encrypts a randomly generated AES session key. The actual data is encrypted with AES. This hybrid approach gets the best of both worlds.</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: RSA Padding — PKCS#1 v1.5 vs OAEP</div>
+      <p class="prose">Textbook RSA (as described above) is <strong>deterministic and malleable</strong> — encrypting the same message always gives the same ciphertext, and an attacker can multiply ciphertexts to relate plaintexts. Real RSA always uses padding:</p>
+      <ul class="prose">
+        <li><strong>PKCS#1 v1.5:</strong> Pads with random bytes before encryption. Historically used in TLS. Vulnerable to the <strong>Bleichenbacher padding oracle attack</strong> (1998) — a Chosen-Ciphertext Attack that exploits error messages to decrypt RSA without the private key.</li>
+        <li><strong>OAEP (Optimal Asymmetric Encryption Padding):</strong> Uses two hash functions to make padding fully randomized and non-malleable. Provably secure against CCA2 attacks. Required in modern TLS.</li>
+      </ul>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: RSA &amp; Quantum Threat — Shor&#39;s Algorithm</div>
+      <p class="prose">Peter Shor (1994) designed a quantum algorithm that factors integers in polynomial time: <span class="math-inline">O((log n)&sup2; (log log n) (log log log n))</span>. On a classical computer, the best known factoring algorithm (General Number Field Sieve) runs in sub-exponential time. A quantum computer with enough qubits running Shor&#39;s can break RSA-2048 in hours. Current estimates: a cryptographically relevant quantum computer requires ~4000 logical qubits (millions of physical qubits due to error correction overhead). We are likely 10&ndash;15 years away &mdash; but the &ldquo;Harvest Now, Decrypt Later&rdquo; threat makes post-quantum migration urgent now.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Bellcore Attack — RSA-CRT Fault Injection</div>
+      <p class="prose">RSA decryption is commonly accelerated using the Chinese Remainder Theorem (CRT): compute M<sub>p</sub> = C<sup>d<sub>p</sub></sup> mod p and M<sub>q</sub> = C<sup>d<sub>q</sub></sup> mod q separately (where d<sub>p</sub> = d mod (p&minus;1), d<sub>q</sub> = d mod (q&minus;1)), then combine via Garner&#39;s formula. This gives a ~4&times; speedup. However, Boneh, DeMillo, and Lipton (1997) showed that <strong>a single fault during CRT computation completely breaks the private key</strong>.</p>
+      <div class="formula-box">
+        <div class="formula-label">Bellcore Attack: Key Recovery from One Faulty Signature</div>
+        Normal sig: &sigma; = C<sup>d</sup> mod n (both M<sub>p</sub> and M<sub>q</sub> correct)<br>
+        Faulty sig: &sigma;&#771; = CRT(M<sub>p</sub>, M&#771;<sub>q</sub>) where M<sub>q</sub> has a fault<br><br>
+        gcd(&sigma; &minus; &sigma;&#771;, n) = gcd(error &middot; q, p&middot;q) = q &larr; private prime recovered!<br>
+        <small>Once q is known: p = n/q, &phi;(n) = (p&minus;1)(q&minus;1), d = e<sup>&minus;1</sup> mod &phi;(n). Full private key in milliseconds.</small>
+      </div>
+      <p class="prose"><strong>Defenses:</strong> (1) <em>Verify before returning</em>: recompute &sigma;<sup>e</sup> mod n and check it equals C before returning the signature &mdash; a faulty output will fail this check. (2) <em>RSA blinding</em>: multiply the input by a random r<sup>e</sup>, decrypt, then divide by r. Fault injection now produces errors in random-looking data. (3) <em>Avoid RSA-CRT entirely</em>: use EdDSA (Ed25519) which has no CRT-equivalent vulnerability and is deterministic.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> RSA key generation: given primes p=61, q=53, compute n, λ(n), and a valid (e,d) pair.<div class="recall-answer">n = 61×53 = 3233. λ(n) = lcm(60, 52) = lcm(60,52) = 780. Choose e=17 (coprime to 780). d = 17^-1 mod 780 = 413 (verify: 17×413 = 7021 = 9×780 + 1 ✓). Encrypt M=65: C = 65^17 mod 3233 = 2790. Decrypt: 2790^413 mod 3233 = 65 ✓. Real RSA uses 2048-bit primes where n ≈ 2^4096.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> Why is RSA-PKCS#1 v1.5 vulnerable and what replaced it?<div class="recall-answer">PKCS#1 v1.5 padding for RSA encryption has a fixed structure (0x00 0x02 [random] 0x00 [message]). A padding oracle (server returning "valid/invalid" padding) enables Bleichenbacher's million-message attack — recovering plaintext with ~10^6 queries to the server. Replaced by OAEP (Optimal Asymmetric Encryption Padding) using random masks and hash functions — provably secure against CCA2 under the random oracle model.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>RSA: n=p×q, e coprime to λ(n), d=e^-1 mod λ(n). Encrypt: C=M^e mod n. Decrypt: M=C^d mod n</li>
+    <li>Security: Integer Factorization Problem (IFP). Best algorithm: General Number Field Sieve — sub-exponential</li>
+    <li>RSA-PKCS#1 v1.5 padding: vulnerable to Bleichenbacher CCA2 (~10^6 oracle queries). Use RSA-OAEP</li>
+    <li>RSA-2048 provides ~112-bit classical security. Broken by Shor's algorithm on quantum computers</li>
+    <li>Never encrypt with private key (that's signing). Never decrypt without OAEP padding.</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.10 ECC ===================== -->
+  <section id="s-ecc" data-search-section="ECC elliptic curve cryptography ECDH ECDSA discrete logarithm Weierstrass">
+    <div class="section-heading">
+      <h2 class="prose">1.10 Elliptic Curve Cryptography (ECC)
+        <button class="bookmark-btn" data-id="s-ecc" data-label="1.10 ECC">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">ECC — Elliptic Curve Cryptography</div>
+        Security based on the <strong>Elliptic Curve Discrete Logarithm Problem (ECDLP)</strong>: given a point G on a curve and the result point Q = kG (k multiplications of G), finding k is computationally infeasible. Provides same security as RSA with dramatically smaller keys.
+      </div>
+      <div class="formula-box">
+        <div class="formula-label">Weierstrass Equation (ECC over finite field F&#7529;)</div>
+        y&#178; &#8801; x&#179; + ax + b (mod p)<br>
+        <small>Condition: 4a&#179; + 27b&#178; &#8800; 0 (no singular points — ensures valid group structure)</small>
+      </div>
+
+      <h3 class="prose">ECC Key Size Advantage</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Security Level</th><th>RSA Key Size</th><th>ECC Key Size</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>80 bits</td><td>1024 bits</td><td>160 bits</td><td>1:6</td></tr>
+          <tr><td>112 bits</td><td>2048 bits</td><td>224 bits</td><td>1:9</td></tr>
+          <tr><td>128 bits</td><td>3072 bits</td><td>256 bits</td><td>1:12</td></tr>
+          <tr><td>256 bits</td><td>15360 bits</td><td>512 bits</td><td>1:30</td></tr>
+        </tbody>
+      </table>
+      <p class="prose">Smaller keys = faster computation + less power + less bandwidth. ECC is the standard for mobile devices, smart cards, TLS (ECDHE), Bitcoin (secp256k1), and SSH keys.</p>
+
+      <h3 class="prose" style="margin-top:20px">ECC Domain Parameters (The Six Values Every Curve Needs)</h3>
+      <p class="prose">Every ECC system is defined by six public domain parameters &mdash; all users of the same curve share these values:</p>
+      <table class="data-table reveal">
+        <thead><tr><th>Parameter</th><th>Meaning</th><th>Example (secp256k1 &mdash; Bitcoin)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>p</strong></td><td>Prime modulus of the finite field F<sub>p</sub></td><td>2<sup>256</sup> &minus; 2<sup>32</sup> &minus; 2<sup>9</sup> &minus; &hellip; &minus; 1 (256-bit prime)</td></tr>
+          <tr><td><strong>a, b</strong></td><td>Curve equation coefficients: y&sup2; = x&sup3; + ax + b</td><td>a = 0, b = 7 (so y&sup2; = x&sup3; + 7)</td></tr>
+          <tr><td><strong>G</strong></td><td>Generator point (base point) &mdash; all public keys are multiples of G</td><td>79BE667E&hellip; (a fixed 64-byte point on the curve)</td></tr>
+          <tr><td><strong>n</strong></td><td>Order of G &mdash; the number of points in the cyclic subgroup (n&times;G = point at infinity)</td><td>~1.158 &times; 10<sup>77</sup> (nearly as large as p)</td></tr>
+          <tr><td><strong>h</strong></td><td>Cofactor = |total curve points| / n. Safe curves require h = 1 or h = 4</td><td>h = 1 (secp256k1 is a prime-order curve)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip"><span class="callout-icon">&#128161;</span><div>Private key = random integer k in [1, n&minus;1]. Public key = k&times;G. Security: given G and k&times;G, finding k is the Elliptic Curve Discrete Logarithm Problem (ECDLP) &mdash; computationally infeasible for 256-bit curves.</div></div>
+
+      <h3 class="prose" style="margin-top:20px">ECDH — Elliptic Curve Diffie-Hellman</h3>
+      <p class="prose">This is how Alice and Bob agree on a shared secret using ECC (directly analogous to DH but over a curve):</p>
+      <div class="worked-example">
+        <div class="we-title">ECDH Protocol (from your practical ecc_step.py)</div>
+        <div class="cipher-grid">Setup: Both agree on curve parameters and generator point G.
+
+Alice: picks private key a, computes A = a&#215;G (point multiplication)
+Bob:   picks private key b, computes B = b&#215;G (point multiplication)
+
+Exchange: Alice sends A, Bob sends B (public — safe to share)
+
+Alice computes: S = a&#215;B = a&#215;(b&#215;G) = ab&#215;G
+Bob   computes: S = b&#215;A = b&#215;(a&#215;G) = ab&#215;G
+
+Both arrive at the same point S — the shared secret!
+Eve sees G, A, B but cannot find a or b (ECDLP hardness).</div>
+      </div>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: Named Curves Used in Practice</div>
+      <table class="data-table">
+        <thead><tr><th>Curve Name</th><th>Field Size</th><th>Used In</th></tr></thead>
+        <tbody>
+          <tr><td><strong>P-256 (secp256r1)</strong></td><td>256 bits</td><td>TLS, HTTPS, Android, iOS</td></tr>
+          <tr><td><strong>secp256k1</strong></td><td>256 bits</td><td>Bitcoin, Ethereum (not a NIST curve)</td></tr>
+          <tr><td><strong>Curve25519</strong></td><td>255 bits</td><td>Signal, WhatsApp, SSH, WireGuard VPN</td></tr>
+          <tr><td><strong>P-384</strong></td><td>384 bits</td><td>NSA Suite B, high-security government</td></tr>
+        </tbody>
+      </table>
+      <p class="prose"><strong>Why Curve25519?</strong> It was designed by Daniel Bernstein to be immune to side-channel attacks by construction — all operations run in constant time. NIST P-curves require careful implementation to prevent timing attacks.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: ECC Point Addition Mathematics</div>
+      <p class="prose">Point addition (P + Q = R) on an elliptic curve follows a geometric rule: draw the line through P and Q, find the third intersection with the curve, reflect it across the x-axis to get R. Algebraically, if P=(x&#8321;,y&#8321;) and Q=(x&#8322;,y&#8322;) with P&ne;Q:</p>
+      <div class="formula-box">
+        <div class="formula-label">Point Addition on y&sup2; = x&sup3; + ax + b</div>
+        &lambda; = (y&#8322; - y&#8321;)/(x&#8322; - x&#8321;) mod p<br>
+        x&#8323; = &lambda;&sup2; - x&#8321; - x&#8322; mod p<br>
+        y&#8323; = &lambda;(x&#8321; - x&#8323;) - y&#8321; mod p<br><br>
+        For point doubling (P + P = 2P): &lambda; = (3x&#8321;&sup2; + a)/(2y&#8321;) mod p
+      </div>
+      <p class="prose">Scalar multiplication (k&times;G) is computed using the <strong>double-and-add</strong> algorithm (analogous to square-and-multiply for modular exponentiation), taking O(log k) point operations &mdash; making it efficient even for k with 256 bits.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Montgomery Ladder &amp; Twist Security</div>
+      <p class="prose">The standard double-and-add algorithm branches on the bits of k: doubling every step, adding only when the current bit is 1. This data-dependent branching leaks k bit-by-bit via timing and power side-channels (Kocher, 1996). The <strong>Montgomery Ladder</strong> (Peter Montgomery, 1987) eliminates this by always performing <em>both</em> a doubling and an addition each step, selecting the result via a constant-time conditional swap.</p>
+      <div class="formula-box">
+        <div class="formula-label">Montgomery Ladder Algorithm</div>
+        R&#8320; &larr; &infin;, R&#8321; &larr; G<br>
+        For each bit b of k from MSB to LSB:<br>
+        &nbsp;&nbsp;(R&#8320;, R&#8321;) &larr; cswap(b, R&#8320;, R&#8321;)  &nbsp;&nbsp;&laquo; constant-time swap &raquo;<br>
+        &nbsp;&nbsp;R&#8321; &larr; R&#8320; + R&#8321;; &nbsp;R&#8320; &larr; 2R&#8320;<br>
+        &nbsp;&nbsp;(R&#8320;, R&#8321;) &larr; cswap(b, R&#8320;, R&#8321;)<br>
+        Result: R&#8320; = k&middot;G &nbsp; (same operation count regardless of k)
+      </div>
+      <p class="prose"><strong>Twist security:</strong> An attacker can send a point on the quadratic twist of the curve (a related curve of different group order) instead of a legitimate public key. Scalar multiplication on the twist may leak the private key via small-subgroup attacks if the implementation skips point validation. Curve25519 is specifically designed so its twist has a safe large cofactor, making twist attacks structurally impossible &mdash; NIST P-curves require explicit point validation that vulnerable implementations often skip.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.11 HASH FUNCTIONS ===================== -->
+  <section id="s-hash" data-search-section="hash functions SHA MD5 SHA256 collision preimage HMAC birthday attack digest">
+    <div class="section-heading">
+      <h2 class="prose">1.11 Cryptographic Hash Functions &amp; HMAC
+        <button class="bookmark-btn" data-id="s-hash" data-label="1.11 Hash Functions">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Cryptographic Hash Function</div>
+        A function H that maps an input of <strong>arbitrary length</strong> to a fixed-size output (the <em>digest</em> or <em>hash</em>). It is a <strong>one-way function</strong> — no keys, no decryption. H(M) is easy to compute; finding M from H(M) is computationally infeasible.
+      </div>
+
+      <h3 class="prose">Three Security Properties (All Required)</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Property</th><th>Definition</th><th>What&#39;s Broken If Violated</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Pre-image Resistance</strong><br>(One-Way)</td>
+            <td>Given H(M), it is infeasible to find M.</td>
+            <td>Password hashes: attacker recovers your password from the stored hash.</td>
+          </tr>
+          <tr>
+            <td><strong>Second Pre-image Resistance</strong><br>(Weak Collision Resistance)</td>
+            <td>Given M1, infeasible to find M2 &#8800; M1 where H(M1) = H(M2).</td>
+            <td>Document signing: attacker replaces a signed document with a malicious one that has the same hash.</td>
+          </tr>
+          <tr>
+            <td><strong>Collision Resistance</strong><br>(Strong Collision Resistance)</td>
+            <td>Infeasible to find ANY two distinct inputs M1, M2 where H(M1) = H(M2).</td>
+            <td>Certificate fraud: attacker creates two certificates with same hash but different contents (SHAttered attack on SHA-1, 2017).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:20px">Hash Algorithm Comparison</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Algorithm</th><th>Digest Size</th><th>Block Size</th><th>Rounds</th><th>Security</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>MD5</strong></td><td>128 bits</td><td>512 bits</td><td>64</td><td>Broken (collisions in seconds)</td><td>&#10060; Do not use for security</td></tr>
+          <tr><td><strong>SHA-1</strong></td><td>160 bits</td><td>512 bits</td><td>80</td><td>Broken (SHAttered 2017: first real collision)</td><td>&#10060; Deprecated everywhere</td></tr>
+          <tr><td><strong>SHA-224</strong></td><td>224 bits</td><td>512 bits</td><td>64</td><td>~112-bit security</td><td>&#9989; Acceptable</td></tr>
+          <tr><td><strong>SHA-256</strong></td><td>256 bits</td><td>512 bits</td><td>64</td><td>~128-bit security</td><td>&#9989; Current standard</td></tr>
+          <tr><td><strong>SHA-512</strong></td><td>512 bits</td><td>1024 bits</td><td>80</td><td>~256-bit security</td><td>&#9989; High security</td></tr>
+          <tr><td><strong>SHA-3</strong></td><td>224-512 bits</td><td>variable</td><td>24 (Keccak)</td><td>Different internal structure than SHA-2</td><td>&#9989; NIST standard, quantum-safer</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Birthday Attack:</strong> By the Birthday Paradox, finding a collision for an n-bit hash takes only ~2<sup>n/2</sup> operations, not 2<sup>n</sup>. This is why 128-bit hashes (MD5) offer only ~2<sup>64</sup> collision resistance — which modern GPUs can exhaust. Always use at least SHA-256 (2<sup>128</sup> collision resistance).</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">SHA-256 Internal Structure (Merkle-Damg&#229;rd Construction)</h3>
+      <p class="prose">SHA-256 uses the <strong>Merkle-Damg&#229;rd construction</strong>: the message is padded to a multiple of 512 bits, split into 512-bit blocks, and each block is processed sequentially through a <strong>compression function</strong>. The output of each compression feeds as input to the next. The final compression output is the hash digest.</p>
+      <div class="cipher-grid">Message &#8594; Padding &#8594; [Block 1] [Block 2] ... [Block N]
+                              &#8595;          &#8595;              &#8595;
+Initial Hash Value &#8594; Compress &#8594; Compress &#8594; ... &#8594; Final Digest (256 bits)
+
+Each block: 64 rounds of bit mixing using message schedule words,
+constants (first 32 bits of cube roots of first 64 primes),
+and 8 working variables (a,b,c,d,e,f,g,h).</div>
+
+      <h3 class="prose" style="margin-top:20px">HMAC (Hash-based Message Authentication Code)</h3>
+      <p class="prose">A plain hash provides <em>integrity</em> but NOT <em>authentication</em>. An attacker can modify a message AND recompute its hash. HMAC adds a shared secret key — only someone with the key can produce or verify the MAC.</p>
+      <div class="formula-box">
+        <div class="formula-label">HMAC Construction (RFC 2104)</div>
+        HMAC(K, M) = H( (K&#8242; &oplus; opad) &Vert; H( (K&#8242; &oplus; ipad) &Vert; M ) )<br><br>
+        ipad = 0x36 repeated to block size &nbsp;(XOR with K&#8242; &rarr; &ldquo;inner key&rdquo;)<br>
+        opad = 0x5C repeated to block size &nbsp;(XOR with K&#8242; &rarr; &ldquo;outer key&rdquo;)<br>
+        K&#8242; = K padded to block size (or hashed if |K| &gt; block size)<br><br>
+        <small>Why 0x36 and 0x5C? They differ in every bit position (0x36 XOR 0x5C = 0x6A = 0110 1010) &mdash; ensuring the inner and outer keys are maximally different, preventing related-key attacks between the two hash invocations.</small>
+      </div>
+      <div class="worked-example">
+        <div class="we-title">HMAC Step-by-Step (why double nesting blocks length extension)</div>
+        <div class="cipher-grid">Step 1 (Inner Hash): inner = SHA256( (K &oplus; ipad) &Vert; M )
+         &rarr; This produces a 256-bit value that mixes K into M's hash.
+
+Step 2 (Outer Hash): HMAC = SHA256( (K &oplus; opad) &Vert; inner )
+         &rarr; The outer hash treats the inner result as just 32 bytes of data.
+
+Why length extension fails against HMAC:
+  - Attacker knows HMAC(K,M) = SHA256(outer_key &Vert; inner)
+  - To extend, attacker needs to continue the SHA256 chain from state = HMAC(K,M)
+  - But that state IS the outer hash's final state, which hashes (outer_key &Vert; inner)
+  - Attacker doesn't know outer_key (needs K to compute it)
+  - Even knowing HMAC(K,M), they cannot forge HMAC(K, M&Vert;suffix) without K &#10003;</div>
+      </div>
+      <p class="prose">The nested two-level hashing specifically prevents <strong>length-extension attacks</strong>. HMAC's double nesting blocks this because the outer hash key is unknown to the attacker. HMAC-SHA256 is used universally: JWT token signing, TLS 1.2 PRF, API authentication (AWS Signature V4), and cookie integrity.</p>
+
+      <h3 class="prose" style="margin-top:20px">Practical Uses of Hash Functions</h3>
+      <table class="data-table">
+        <thead><tr><th>Use Case</th><th>How Hash is Used</th></tr></thead>
+        <tbody>
+          <tr><td>Password storage</td><td>Store Hash(salt + password). Never the password itself.</td></tr>
+          <tr><td>File integrity</td><td>Publish SHA-256 checksum; user verifies downloaded file.</td></tr>
+          <tr><td>Digital signatures</td><td>Sign Hash(document) — far faster than signing the whole document with RSA.</td></tr>
+          <tr><td>Blockchain</td><td>Each block contains Hash(previous block header) — creating an immutable chain.</td></tr>
+          <tr><td>TLS Handshake</td><td>Finished message = Hash of all handshake messages — proves neither party tampered.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: SHA-3 / Keccak — A Different Design</div>
+      <p class="prose">SHA-3 (Keccak) uses a <strong>sponge construction</strong> instead of Merkle-Damg&#229;rd. The message is &ldquo;absorbed&rdquo; into a large state (1600 bits), then the hash is &ldquo;squeezed&rdquo; out. The sponge construction is inherently resistant to length-extension attacks, produces variable-length outputs (SHA3-224 to SHA3-512), and is based on completely different mathematics than SHA-2 &mdash; important if SHA-2 is ever broken. This design diversity is why NIST standardized both SHA-2 and SHA-3.</p>
+    </div>
+
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Length Extension Attack, Keccak-f[1600] &amp; BLAKE3</div>
+      <p class="prose"><strong>Length Extension Attack (SHA-2 structural flaw):</strong> Merkle-Damg&#229;rd hash functions (SHA-256, SHA-512, MD5) expose their internal chaining state as the final output. Given H(M) for an <em>unknown</em> M, an attacker can compute H(M &Vert; pad &Vert; M') for any chosen M' &mdash; without knowing M &mdash; by initializing the SHA-256 state registers (a&ndash;h) with the known H(M) value and continuing to compress blocks. This directly breaks the naive MAC construction H(K &Vert; M): an attacker knowing H(K &Vert; M) can forge H(K &Vert; M &Vert; suffix). <strong>Not vulnerable:</strong> HMAC (outer hash prevents extension), SHA-3 (sponge absorbs then squeezes &mdash; no resumable chain), BLAKE3 (tree hashing with finalization flags).</p>
+      <div class="formula-box">
+        <div class="formula-label">Keccak-f[1600] Permutation &mdash; 5 Steps Per Round (24 rounds total)</div>
+        State: 5&times;5 matrix of 64-bit lanes = 1600 bits<br>
+        &theta; (Theta): x<sub>i,j</sub> &larr; x<sub>i,j</sub> &oplus; parity(col i&minus;1) &oplus; rot(parity(col i+1), 1)<br>
+        &rho; (Rho): rotate each lane by a fixed offset (provides bit-level diffusion)<br>
+        &pi; (Pi): rearrange lanes between positions (inter-lane diffusion)<br>
+        &chi; (Chi): x<sub>i</sub> &larr; x<sub>i</sub> &oplus; ((&not;x<sub>i+1</sub>) AND x<sub>i+2</sub>) &nbsp;&mdash;&nbsp; <em>only non-linear step</em><br>
+        &iota; (Iota): XOR lane (0,0) with round constant (breaks symmetry)<br>
+        <small>Full diffusion achieved in 2 rounds; 24 rounds provides 480&times; the minimum required margin.</small>
+      </div>
+      <p class="prose"><strong>BLAKE3</strong> (2020) combines a Feistel-inspired 7-round compression function (inherited from ChaCha20) with a <em>Merkle tree</em> structure, enabling: (1) arbitrary-length output (XOF mode, like SHA-3), (2) full CPU parallelism &mdash; each 1 KB chunk processed independently across cores, (3) built-in keyed MAC, PRF, KDF, and XOF modes without overhead. BLAKE3 is typically <strong>10&times;&ndash;20&times; faster than SHA-256</strong> on CPUs with AVX-512 SIMD, and is used in WireGuard VPN&#39;s handshake KDF and the Bao verified streaming content addressing protocol.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> What are the three security properties of a cryptographic hash function and how do their computational costs differ?<div class="recall-answer">Preimage resistance: given H(x), find any x' such that H(x')=H(x). Cost: O(2^n). Second-preimage resistance: given x, find x'≠x such that H(x)=H(x'). Cost: O(2^n). Collision resistance: find any pair (x,y) where x≠y and H(x)=H(y). Cost: O(2^(n/2)) — much cheaper! This birthday bound is why SHA-256 (256-bit) provides only 128-bit collision resistance.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> HMAC provides authentication — explain why H(key || message) alone is insecure (length extension attack).<div class="recall-answer">SHA-256 uses the Merkle-Damgård construction: the final hash state IS the internal state after processing all blocks. An attacker knowing H(key || message) can compute H(key || message || padding || extra_data) without knowing the key — by continuing the hash computation from the known final state. HMAC wraps the hash in two nested calls: H(K_outer || H(K_inner || message)), making the internal state inaccessible to length extension.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>Hash properties: Preimage resistance (O(2^n)), Second-preimage resistance (O(2^n)), Collision resistance (O(2^(n/2)))</li>
+    <li>MD5 (128-bit): collision-broken in seconds. SHA-1 (160-bit): broken (SHAttered 2017). SHA-256: secure</li>
+    <li>Length extension attack: H(key‖msg) is insecure. Use HMAC: H(K_outer ‖ H(K_inner ‖ msg))</li>
+    <li>Password storage: NEVER use raw SHA-256. Use bcrypt/scrypt/Argon2 (slow, memory-hard) + salt</li>
+    <li>Merkle-Damgård: SHA-256 processes 512-bit blocks iteratively. Final state = hash output</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- ===================== 1.12 MCQ ===================== -->
+  <section id="s-mcq" data-search-section="unit 1 MCQ practice questions exam">
+    <div class="section-heading">
+      <h2 class="prose">1.12 Practice MCQs — Unit 1 (20 Questions)
+        <button class="bookmark-btn" data-id="s-mcq" data-label="1.12 MCQs">&#128278;</button>
+      </h2>
+      <p class="prose" style="font-size:0.85rem;color:var(--tx-muted);margin-top:4px">Difficulty: &#127802; Easy &nbsp;|&nbsp; &#127841; Medium &nbsp;|&nbsp; &#128308; Hard &nbsp;|&nbsp; &#128128; Expert</p>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q1. Kerckhoffs&#39;s Principle states that a cipher&#39;s security should depend on:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq1"> (a) The secrecy of the encryption algorithm</label>
+        <label><input type="radio" name="mcq1"> (b) The secrecy of the key only</label>
+        <label><input type="radio" name="mcq1"> (c) Both the algorithm and the key</label>
+        <label><input type="radio" name="mcq1"> (d) The complexity of the algorithm</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) The secrecy of the key only.</strong> The algorithm should be public (reviewed by the community). Only the key is kept secret. This is why AES and RSA are completely published standards.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q2. Which property of a hash function guarantees that it is computationally infeasible to find any two distinct inputs that produce the same output?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq2"> (a) Pre-image resistance</label>
+        <label><input type="radio" name="mcq2"> (b) Second pre-image resistance</label>
+        <label><input type="radio" name="mcq2"> (c) Collision resistance</label>
+        <label><input type="radio" name="mcq2"> (d) Avalanche effect</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) Collision resistance.</strong> It covers ANY two distinct inputs, not just one specific input. Second pre-image resistance only covers finding a second input that collides with a given specific input.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q3. DES uses a 64-bit key input but has an effective key strength of only 56 bits. Why?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq3"> (a) 8 bits are used as round constants</label>
+        <label><input type="radio" name="mcq3"> (b) Every 8th bit is a parity check bit, stripped by PC-1</label>
+        <label><input type="radio" name="mcq3"> (c) The S-boxes consume 8 extra bits</label>
+        <label><input type="radio" name="mcq3"> (d) Key scheduling requires 8 initialization bits</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Every 8th bit (bits 8,16,24,32,40,48,56,64) is a parity check bit</strong> used for hardware error detection. PC-1 (Permuted Choice 1) in the key schedule strips these 8 bits, leaving 56 bits for cryptographic use.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q4. In RSA with p=5, q=11, e=3, what is the private key d?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq4"> (a) 7</label>
+        <label><input type="radio" name="mcq4"> (b) 27</label>
+        <label><input type="radio" name="mcq4"> (c) 3</label>
+        <label><input type="radio" name="mcq4"> (d) 13</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) 27.</strong> n=55, &#966;(n)=(5-1)(11-1)=40. Find d: 3d &#8801; 1 (mod 40). 3&#215;27=81=2&#215;40+1. So d=27. Verify: 3&#215;27 mod 40 = 81 mod 40 = 1 &#10003;</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q5. The Meet-in-the-Middle attack on Double DES reduces the effective security from 112 bits to approximately:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq5"> (a) 56 bits</label>
+        <label><input type="radio" name="mcq5"> (b) 57 bits</label>
+        <label><input type="radio" name="mcq5"> (c) 64 bits</label>
+        <label><input type="radio" name="mcq5"> (d) 84 bits</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) 57 bits.</strong> The attacker encrypts from one end (2&#8309;&#8310; operations) and decrypts from the other (2&#8309;&#8310; operations), then matches. Total: 2&#8309;&#8310; + 2&#8309;&#8310; = 2&#8309;&#8311; operations, far less than the 2&#185;&#185;&#178; naive expectation.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q6. Which block cipher mode of operation is vulnerable to the "ECB Penguin" problem?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq6"> (a) CBC</label>
+        <label><input type="radio" name="mcq6"> (b) OFB</label>
+        <label><input type="radio" name="mcq6"> (c) ECB</label>
+        <label><input type="radio" name="mcq6"> (d) CTR</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) ECB (Electronic Codebook).</strong> Identical plaintext blocks produce identical ciphertext blocks, revealing the structural patterns of the plaintext. When a Linux penguin image was encrypted with ECB, the ciphertext still clearly showed the penguin shape.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q7. ECC provides the same security level as RSA-3072 with a key size of approximately:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq7"> (a) 1024 bits</label>
+        <label><input type="radio" name="mcq7"> (b) 384 bits</label>
+        <label><input type="radio" name="mcq7"> (c) 256 bits</label>
+        <label><input type="radio" name="mcq7"> (d) 512 bits</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) 256 bits.</strong> RSA-3072 provides approximately 128-bit security. ECC-256 (P-256 curve) provides the same 128-bit security level. This dramatic difference explains why ECC is preferred for resource-constrained devices.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q8. The Vigen&#232;re cipher is broken by the Kasiski test, which exploits:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq8"> (a) The small key space of only 26 keys</label>
+        <label><input type="radio" name="mcq8"> (b) Repeated plaintext segments encrypted with the same key segment</label>
+        <label><input type="radio" name="mcq8"> (c) The deterministic nature of the cipher</label>
+        <label><input type="radio" name="mcq8"> (d) Collision in the XOR operation</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Repeated plaintext segments encrypted with the same key segment.</strong> When the same plaintext phrase happens to align with the same part of the repeating key, it produces repeated ciphertext. The distance between repetitions is a multiple of the key length, revealing the key length.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q9. Which step of AES provides the "Confusion" property?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq9"> (a) ShiftRows</label>
+        <label><input type="radio" name="mcq9"> (b) MixColumns</label>
+        <label><input type="radio" name="mcq9"> (c) AddRoundKey</label>
+        <label><input type="radio" name="mcq9"> (d) SubBytes</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(d) SubBytes.</strong> SubBytes applies a non-linear S-box substitution, making the relationship between the key and ciphertext complex and non-predictable — providing Confusion. ShiftRows and MixColumns provide Diffusion by spreading plaintext influence across the ciphertext.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q10. HMAC provides protection against length-extension attacks that affect H(Key || Message) because:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq10"> (a) It uses a longer key</label>
+        <label><input type="radio" name="mcq10"> (b) The outer hash re-hashes the inner hash output, breaking the Merkle-Damg&#229;rd extension chain</label>
+        <label><input type="radio" name="mcq10"> (c) It uses a different hash algorithm internally</label>
+        <label><input type="radio" name="mcq10"> (d) It pads the message with random bits</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) The outer hash re-hashes the inner hash output.</strong> An attacker who knows H(K||M) cannot extend it to H(K||M||extra) without the key, because the final HMAC value is the result of a second hash that the attacker cannot predict without knowing K.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q11. The One-Time Pad fails in practice primarily because:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq11"> (a) XOR is not strong enough encryption</label>
+        <label><input type="radio" name="mcq11"> (b) The key must be distributed securely and is as large as the message</label>
+        <label><input type="radio" name="mcq11"> (c) It can be broken with frequency analysis</label>
+        <label><input type="radio" name="mcq11"> (d) It requires too many computational resources</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) The key distribution problem.</strong> The key must be truly random, at least as long as the message, and transmitted securely. If you had a secure channel to share the key, you could just use that channel for the message directly. OTP is mathematically perfect but practically unusable for large data.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q12. Which block cipher mode allows parallel encryption and decryption of independent blocks without an IV chain dependency?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq12"> (a) CBC</label>
+        <label><input type="radio" name="mcq12"> (b) OFB</label>
+        <label><input type="radio" name="mcq12"> (c) CTR</label>
+        <label><input type="radio" name="mcq12"> (d) CFB</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) CTR (Counter Mode).</strong> Each block is encrypted independently using E(K, Nonce||Counter_i). Different counters mean different keystreams for each block, which can be computed in parallel. This is why CTR is used in AES-GCM for high-speed TLS.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q13. The DES S-box design provides which cryptographic property?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq13"> (a) Diffusion — spreading plaintext bits</label>
+        <label><input type="radio" name="mcq13"> (b) Confusion — non-linear substitution obscuring key-ciphertext relationship</label>
+        <label><input type="radio" name="mcq13"> (c) Authentication — verifying message origin</label>
+        <label><input type="radio" name="mcq13"> (d) Availability — ensuring service uptime</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Confusion.</strong> S-boxes are the only non-linear component in DES. They make it mathematically difficult to deduce the round key from the relationship between plaintext and ciphertext. The P-box (permutation) after S-boxes provides diffusion.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q14. AES-256 requires how many rounds?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq14"> (a) 10 rounds</label>
+        <label><input type="radio" name="mcq14"> (b) 12 rounds</label>
+        <label><input type="radio" name="mcq14"> (c) 14 rounds</label>
+        <label><input type="radio" name="mcq14"> (d) 16 rounds</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) 14 rounds.</strong> AES-128 uses 10 rounds, AES-192 uses 12 rounds, AES-256 uses 14 rounds. More rounds for larger keys because the key schedule generates more subkeys and the additional rounds increase security margin.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#127841; Medium</span>Q15. When two AES-GCM ciphertexts are encrypted with the same (Key, Nonce) pair, what can an attacker immediately recover?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq15"> (a) The AES round keys via the key schedule</label>
+        <label><input type="radio" name="mcq15"> (b) The GHASH authentication key H = E(K, 0<sup>128</sup>), enabling tag forgery</label>
+        <label><input type="radio" name="mcq15"> (c) The plaintext XOR of the two messages only if both are known</label>
+        <label><input type="radio" name="mcq15"> (d) The nonce value used in the CTR keystream</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) The GHASH authentication key H.</strong> Nonce reuse means both ciphertexts use the same CTR keystream AND the same H. The XOR of the two authentication tags T&#8321;&oplus;T&#8322; is a polynomial equation in H over GF(2<sup>128</sup>), immediately solvable. Once H is recovered, the attacker can forge valid tags for any future message &mdash; this is the Forbidden Attack (Joux, 2006).</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q16. According to the Luby-Rackoff theorem, what is the minimum number of Feistel rounds required to construct a <em>strong</em> pseudorandom permutation (secure against adaptive CCA)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq16"> (a) 2 rounds</label>
+        <label><input type="radio" name="mcq16"> (b) 3 rounds</label>
+        <label><input type="radio" name="mcq16"> (c) 4 rounds</label>
+        <label><input type="radio" name="mcq16"> (d) 8 rounds</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) 4 rounds.</strong> The Luby-Rackoff theorem proves: 3-round Feistel &rarr; PRP (secure under CPA only). 4-round Feistel &rarr; <em>strong</em> PRP (secure under adaptive CCA). DES uses 16 rounds &mdash; far above the minimum &mdash; for a large security margin. This is why the &ldquo;f-function&rdquo; (S-boxes + P-box) doesn&rsquo;t need to be invertible.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q17. In the Bellcore attack on RSA-CRT, an attacker obtains one faulty signature &sigma;&#771; and one correct signature &sigma;. What single operation recovers a private prime?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq17"> (a) &sigma; &oplus; &sigma;&#771; (XOR of signatures)</label>
+        <label><input type="radio" name="mcq17"> (b) gcd(&sigma; &minus; &sigma;&#771;, n)</label>
+        <label><input type="radio" name="mcq17"> (c) (&sigma; &times; &sigma;&#771;) mod n</label>
+        <label><input type="radio" name="mcq17"> (d) &sigma;<sup>e</sup> mod n &minus; &sigma;&#771;<sup>e</sup> mod n</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) gcd(&sigma; &minus; &sigma;&#771;, n).</strong> The faulty signature introduces an error only in the mod-q computation. The difference &sigma; &minus; &sigma;&#771; is divisible by q (but not p), so gcd(&sigma; &minus; &sigma;&#771;, p&middot;q) = q. Once q is known, p = n/q and the full private key d is trivially computed. This requires just ONE faulty output and ONE correct output &mdash; a devastating real-world threat to smart card RSA.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#127841; Medium</span>Q18. Which of the following hash constructions is <em>NOT</em> vulnerable to a length-extension attack?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq18"> (a) SHA-256(K &Vert; M) used as a MAC</label>
+        <label><input type="radio" name="mcq18"> (b) MD5(K &Vert; M) used as a MAC</label>
+        <label><input type="radio" name="mcq18"> (c) HMAC-SHA256(K, M)</label>
+        <label><input type="radio" name="mcq18"> (d) SHA-512(K &Vert; M) used as a MAC</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) HMAC-SHA256(K, M).</strong> HMAC&rsquo;s outer hash H(K&prime;&oplus;opad &Vert; inner_hash) wraps the inner result, so the attacker cannot continue the Merkle-Damg&aring;rd chain without knowing K. SHA-256(K&Vert;M), MD5(K&Vert;M), and SHA-512(K&Vert;M) all expose their internal state as the hash output, enabling extension without knowing K. SHA-3 is also inherently immune (sponge construction).</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128308; Hard</span>Q19. The Montgomery Ladder for ECC scalar multiplication was specifically designed to prevent which class of attack?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq19"> (a) Algebraic attacks exploiting the curve equation</label>
+        <label><input type="radio" name="mcq19"> (b) Timing and power side-channel attacks that exploit data-dependent branching</label>
+        <label><input type="radio" name="mcq19"> (c) Differential fault injection attacks on modular arithmetic</label>
+        <label><input type="radio" name="mcq19"> (d) Man-in-the-middle attacks on the key exchange protocol</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Timing and power side-channel attacks.</strong> Standard double-and-add processes bits of the scalar k differently (double always, add only when bit=1), leaking k via timing/power traces. The Montgomery Ladder always performs both a doubling and an addition per bit via a constant-time conditional swap (cswap), making the operation count &mdash; and thus the power trace &mdash; identical regardless of k&rsquo;s value. This is why Curve25519 mandates Montgomery ladder internally.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.75rem;margin-right:6px">&#128128; Expert</span>Q20. In the Keccak-f[1600] permutation (SHA-3 core), which is the <em>only</em> non-linear step, and what is its algebraic form?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="mcq20"> (a) &theta; (Theta): XOR with column parity</label>
+        <label><input type="radio" name="mcq20"> (b) &rho; (Rho): bitwise rotation of each lane</label>
+        <label><input type="radio" name="mcq20"> (c) &chi; (Chi): x<sub>i</sub> &larr; x<sub>i</sub> &oplus; ((&not;x<sub>i+1</sub>) AND x<sub>i+2</sub>)</label>
+        <label><input type="radio" name="mcq20"> (d) &iota; (Iota): XOR with round constants</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) &chi; (Chi).</strong> All other Keccak steps (&theta;, &rho;, &pi;, &iota;) are linear over GF(2). Only &chi; introduces non-linearity via the AND operation: x<sub>i</sub> &larr; x<sub>i</sub> &oplus; ((&not;x<sub>i+1</sub>) AND x<sub>i+2</sub>). This single non-linear step per round is sufficient when combined with 24 rounds and the other diffusion steps to provide full cryptographic strength. Compare with AES where SubBytes (the S-box) is the sole non-linear step.</div>
+    </div>
+
+</section>
+</div><!-- /.content-inner -->
+</main>
+
+<div id="mode-panel">
+  <button class="mode-btn active" data-mode="all">&#128218; All</button>
+  <button class="mode-btn uni-btn" data-mode="uni">&#127891; Uni</button>
+  <button class="mode-btn gate-btn" data-mode="gate">&#9889; Extra</button>
+  <button class="mode-btn adv-btn" data-mode="advanced">&#128300; Adv</button>
+</div>
+
+<div id="tts-panel">
+  <div class="tts-controls">
+    <button class="tts-btn" id="tts-play">&#9654;</button>
+    <button class="tts-btn" id="tts-stop">&#9209;</button>
+    <div class="tts-speed"><span>Speed</span><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><span id="tts-rate-label">1.0x</span></div>
+  </div>
+  <div class="tts-voice"><select id="tts-voice-select"><option>Loading voices...</option></select></div>
+</div>
+
+<div id="search-modal">
+  <div class="search-box">
+    <div class="search-input-wrap"><span class="s-icon">&#128269;</span><input id="search-input" type="text" placeholder="Search Unit 1 topics..." autocomplete="off"></div>
+    <div id="search-results"></div>
+    <div class="search-hint"><span><kbd>&#8629;</kbd> navigate</span><span><kbd>Esc</kbd> close</span><span><kbd>Ctrl+K</kbd> open</span></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../assets/js/state.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/modes.js"></script>
+<script src="../assets/js/tts.js"></script>
+<script src="../assets/js/print.js"></script>
+<script src="../assets/js/notes.js"></script>
+<script src="../assets/js/glossary.js"></script>
+</body>
+</html>

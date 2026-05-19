@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Arpit">
+  <title>Unit 4 — Advanced Cryptography & Emerging Trends | Crypto MiniBook</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/chapter.css">
+  <link rel="stylesheet" href="../assets/css/timer.css">
+  
+</head>
+<body>
+<div id="progress-bar"></div>
+<header id="main-header">
+  <div class="header-left">
+    <button id="sidebar-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-icon">A&#9889;</div>
+      <div class="brand-text"><span class="main">Crypto MiniBook</span><span class="sub">Unit 4: Advanced</span></div>
+    </div>
+  </div>
+  <span class="header-chapter-title"></span>
+  <div class="header-right">
+    <button id="search-btn" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button id="tts-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg></button>
+    <button id="print-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span class="print-label">PDF</span></button>
+    <button id="reading-mode-btn" class="icon-btn" aria-pressed="false">&#128214;</button>
+    <button id="theme-toggle" class="icon-btn"></button>
+  </div>
+</header>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="../index.html" class="sidebar-link">&#127968; Home</a>
+      <a href="../progress.html" class="sidebar-link">&#128202; Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Chapters</div>
+      <a href="unit1.html" class="sidebar-link">&#128272; Unit 1 &mdash; Foundations</a>
+      <a href="unit2.html" class="sidebar-link">&#128220; Unit 2 &mdash; Protocols</a>
+      <a href="unit3.html" class="sidebar-link">&#128373; Unit 3 &mdash; Cryptanalysis</a>
+      <a href="unit4.html" class="sidebar-link active">&#128640; Unit 4 &mdash; Advanced</a>
+      <a href="unit5.html" class="sidebar-link">&#128187; Unit 5 &mdash; Practicals</a>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-section-label">Bookmarks</div><div id="bookmarks-list"></div></div>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-brand-mark"><div class="mark">A&#9889;</div><span>Arpit &middot; Crypto MiniBook 2026</span></div></div>
+</aside>
+<main id="main-content">
+<div class="content-inner">
+
+  <div class="chapter-hero">
+    <div class="chapter-num">&#128640; Unit 4</div>
+    <h1 class="chapter-title">Advanced Cryptography &amp; Emerging Trends</h1>
+    <p class="chapter-desc">Quantum cryptography, homomorphic encryption, blockchain, post-quantum standards, and cutting-edge research including DNA cryptography and zero-knowledge proofs.</p>
+  </div>
+
+  <div class="toc-card">
+    <h3>&#128203; Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#s-quantum-threat" class="toc-item"><span class="toc-num">4.1</span>The Quantum Threat</a>
+      <a href="#s-qkd" class="toc-item"><span class="toc-num">4.2</span>Quantum Key Distribution (QKD)</a>
+      <a href="#s-pqc" class="toc-item"><span class="toc-num">4.3</span>Post-Quantum Cryptography (NIST PQC)</a>
+      <a href="#s-fhe" class="toc-item"><span class="toc-num">4.4</span>Homomorphic Encryption</a>
+      <a href="#s-blockchain" class="toc-item"><span class="toc-num">4.5</span>Blockchain &amp; Cryptocurrency</a>
+      <a href="#s-zkp" class="toc-item"><span class="toc-num">4.6</span>Zero-Knowledge Proofs</a>
+      <a href="#s-dna" class="toc-item"><span class="toc-num">4.7</span>DNA Cryptography (Advanced)</a>
+      <a href="#s-future" class="toc-item"><span class="toc-num">4.8</span>Future Trends</a>
+      <a href="#s-mcq4" class="toc-item"><span class="toc-num">4.9</span>Practice MCQs (17 Q)</a>
+    </div>
+  </div>
+
+  <!-- 4.1 QUANTUM THREAT -->
+  <section id="s-quantum-threat" data-search-section="quantum computing Shor Grover RSA threat post-quantum qubits">
+    <div class="section-heading">
+      <h2 class="prose">4.1 The Quantum Threat to Classical Cryptography
+        <button class="bookmark-btn" data-id="s-quantum-threat" data-label="4.1 Quantum Threat">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose">Classical computers work in binary (bits: 0 or 1). Quantum computers use <strong>qubits</strong> that can be in superposition (0 AND 1 simultaneously) and can be <strong>entangled</strong> (correlated at a distance). This allows quantum algorithms to explore exponentially many possibilities simultaneously.</p>
+      <h3 class="prose">Two Critical Quantum Algorithms</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Algorithm</th><th>What It Breaks</th><th>Speedup</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Shor&apos;s Algorithm (1994)</strong></td>
+            <td>Integer Factorization &amp; Discrete Logarithm</td>
+            <td>Exponential &#8594; Polynomial time: O((log n)&#179;)</td>
+            <td>Breaks RSA, DH, ECC, DSA, ECDSA completely. ALL public-key crypto falls.</td>
+          </tr>
+          <tr>
+            <td><strong>Grover&apos;s Algorithm (1996)</strong></td>
+            <td>Unstructured Search (symmetric crypto, hashes)</td>
+            <td>O(2&#8319;) &#8594; O(2&#8319;&#8260;&#178;) &mdash; square root speedup</td>
+            <td>Halves effective key strength. AES-128 &#8594; 64-bit security. Fix: double key size. AES-256 remains safe.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>&ldquo;Harvest Now, Decrypt Later&rdquo; (HNDL):</strong> Nation-state adversaries are recording encrypted internet traffic today and storing it. When cryptographically-relevant quantum computers arrive (estimated 10&ndash;15 years), they will retroactively decrypt all stored traffic. Data with long secrecy requirements (medical, military, intelligence) is already at risk TODAY. This is why NIST standardized post-quantum algorithms in 2024.</div>
+      </div>
+      <table class="data-table reveal" style="margin-top:16px">
+        <thead><tr><th>Algorithm</th><th>Secure Against Classical?</th><th>Secure Against Quantum?</th><th>Recommendation</th></tr></thead>
+        <tbody>
+          <tr><td>AES-128</td><td>&#9989;</td><td>&#128993; (64-bit equiv. via Grover)</td><td>Upgrade to AES-256</td></tr>
+          <tr><td>AES-256</td><td>&#9989;</td><td>&#9989; (128-bit equiv. via Grover)</td><td>Keep using</td></tr>
+          <tr><td>SHA-256</td><td>&#9989;</td><td>&#128993; (128-bit collision resistance)</td><td>Acceptable; SHA-384/512 preferred</td></tr>
+          <tr><td>RSA-2048</td><td>&#9989;</td><td>&#10060; (Shor breaks it)</td><td>Migrate to PQC (ML-KEM)</td></tr>
+          <tr><td>ECC P-256</td><td>&#9989;</td><td>&#10060; (Shor breaks it)</td><td>Migrate to PQC (ML-DSA)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: How Many Qubits to Break RSA-2048?</div>
+      <p class="prose">Breaking RSA-2048 with Shor&apos;s algorithm requires approximately <strong>4,000 logical qubits</strong>. However, due to quantum error rates, each logical qubit requires ~1,000&ndash;10,000 physical qubits for error correction. Current state-of-the-art (2025): IBM has ~1,000-qubit chips; Google demonstrated 105-qubit quantum supremacy on a specific task. A cryptographically-relevant quantum computer requires millions of physical qubits &mdash; still years away. But the &ldquo;harvest now&rdquo; threat makes migration urgent.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.2 QKD -->
+  <section id="s-qkd" data-search-section="quantum key distribution BB84 E91 photon polarization no-cloning uncertainty principle">
+    <div class="section-heading">
+      <h2 class="prose">4.2 Quantum Key Distribution (QKD)
+        <button class="bookmark-btn" data-id="s-qkd" data-label="4.2 QKD">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">QKD &mdash; Quantum Key Distribution</div>
+        Uses principles of quantum mechanics to distribute cryptographic keys. Any eavesdropping is physically detectable. Security is based on physics, not mathematical hardness &mdash; it is <strong>unconditionally secure</strong> (even against quantum computers).
+      </div>
+      <h3 class="prose">Two Foundational Quantum Principles</h3>
+      <ul class="prose">
+        <li><strong>No-Cloning Theorem:</strong> It is impossible to create an exact copy of an unknown quantum state. Eve cannot intercept and re-send a photon without introducing detectable errors.</li>
+        <li><strong>Heisenberg Uncertainty Principle:</strong> Measuring a quantum state necessarily disturbs it. If Eve measures photons to spy, she irreversibly changes their polarization.</li>
+      </ul>
+      <h3 class="prose" style="margin-top:20px">BB84 Protocol (Bennett &amp; Brassard, 1984)</h3>
+      <p class="prose">The first and most widely implemented QKD protocol. Uses single polarized photons over a fiber optic channel.</p>
+      <div class="worked-example">
+        <div class="we-title">BB84 Step-by-Step</div>
+        <div class="cipher-grid">Bases: + (Rectilinear: 0&deg;=0, 90&deg;=1) or × (Diagonal: 45&deg;=0, 135&deg;=1)
+
+Step 1 - Alice transmits:
+  Bit:   0  1  1  0  1  0  0  1
+  Basis: +  ×  +  ×  +  +  ×  ×
+
+Step 2 - Bob measures (randomly choosing basis):
+  Basis: +  +  +  ×  ×  +  +  ×
+  Result:0  ?  1  0  ?  0  ?  1  (? = random when wrong basis)
+
+Step 3 - Sifting (over public channel):
+  Bob announces which bases he used (NOT results)
+  Alice says which bases were CORRECT (positions 1,3,4,6,8)
+  Both keep only those bits: Raw Key = 0,1,0,0,1
+
+Step 4 - Error Check:
+  Compare a SUBSET of raw key bits publicly.
+  If error rate &gt; 11%: Eve is present, ABORT.
+  If low: use privacy amplification to get final secure key.</div>
+      </div>
+      <h3 class="prose" style="margin-top:20px">E91 Protocol (Ekert, 1991)</h3>
+      <p class="prose">Uses <strong>quantum entanglement</strong> instead of single photons. A central source emits entangled photon pairs &mdash; one to Alice, one to Bob. When both measure in the same basis, results are perfectly anti-correlated. Eavesdropping violates <strong>Bell&apos;s inequality</strong>, which Alice and Bob can detect statistically. More secure (detects all intercept-resend strategies) but harder to implement than BB84.</p>
+      <h3 class="prose" style="margin-top:20px">QKD Limitations</h3>
+      <table class="data-table">
+        <thead><tr><th>Limitation</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Distance</strong></td><td>Photons are lost in fiber. Practical limit ~100&ndash;200 km without quantum repeaters (still experimental).</td></tr>
+          <tr><td><strong>Speed</strong></td><td>Key generation rate is slow &mdash; kilobits per second, not megabits.</td></tr>
+          <tr><td><strong>Cost</strong></td><td>Requires specialized hardware (single-photon sources, detectors). Expensive to deploy.</td></tr>
+          <tr><td><strong>Implementation attacks</strong></td><td>The QKD math is perfect; the hardware isn&apos;t. Detector blinding attacks exploit non-ideal single-photon detectors.</td></tr>
+          <tr><td><strong>Authentication still needed</strong></td><td>QKD distributes keys but still needs an authenticated classical channel for the sifting step &mdash; which still requires PKI or a pre-shared key.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Measurement-Device-Independent QKD (MDI-QKD)</div>
+      <p class="prose">Standard QKD is vulnerable to detector side-channel attacks (e.g., Eve blinds Alice&apos;s detector with a bright laser, then controls it). <strong>MDI-QKD</strong> (Lo, Curty, Qi, 2012) removes all detector side-channels by having both Alice and Bob send photons to an untrusted middle node (Charlie) that performs a Bell-state measurement. Charlie announces results publicly. Alice and Bob correlate their key bits based on Charlie&apos;s announcement &mdash; but Charlie learns nothing about the key. This makes QKD secure against all detector attacks, even if Charlie is completely compromised. Commercial MDI-QKD systems now exist (QuantumCTek, Toshiba).</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> In BB84, bases mismatch ~50% of the time. These bits are discarded. What is this step called?<div class="recall-answer">Sifting (or basis reconciliation). Alice and Bob compare their chosen bases over a public (authenticated but not secret) channel. Bits where they chose different bases are discarded — only matching-basis bits form the sifted key. This keeps ~50% of transmitted bits.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> Why can't a quantum eavesdropper copy photons to measure them later without disturbing the channel?<div class="recall-answer">The No-Cloning Theorem: it is impossible to create an identical copy of an unknown quantum state. Eve cannot copy Alice's photons to measure at leisure — she must measure them now, disturbing them. The Heisenberg Uncertainty Principle ensures this measurement changes the state, introducing ~25% errors in the sifted key that Alice and Bob detect.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>BB84 protocol: 4 polarization states, 2 bases. ~50% bits sifted away after basis comparison</li>
+    <li>Security: No-Cloning Theorem + Heisenberg Uncertainty → eavesdropping always detectable (QBER &gt; 11%)</li>
+    <li>QKD range: ~200 km fiber; Micius satellite extends to 1200 km via space</li>
+    <li>QKD is information-theoretically secure against quantum computers</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.3 PQC -->
+  <section id="s-pqc" data-search-section="post-quantum cryptography NIST Kyber Dilithium lattice MLWE FIPS 203 204 205">
+    <div class="section-heading">
+      <h2 class="prose">4.3 Post-Quantum Cryptography (NIST PQC Standards)
+        <button class="bookmark-btn" data-id="s-pqc" data-label="4.3 PQC">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Post-Quantum Cryptography (PQC)</div>
+        Classical cryptographic algorithms designed to be secure against BOTH classical and quantum computers. They are based on mathematical problems that no known quantum algorithm can solve efficiently. No quantum hardware required &mdash; they run on today&apos;s computers.
+      </div>
+      <h3 class="prose">NIST PQC Standards (Finalized August 2024)</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>FIPS Standard</th><th>Algorithm Name</th><th>Based On</th><th>Purpose</th><th>Key Sizes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>FIPS 203</strong></td>
+            <td>ML-KEM (CRYSTALS-Kyber)</td>
+            <td>Module Learning With Errors (MLWE) over polynomial rings</td>
+            <td>Key Encapsulation (replaces ECDH/RSA for key exchange)</td>
+            <td>Kyber-512: 800B public key; Kyber-1024: 1568B</td>
+          </tr>
+          <tr>
+            <td><strong>FIPS 204</strong></td>
+            <td>ML-DSA (CRYSTALS-Dilithium)</td>
+            <td>Module Lattices (MLWE + MSIS)</td>
+            <td>Digital Signatures (replaces ECDSA/RSA-PSS)</td>
+            <td>Dilithium3: 1952B public key, 3293B signature</td>
+          </tr>
+          <tr>
+            <td><strong>FIPS 205</strong></td>
+            <td>SLH-DSA (SPHINCS+)</td>
+            <td>Stateless Hash-based signatures</td>
+            <td>Digital Signatures (conservative backup, very different math from lattices)</td>
+            <td>Larger signatures (~8KB) but based only on hash security</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why Lattice-Based?</strong> The Learning With Errors (LWE) problem: given a system of approximate linear equations with noise, find the secret vector. No quantum algorithm can solve this significantly faster than classical algorithms. Lattice problems have been studied for 30+ years with no breakthroughs &mdash; unlike RSA and ECC which were broken by quantum algorithms.</div>
+      </div>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: How Kyber (ML-KEM) Works Conceptually</div>
+      <p class="prose">Kyber uses <strong>Module Learning With Errors (MLWE)</strong>. Simplified analogy: Alice generates a secret vector <strong>s</strong>, computes a public matrix product <strong>A&times;s + e</strong> (where e is small random &ldquo;noise&rdquo;). Bob uses this public value to encrypt a message by adding more noise. Decryption works because Alice&apos;s secret <strong>s</strong> allows her to cancel out the systematic part, leaving only recoverable noise. A quantum computer cannot remove structured noise from lattice problems efficiently &mdash; Grover&apos;s algorithm provides only negligible speedup on random lattice problems.</p>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: SIDH Break (2022) &mdash; A Warning</div>
+      <p class="prose">SIKE (Supersingular Isogeny Key Encapsulation) was a NIST PQC finalist based on the hardness of computing isogenies between elliptic curves. In July 2022, Castryck and Decru published a classical (non-quantum) attack that broke SIKE in under an hour on a single laptop. This was a catastrophic failure &mdash; a promising post-quantum candidate eliminated overnight. The break exploited auxiliary information (torsion point images) that SIKE&apos;s key generation exposed. Lesson: PQC algorithms need even more public scrutiny than classical algorithms. NIST&apos;s multi-year competition was vindicated &mdash; the conservative lattice-based choices (Kyber, Dilithium) remain unbroken.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Shor's algorithm breaks RSA. What quantum resource does it actually require to threaten RSA-2048?<div class="recall-answer">~4000 fault-tolerant logical qubits. Current quantum computers (2024) have ~1100 physical qubits with high error rates. Each logical qubit requires ~1000 physical qubits for error correction, meaning ~4 million physical qubits needed to break RSA-2048. Estimates suggest 10-15 years before this capability exists.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> Why is "harvest now, decrypt later" an urgent threat even though quantum computers can't break RSA yet?<div class="recall-answer">Nation-state adversaries record HTTPS/TLS traffic today. Once a quantum computer exists, they decrypt it retroactively using Shor's algorithm. Data with long sensitivity lifetimes (medical, state secrets, financial records) encrypted today remains exposed for decades. PQC migration must happen BEFORE quantum computers arrive — the timeline is 10-15 years, and TLS migrations have historically taken 10+ years.</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>Shor's: O((log N)³) — breaks RSA/ECC/DH; needs ~4M physical qubits for RSA-2048 (~15 years away)</li>
+    <li>Grover's: O(√N) search — halves symmetric key security; AES-256 remains secure (128-bit post-quantum)</li>
+    <li>NIST PQC 2022: Kyber (ML-KEM), Dilithium/Falcon/SPHINCS+ (signatures) — all lattice-based or hash-based</li>
+    <li>"Harvest now": recorded ciphertext decryptable later — PQC migration is urgent even before quantum computers exist</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.4 FHE -->
+  <section id="s-fhe" data-search-section="homomorphic encryption FHE PHE SHE Gentry bootstrapping noise cloud computing privacy">
+    <div class="section-heading">
+      <h2 class="prose">4.4 Homomorphic Encryption
+        <button class="bookmark-btn" data-id="s-fhe" data-label="4.4 FHE">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Homomorphic Encryption</div>
+        Allows arbitrary computations to be performed on encrypted data (ciphertext) <strong>without ever decrypting it</strong>. The cloud server processes ciphertexts and returns an encrypted result. Only the data owner with the private key can decrypt the final answer. The server learns nothing about the data.
+      </div>
+      <div class="worked-example">
+        <div class="we-title">Alice&apos;s Jewellery Box Analogy (from your resources)</div>
+        <div class="cipher-grid">Problem: Alice wants workers to assemble jewellery without touching raw materials.
+Solution: Alice puts materials in a LOCKED GLOVE BOX (only she has the key).
+         Workers assemble through holes in the box.
+         Alice unlocks to retrieve finished jewellery.
+
+Crypto equivalent:
+  Encrypt = put data in locked box
+  Homomorphic Evaluate = workers assemble (compute) inside locked box
+  Decrypt = Alice unlocks and retrieves result
+
+The workers (cloud server) never see the raw materials (plaintext)!</div>
+      </div>
+      <h3 class="prose">Types of Homomorphic Encryption</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Type</th><th>Supported Operations</th><th>Depth</th><th>Practical Use</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Partially Homomorphic (PHE)</strong></td>
+            <td>Either addition OR multiplication (not both)</td>
+            <td>Unlimited for one operation</td>
+            <td>RSA (multiplicative). Paillier (additive &mdash; used in e-voting, privacy-preserving statistics).</td>
+          </tr>
+          <tr>
+            <td><strong>Somewhat Homomorphic (SHE)</strong></td>
+            <td>Both addition AND multiplication</td>
+            <td>Limited &mdash; noise grows with operations</td>
+            <td>Intermediate step. Can evaluate low-depth circuits. Used in some ML inference.</td>
+          </tr>
+          <tr>
+            <td><strong>Fully Homomorphic (FHE)</strong></td>
+            <td>Any computation (Turing complete)</td>
+            <td>Unlimited (via bootstrapping)</td>
+            <td>Privacy-preserving ML, genomic analysis, secure cloud computing. Still slow.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3 class="prose" style="margin-top:20px">The Noise Problem &amp; Gentry&apos;s Bootstrapping</h3>
+      <p class="prose">FHE ciphertexts contain cryptographic &ldquo;noise&rdquo; that grows with each operation. Addition adds noise linearly. <strong>Multiplication squares noise exponentially</strong>. Once noise exceeds a threshold, decryption fails.</p>
+      <div class="worked-example">
+        <div class="we-title">Gentry&apos;s Bootstrapping (2009) &mdash; The FHE Breakthrough</div>
+        <div class="cipher-grid">Problem: After k multiplications, noise is too large to decrypt.
+Gentry&apos;s solution: Run the DECRYPTION CIRCUIT homomorphically!
+  1. Re-encrypt the noisy ciphertext under the PUBLIC KEY
+     while it is still encrypted (encrypt-within-encrypt)
+  2. Homomorphically evaluate the decryption function on the
+     doubly-encrypted ciphertext
+  3. Result: a FRESH ciphertext with minimum noise, same plaintext
+
+This &quot;resets&quot; the noise budget.
+Bootstrapping enables arbitrary-depth computation.
+Cost: One bootstrapping step takes seconds to minutes on current hardware.</div>
+      </div>
+      <h3 class="prose" style="margin-top:20px">Real Applications of FHE</h3>
+      <ul class="prose">
+        <li><strong>Privacy-preserving ML inference:</strong> Send encrypted patient data to a hospital ML model; receive encrypted diagnosis. Hospital never sees raw patient data.</li>
+        <li><strong>Genomic privacy:</strong> Research on encrypted DNA sequences without exposing personal genetic data.</li>
+        <li><strong>Private database queries:</strong> Query a database without revealing what you searched for.</li>
+        <li><strong>Secure e-voting:</strong> Tally votes homomorphically &mdash; sum encryptions without decrypting individual votes.</li>
+      </ul>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: CKKS Scheme &mdash; Approximate FHE for ML</div>
+      <p class="prose">The <strong>CKKS (Cheon-Kim-Kim-Song, 2017)</strong> scheme extends FHE to approximate arithmetic over complex numbers. Unlike BFV/BGV (exact integer arithmetic), CKKS allows small errors in the final result &mdash; acceptable for machine learning (a neural network with 0.001% error in weights is still accurate). CKKS encodes a vector of real numbers into a single ciphertext using SIMD packing, then performs polynomial arithmetic in a ring. A single CKKS ciphertext can encode thousands of float values, making batched neural network inference practical. Microsoft SEAL, IBM HELib, and Google&apos;s HEALt library all implement CKKS. Current performance: GPT-2 inference over encrypted data takes ~hours; still improving rapidly.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.5 BLOCKCHAIN -->
+  <section id="s-blockchain" data-search-section="blockchain Bitcoin Merkle tree hash proof of work consensus smart contract ECDSA">
+    <div class="section-heading">
+      <h2 class="prose">4.5 Blockchain &amp; Cryptocurrency: Cryptographic Foundations
+        <button class="bookmark-btn" data-id="s-blockchain" data-label="4.5 Blockchain">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Blockchain</div>
+        A decentralized, distributed, append-only ledger of transactions. Each &ldquo;block&rdquo; contains: transaction data, a timestamp, and the SHA-256 hash of the previous block header &mdash; creating a cryptographic chain. Altering any historical block invalidates all subsequent blocks.
+      </div>
+      <h3 class="prose">Cryptographic Components of Blockchain</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Component</th><th>Crypto Used</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Transaction signing</td><td>ECDSA (secp256k1)</td><td>Prove you own the funds you&apos;re spending. Your Bitcoin address IS your public key hash.</td></tr>
+          <tr><td>Transaction integrity</td><td>SHA-256</td><td>Each transaction has a TXID = SHA-256(SHA-256(transaction data)).</td></tr>
+          <tr><td>Block linking</td><td>SHA-256</td><td>Block header includes Previous Block Hash &mdash; linking them cryptographically.</td></tr>
+          <tr><td>Transaction grouping</td><td>Merkle Trees (SHA-256)</td><td>Efficiently prove a transaction is in a block without downloading the whole block.</td></tr>
+          <tr><td>Proof of Work</td><td>SHA-256 (mining)</td><td>Find a nonce such that SHA-256(block_header) &lt; target. Computationally expensive.</td></tr>
+        </tbody>
+      </table>
+      <h3 class="prose" style="margin-top:20px">Merkle Tree Structure</h3>
+      <p class="prose">A Merkle Tree is a binary tree of hashes. Leaf nodes = individual transaction hashes. Each parent = SHA-256(left child + right child). The root (Merkle Root) goes into the block header and represents all transactions.</p>
+      <div class="worked-example">
+        <div class="we-title">Merkle Proof: Proving Tx-C is in a block (without downloading all 4 TXs)</div>
+        <div class="cipher-grid">Tree:          Merkle Root
+              /           \
+        Hash(AB)       Hash(CD)
+        /     \         /     \
+      H(A)   H(B)   H(C)   H(D)
+
+To prove H(C) is in the tree, you only need:
+  - H(C) itself
+  - H(D) (sibling)
+  - Hash(AB) (uncle)
+
+Verify: Hash(Hash(H(C) + H(D)) + Hash(AB)) == Merkle Root?
+Only log2(N) hashes needed! For 1 million TXs: only 20 hashes.</div>
+      </div>
+      <h3 class="prose" style="margin-top:20px">Consensus Mechanisms</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Mechanism</th><th>How It Works</th><th>Used By</th><th>Energy</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Proof of Work (PoW)</strong></td>
+            <td>Find nonce so SHA-256(block) &lt; target difficulty. Whoever finds it first adds the block and earns the reward. Requires massive computation.</td>
+            <td>Bitcoin</td>
+            <td>~150 TWh/year (comparable to Argentina)</td>
+          </tr>
+          <tr>
+            <td><strong>Proof of Stake (PoS)</strong></td>
+            <td>Validators lock up ETH as stake. Algorithm pseudorandomly selects proposer weighted by stake. Penalties for dishonesty (slashing).</td>
+            <td>Ethereum 2.0</td>
+            <td>~99.95% less than PoW</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3 class="prose" style="margin-top:20px">Double-Spending Problem</h3>
+      <p class="prose">Digital money can be copied (unlike physical cash). The double-spend problem: can the same digital coin be spent twice? Bitcoin solves this with the blockchain: every node has a full copy of all transactions. When I spend a coin, the network records it. If I try to spend it again, the network sees the UTXO (Unspent Transaction Output) is already consumed and rejects the second transaction. The 51% attack: if an attacker controls &gt;51% of mining hash power, they can rewrite recent history &mdash; but this requires billions in hardware and is economically irrational (it would destroy the coin&apos;s value).</p>
+    </div>
+    <div class="mode-gate">
+      <div class="mode-badge gate">&#9889; Extra: How Your Bitcoin Wallet Address Is Generated</div>
+      <div class="cipher-grid">1. Generate random 256-bit private key k
+2. Compute public key K = k * G  (ECC secp256k1 scalar multiplication)
+3. Apply SHA-256 to K: SHA256(K)
+4. Apply RIPEMD-160: RIPEMD160(SHA256(K)) = 20-byte Public Key Hash
+5. Add version byte (0x00 for mainnet)
+6. Apply double SHA-256 checksum, take first 4 bytes
+7. Base58Check encode = your Bitcoin address (e.g., 1A1zP1...)
+
+Your address IS a double-hash of your public key.
+Your public key is only revealed when you SPEND (not receive).</div>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Quantum Threat to Blockchain</div>
+      <p class="prose">Shor&apos;s algorithm breaks ECDSA &mdash; meaning a sufficiently powerful quantum computer could forge any Bitcoin transaction. The threat is nuanced: (1) Your Bitcoin address hides your public key behind a hash (RIPEMD-160). Shor&apos;s can&apos;t directly break hashes (only Grover&apos;s applies). BUT (2) once you spend from an address, your public key is revealed on-chain. If a quantum computer exists, it can derive your private key from the revealed public key and steal remaining funds. Current estimate: ~4 million Bitcoin (~25% of supply) sits in addresses where the public key is already exposed. Post-quantum blockchain migration would require a coordinated hard fork to new CRYSTALS-Dilithium based signatures &mdash; a massive coordination challenge.</p>
+    </div>
+
+  <div class="recall-block">
+    <div class="recall-question"><strong>Q1.</strong> Schnorr ZKP: prover sends R=g^r, receives challenge e, sends s=r+e·x. Why does this prove knowledge of x without revealing x?<div class="recall-answer">The verifier checks g^s = R · Y^e. This works because: g^s = g^(r+ex) = g^r · g^(ex) = R · (g^x)^e = R · Y^e. But s = r + e·x mixes x with the one-time random mask r. Without knowing r, the verifier cannot extract x from s — r is never revealed, and r is fresh for each proof.</div></div>
+    <div class="recall-question"><strong>Q2.</strong> What distinguishes zk-STARKs from zk-SNARKs?<div class="recall-answer">STARKs: no trusted setup (use hash functions), quantum-resistant, larger proofs (~100 KB). SNARKs: require trusted setup (CRS/toxic waste), smaller proofs (~200 bytes), not quantum-resistant (use pairings). STARKs are preferred when trust minimization is critical (Ethereum StarkNet). SNARKs are preferred when proof size matters (Zcash, zkSync).</div></div>
+    <button class="reveal-btn">Reveal All Answers</button>
+  </div>
+  <div class="unit-summary"><ul>
+    <li>ZKP: prove knowledge of secret without revealing it. Three properties: Completeness, Soundness, Zero-Knowledge</li>
+    <li>Schnorr: 3-round interactive proof; foundation of EdDSA and many advanced protocols</li>
+    <li>zk-SNARKs: non-interactive, ~200-byte proofs, trusted setup required, pairing-based (not quantum-safe)</li>
+    <li>zk-STARKs: no trusted setup, quantum-resistant, ~100 KB proofs, hash-based</li>
+    <li>Applications: Zcash (private transactions), zkRollups (Ethereum L2 scaling), anonymous credentials</li>
+  </ul></div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.6 ZKP -->
+  <section id="s-zkp" data-search-section="zero knowledge proof ZKP zk-SNARK zk-STARK interactive proof Zcash privacy">
+    <div class="section-heading">
+      <h2 class="prose">4.6 Zero-Knowledge Proofs (ZKP)
+        <button class="bookmark-btn" data-id="s-zkp" data-label="4.6 ZKP">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="def-box">
+        <div class="def-term">Zero-Knowledge Proof</div>
+        A cryptographic protocol where a <strong>Prover</strong> can convince a <strong>Verifier</strong> that a statement is TRUE, without revealing any information beyond the truth of the statement itself. &ldquo;I know the password, but I won&apos;t show you the password &mdash; I&apos;ll just prove I know it.&rdquo;
+      </div>
+      <h3 class="prose">Three Properties of ZKP</h3>
+      <ul class="prose">
+        <li><strong>Completeness:</strong> If the statement is true and Prover is honest, Verifier will be convinced.</li>
+        <li><strong>Soundness:</strong> If the statement is false, a cheating Prover cannot convince the Verifier (except with negligible probability).</li>
+        <li><strong>Zero-Knowledge:</strong> The Verifier learns nothing beyond &ldquo;the statement is true.&rdquo; The proof reveals no additional information.</li>
+      </ul>
+      <div class="worked-example">
+        <div class="we-title">Ali Baba&apos;s Cave Analogy (classic ZKP illustration)</div>
+        <div class="cipher-grid">A cave has a ring-shaped tunnel with a magic door in the middle.
+Only the person knowing the password can open the door.
+Prover (Peggy) wants to prove to Verifier (Victor) she knows the
+password WITHOUT revealing it.
+
+Protocol (repeat 20 times):
+1. Peggy enters the cave, randomly going LEFT or RIGHT (Victor doesn&apos;t see)
+2. Victor shouts: "Come out from the LEFT" or "Come out from the RIGHT"
+3. If Peggy knew the password: she can always exit the correct side.
+4. If Peggy is cheating: she has only 50% chance of exiting correct side.
+
+After 20 rounds: probability of cheating = (1/2)^20 = 1 in 1 million.
+Victor is convinced Peggy knows the password, but learned nothing about it.</div>
+      </div>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: zk-SNARKs (Succinct Non-Interactive Argument of Knowledge)</div>
+      <p class="prose">zk-SNARKs extend ZKPs to be <strong>non-interactive</strong> (no back-and-forth) and <strong>succinct</strong> (tiny proof sizes regardless of computation complexity). A zk-SNARK proves: &ldquo;I know inputs w such that C(w) = y for a circuit C,&rdquo; where the proof is only ~200 bytes and verifies in milliseconds, even if the circuit C has millions of gates. Used in:</p>
+      <ul class="prose">
+        <li><strong>Zcash:</strong> Proves transaction validity (outputs = inputs + fee) without revealing sender, receiver, or amount.</li>
+        <li><strong>Ethereum rollups (zkSync, StarkNet):</strong> Prove 10,000 transactions are valid with one 200-byte proof, dramatically scaling Ethereum throughput.</li>
+        <li><strong>Identity systems:</strong> Prove you are over 18 without revealing your birthdate.</li>
+      </ul>
+      <p class="prose"><strong>zk-STARKs</strong> (Scalable Transparent Arguments of Knowledge) are a newer variant that require no trusted setup (eliminating a key weakness of zk-SNARKs) and are potentially post-quantum secure (based only on hash functions). Larger proof sizes (~50KB vs ~200B) but growing rapidly in adoption.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.7 DNA CRYPTO -->
+  <section id="s-dna" data-search-section="DNA cryptography biological encoding nanopore sequencing UBP one-time pad">
+    <div class="section-heading">
+      <h2 class="prose">4.7 DNA Cryptography <span style="background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.3);font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:99px;vertical-align:middle;">&#128300; Advanced Research</span>
+        <button class="bookmark-btn" data-id="s-dna" data-label="4.7 DNA Cryptography">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Active Research Area (2024&ndash;2026)</div>
+      <p class="prose">DNA cryptography uses biological molecules (DNA strands) as a computational and storage medium for cryptographic operations. The four nucleotide bases (A, T, G, C) encode binary data: A/C = 0, G/T = 1 (or various encoding schemes).</p>
+      <h3 class="prose">Current Research Directions</h3>
+      <table class="data-table">
+        <thead><tr><th>Research Area</th><th>Method</th><th>Security Property</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>DNA-based OTP Key Distribution</strong></td>
+            <td>Synthetic DNA strands used as physical one-time pads. Nanopore sequencing generates identical random key streams at two distant locations. (CNRS, 2026)</td>
+            <td>Unconditional security (OTP). Physical medium cannot be copied without altering the molecule. Resistant to quantum computers.</td>
+          </tr>
+          <tr>
+            <td><strong>Unnatural Base Pairs (UBPs)</strong></td>
+            <td>Synthetic nucleotides (d5SICS, dNaM) not found in nature added to DNA. These cause termination errors in standard sequencers, providing biological obfuscation.</td>
+            <td>Adds a layer of security: even if DNA is intercepted, standard sequencers cannot read the encoded data correctly.</td>
+          </tr>
+          <tr>
+            <td><strong>STR Fingerprint Key Generation</strong></td>
+            <td>Short Tandem Repeat (STR) DNA fingerprints used as entropy source for generating encryption keys for IoT devices.</td>
+            <td>Biometric-based keys &mdash; physically unclonable function (PUF) derived from unique genetic sequences.</td>
+          </tr>
+          <tr>
+            <td><strong>DNA-based Secret Sharing</strong></td>
+            <td>Shamir&apos;s Secret Sharing encoded in DNA strands distributed among multiple participants. Each strand encodes a share; reconstruction requires combining physical molecules.</td>
+            <td>Secret is physically distributed &mdash; no single point of compromise.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why DNA for Cryptography?</strong> (1) Massive density: 1 gram of DNA can store ~215 petabytes of data. (2) Physical uncloneability: the No-Cloning theorem applies &mdash; measuring quantum states of DNA molecules (like GC bonding patterns) disturbs them, providing inherent eavesdropping detection. (3) Longevity: DNA can store information for thousands of years (mammoth DNA recovered from permafrost). (4) It is immune to electromagnetic attacks.</div>
+      </div>
+      <h3 class="prose" style="margin-top:20px">Challenges &amp; Limitations</h3>
+      <ul class="prose">
+        <li>High synthesis and sequencing costs (though falling rapidly)</li>
+        <li>Error rates in DNA synthesis and sequencing (~0.1&ndash;1% per base)</li>
+        <li>Slow read/write speeds compared to electronic storage</li>
+        <li>Temperature sensitivity &mdash; DNA degrades without proper storage</li>
+        <li>Not yet practical for real-time communication cryptography</li>
+      </ul>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.8 FUTURE -->
+  <section id="s-future" data-search-section="future cryptography trends multivariate code-based isogeny lattice quantum internet">
+    <div class="section-heading">
+      <h2 class="prose">4.8 Future Trends in Cryptography
+        <button class="bookmark-btn" data-id="s-future" data-label="4.8 Future Trends">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <table class="data-table reveal">
+        <thead><tr><th>Trend</th><th>Description</th><th>Timeline</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PQC Migration</strong></td><td>Global migration from RSA/ECC to ML-KEM/ML-DSA across browsers, VPNs, government systems, IoT</td><td>2025&ndash;2030</td></tr>
+          <tr><td><strong>Quantum Internet</strong></td><td>Networks transmitting quantum states via entanglement for global QKD and quantum computation</td><td>2030+</td></tr>
+          <tr><td><strong>Threshold Signatures</strong></td><td>Private key split among N parties; requires M of N to sign. Eliminates single point of key compromise.</td><td>Currently in production (crypto wallets, HSMs)</td></tr>
+          <tr><td><strong>Fully Homomorphic Computing</strong></td><td>Cloud processing entirely on encrypted data &mdash; privacy-preserving AI inference at scale</td><td>2028&ndash;2035</td></tr>
+          <tr><td><strong>Cryptographic Agility</strong></td><td>Systems designed to swap algorithms as standards evolve. TLS 1.3 cipher agility is the model.</td><td>Now &mdash; critical design principle</td></tr>
+          <tr><td><strong>Decentralized Identity (DID)</strong></td><td>Self-sovereign identity using blockchain + ZKP + cryptographic credentials &mdash; replace password-based login</td><td>Emerging</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mode-adv">
+      <div class="mode-badge adv">&#128300; Advanced: Cryptographic Agility &mdash; A Design Imperative</div>
+      <p class="prose">The SIKE break (2022) demonstrated that even well-vetted post-quantum candidates can fall. <strong>Cryptographic agility</strong> means designing systems with algorithm abstraction layers so that when an algorithm is broken, you swap it without rebuilding the entire system. TLS 1.3 already implements this via cipher suite negotiation. The US NSA&apos;s Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) mandates cryptographic agility for all national security systems by 2030. For developers: never hard-code specific algorithms; use abstraction (e.g., Java JCA, Python cryptography library) that allows algorithm substitution.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- 4.9 MCQ -->
+  <section id="s-mcq4" data-search-section="unit 4 practice MCQ quantum blockchain FHE PQC">
+    <div class="section-heading">
+      <h2 class="prose">4.9 Practice MCQs &mdash; Unit 4 (17 Questions)
+        <button class="bookmark-btn" data-id="s-mcq4" data-label="4.9 MCQs">&#128278;</button>
+      </h2>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q1. Shor&apos;s algorithm can break RSA because it efficiently solves which mathematical problem?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q1"> (a) Discrete Logarithm Problem only</label>
+        <label><input type="radio" name="m4q1"> (b) Integer Factorization (and Discrete Logarithm)</label>
+        <label><input type="radio" name="m4q1"> (c) Lattice shortest-vector problem</label>
+        <label><input type="radio" name="m4q1"> (d) SHA-256 collision finding</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Shor&apos;s algorithm solves both Integer Factorization (breaking RSA) and Discrete Logarithm (breaking DH, DSA, ECC/ECDSA) in polynomial time. This makes all public-key cryptography based on these problems vulnerable to quantum computers.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q2. In the BB84 protocol, how does Alice detect if Eve has intercepted the photons?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q2"> (a) Eve&apos;s identity is in the photon metadata</label>
+        <label><input type="radio" name="m4q2"> (b) The error rate in the sifted key rises above ~11% due to Eve&apos;s measurement disturbing photon states</label>
+        <label><input type="radio" name="m4q2"> (c) Eve must announce her presence per quantum law</label>
+        <label><input type="radio" name="m4q2"> (d) Alice uses timestamps to detect the extra delay</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Heisenberg&apos;s Uncertainty Principle: measuring a photon disturbs its state. When Eve measures and retransmits photons, she introduces ~25% errors into Bob&apos;s measurements. Alice and Bob compare a subset of their sifted key; if error rate exceeds ~11%, they abort.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q3. Which NIST FIPS standard specifies the post-quantum key encapsulation algorithm?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q3"> (a) FIPS 204 (ML-DSA)</label>
+        <label><input type="radio" name="m4q3"> (b) FIPS 205 (SLH-DSA)</label>
+        <label><input type="radio" name="m4q3"> (c) FIPS 203 (ML-KEM)</label>
+        <label><input type="radio" name="m4q3"> (d) FIPS 197 (AES)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) FIPS 203 (ML-KEM, formerly CRYSTALS-Kyber).</strong> This is the post-quantum replacement for RSA and ECDH in key exchange. FIPS 204 is ML-DSA (Dilithium) for signatures. FIPS 205 is SLH-DSA (SPHINCS+) for hash-based signatures.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q4. What is &ldquo;Harvest Now, Decrypt Later&rdquo; (HNDL)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q4"> (a) A cloud storage optimization technique</label>
+        <label><input type="radio" name="m4q4"> (b) Adversaries collecting and storing encrypted traffic today to decrypt it once quantum computers arrive</label>
+        <label><input type="radio" name="m4q4"> (c) A method of breaking AES-256 using precomputed tables</label>
+        <label><input type="radio" name="m4q4"> (d) A blockchain mining strategy</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Nation-state adversaries are recording all encrypted internet traffic now. When quantum computers mature in ~10-15 years, they will decrypt this stored traffic with Shor&apos;s algorithm. Data with long secrecy requirements (medical, military) is already at risk &mdash; making post-quantum migration urgent today.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q5. Fully Homomorphic Encryption (FHE) allows:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q5"> (a) Faster symmetric encryption using quantum circuits</label>
+        <label><input type="radio" name="m4q5"> (b) Arbitrary computation on encrypted data without decrypting it</label>
+        <label><input type="radio" name="m4q5"> (c) Key exchange that is secure against quantum computers</label>
+        <label><input type="radio" name="m4q5"> (d) Hash functions that are reversible</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> FHE allows a cloud server to perform arbitrary computations on ciphertext without ever decrypting it. Only the data owner can decrypt the final result. This enables privacy-preserving cloud computing, ML inference, and genomic analysis.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q6. Craig Gentry&apos;s bootstrapping technique solves which problem in FHE?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q6"> (a) The key distribution problem</label>
+        <label><input type="radio" name="m4q6"> (b) Accumulated noise in ciphertext that eventually prevents correct decryption</label>
+        <label><input type="radio" name="m4q6"> (c) The integer factorization problem</label>
+        <label><input type="radio" name="m4q6"> (d) The discrete logarithm problem</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> FHE introduces cryptographic noise that grows with operations. Multiplication squares noise exponentially. Bootstrapping &ldquo;resets&rdquo; the noise by evaluating the decryption circuit homomorphically, producing a fresh ciphertext with minimum noise, enabling unlimited computation depth.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q7. In a Bitcoin Merkle tree, the Merkle Root is stored in the:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q7"> (a) Transaction data of the coinbase transaction</label>
+        <label><input type="radio" name="m4q7"> (b) Block header</label>
+        <label><input type="radio" name="m4q7"> (c) Digital signature of the miner</label>
+        <label><input type="radio" name="m4q7"> (d) Previous block&apos;s body</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Block header.</strong> The block header (80 bytes) contains: version, previous block hash, Merkle root, timestamp, difficulty target, nonce. The Merkle root (32 bytes, SHA-256) cryptographically commits to all transactions in the block. Mining hashes the block header.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q8. Zero-Knowledge Proofs allow a Prover to convince a Verifier of what, without revealing what?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q8"> (a) That they know a secret, without revealing the secret itself</label>
+        <label><input type="radio" name="m4q8"> (b) That they are human, without revealing their identity</label>
+        <label><input type="radio" name="m4q8"> (c) That they have money, without revealing the amount</label>
+        <label><input type="radio" name="m4q8"> (d) That their signature is valid, without revealing their public key</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(a)</strong> A ZKP proves the truth of a statement without revealing any information beyond the truth itself. The classic example: proving you know the solution to a puzzle (like a Sudoku) without showing the solution. &ldquo;Soundness&rdquo; ensures a cheater can&apos;t fake the proof.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q9. Grover&apos;s quantum algorithm affects symmetric cryptography (AES) by:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q9"> (a) Breaking it completely within polynomial time</label>
+        <label><input type="radio" name="m4q9"> (b) Providing a square-root speedup, halving effective key strength</label>
+        <label><input type="radio" name="m4q9"> (c) Finding the algorithm&apos;s algebraic structure</label>
+        <label><input type="radio" name="m4q9"> (d) It has no effect on symmetric cryptography</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Grover&apos;s provides a square-root speedup for unstructured search. AES-128 (2&sup1;&sup2;&sup8; classical) becomes 2&sup6;&sup4; effective strength (breakable). AES-256 becomes 2&sup1;&sup2;&sup8; &mdash; still secure. Solution: use AES-256 instead of AES-128 in quantum-threat environments.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q10. DNA cryptography provides which unique security advantage over mathematical cryptography?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q10"> (a) Faster computation speeds</label>
+        <label><input type="radio" name="m4q10"> (b) Physical eavesdropping detection &mdash; measuring DNA strands disturbs them</label>
+        <label><input type="radio" name="m4q10"> (c) No key management required</label>
+        <label><input type="radio" name="m4q10"> (d) Compatible with all existing PKI infrastructure</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Like QKD, DNA strands exhibit quantum-mechanical properties. Measuring or copying a DNA key disturbs its state, providing inherent eavesdropping detection. Combined with OTP-style key generation from nanopore sequencing, DNA cryptography can be unconditionally secure &mdash; resistant even to quantum computers.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q11. SIKE (Supersingular Isogeny Key Encapsulation) was eliminated as a NIST PQC candidate because:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q11"> (a) It was too slow for practical deployment</label>
+        <label><input type="radio" name="m4q11"> (b) A classical (non-quantum) attack was found that broke it in hours on a single laptop</label>
+        <label><input type="radio" name="m4q11"> (c) NSA classified the algorithm</label>
+        <label><input type="radio" name="m4q11"> (d) It required quantum hardware to implement</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> In July 2022, Castryck and Decru published a classical attack exploiting SIKE&apos;s exposure of auxiliary torsion point images, breaking it in under an hour. This demonstrated that even well-vetted PQC algorithms can fail &mdash; reinforcing the need for algorithm diversity and cryptographic agility.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q12. Bitcoin&apos;s Proof of Work consensus mechanism uses which hash function?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q12"> (a) SHA-3</label>
+        <label><input type="radio" name="m4q12"> (b) MD5</label>
+        <label><input type="radio" name="m4q12"> (c) SHA-256 (double SHA-256)</label>
+        <label><input type="radio" name="m4q12"> (d) RIPEMD-160</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(c) SHA-256 (double SHA-256 = SHA-256(SHA-256(x))).</strong> Miners compute SHA-256(SHA-256(block_header)) repeatedly with different nonces until the result is below the current difficulty target. RIPEMD-160 is also used in Bitcoin but for address generation (RIPEMD-160(SHA-256(public_key))).</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q">Q13. The E91 QKD protocol differs from BB84 in that it uses:</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q13"> (a) Classical communication channels only</label>
+        <label><input type="radio" name="m4q13"> (b) Quantum entanglement between photon pairs and Bell inequality violation for eavesdrop detection</label>
+        <label><input type="radio" name="m4q13"> (c) RSA-encrypted quantum states</label>
+        <label><input type="radio" name="m4q13"> (d) A larger photon basis set (8 bases instead of 2)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> E91 uses entangled photon pairs from a central source. When both Alice and Bob measure in the same basis, results are perfectly anti-correlated (entanglement). Eavesdropping breaks the entanglement, violating Bell&apos;s inequality measurably. BB84 uses single photons and error rate detection.</div>
+    </div>
+
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q14. NIST's 2022 PQC standardization selected which algorithm for key encapsulation (KEM)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q14"> (a) NTRU</label>
+        <label><input type="radio" name="m4q14"> (b) CRYSTALS-Kyber (now FIPS 203: ML-KEM)</label>
+        <label><input type="radio" name="m4q14"> (c) McEliece</label>
+        <label><input type="radio" name="m4q14"> (d) Rainbow</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) CRYSTALS-Kyber (ML-KEM, FIPS 203).</strong> Kyber is based on Module-LWE and was selected for its balance of security, performance, and key size. CRYSTALS-Dilithium (ML-DSA) and FALCON were selected for signatures. Rainbow (multivariate) was broken during the competition. McEliece has huge key sizes (~1 MB). NTRU is an alternate candidate but wasn't selected for primary FIPS standardization.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff">&#128308; Hard</span>Q15. In BB84 QKD, if Eve intercepts and re-sends all photons, what error rate does she introduce in the sifted key?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q15"> (a) 0% — quantum states can be cloned perfectly</label>
+        <label><input type="radio" name="m4q15"> (b) 25% — Eve's random basis choice matches 50% of the time; mismatches introduce 50% error in those cases → 25% overall</label>
+        <label><input type="radio" name="m4q15"> (c) 50% — all photons are disturbed</label>
+        <label><input type="radio" name="m4q15"> (d) 100% — QKD is perfectly secure</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) 25%.</strong> Eve randomly guesses the basis: 50% of the time she picks the right basis (no error), 50% she picks wrong (50% chance of error). Overall error rate = 0.5 × 0.5 = 25%. QBER (Quantum Bit Error Rate) threshold is ~11% for the standard BB84 protocol — anything above indicates eavesdropping and the key is discarded. In practice, channel noise also contributes to QBER.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q16. Fully Homomorphic Encryption (FHE) allows computation on encrypted data. What is its primary current limitation?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q16"> (a) FHE only works with addition, not multiplication</label>
+        <label><input type="radio" name="m4q16"> (b) Performance overhead: FHE computations are 1,000–10,000× slower than plaintext computation</label>
+        <label><input type="radio" name="m4q16"> (c) FHE is broken by quantum computers</label>
+        <label><input type="radio" name="m4q16"> (d) FHE requires a trusted third party to decrypt results</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Performance overhead.</strong> FHE (Gentry, 2009) was a theoretical breakthrough but practical schemes (TFHE, CKKS, BGV) remain 1,000-10,000× slower than plaintext. A simple neural network inference that takes 1 ms in plaintext takes ~10 seconds with FHE. Active research (GPUs, FPGA acceleration) is reducing this. Current applications: private genomic analysis, encrypted database queries, privacy-preserving ML inference.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff">&#128128; Expert</span>Q17. In a zk-SNARK, what is the "trusted setup" and why is it a potential weakness?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q17"> (a) The verifier must trust the prover's hardware</label>
+        <label><input type="radio" name="m4q17"> (b) A Common Reference String (CRS) is generated using secret randomness — if the secret is ever revealed, an attacker can create false proofs for any statement</label>
+        <label><input type="radio" name="m4q17"> (c) The trusted setup is a PKI certificate for the proof system</label>
+        <label><input type="radio" name="m4q17"> (d) zk-SNARKs require trusted hardware (HSM) to generate proofs</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) CRS with secret randomness.</strong> The CRS ("toxic waste") must be destroyed after setup. If retained, the holder can create proofs for FALSE statements — e.g., in Zcash, they could mint unlimited ZEC from nothing undetectably. Zcash's Powers of Tau ceremony (2018) involved 88 participants worldwide: as long as ONE participant destroyed their secret, the CRS is secure. zk-STARKs eliminate this with no trusted setup (using hash functions), but produce larger proofs (~100 KB vs ~200 bytes for SNARKs).</div>
+    </div>
+
+
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q14. NIST selected which algorithm as the primary post-quantum key encapsulation mechanism (KEM)?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q14"> (a) NTRU</label>
+        <label><input type="radio" name="m4q14"> (b) CRYSTALS-Kyber (FIPS 203 ML-KEM), based on Module-LWE</label>
+        <label><input type="radio" name="m4q14"> (c) McEliece (code-based)</label>
+        <label><input type="radio" name="m4q14"> (d) Rainbow (multivariate)</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) CRYSTALS-Kyber (ML-KEM).</strong> Selected in 2022 for balance of security, performance and key sizes. Kyber-768 provides ~180-bit security with 1184-byte public keys. Rainbow was broken during competition. McEliece has ~1 MB public keys. NTRU is an alternate but wasn't selected as the primary FIPS standard.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#f87171;color:#fff">&#128308; Hard</span>Q15. Grover's algorithm applied to AES-128 gives what effective post-quantum security level?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q15"> (a) 0-bit — AES is fully broken by Grover</label>
+        <label><input type="radio" name="m4q15"> (b) 64-bit — Grover halves bit security from 128 to 64</label>
+        <label><input type="radio" name="m4q15"> (c) 128-bit — Grover does not affect symmetric ciphers</label>
+        <label><input type="radio" name="m4q15"> (d) 32-bit — Grover quarter-reduces bit security</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) 64-bit.</strong> Grover's algorithm searches an N-element database in O(√N) queries. For AES-128 (2^128 possible keys), Grover needs 2^64 quantum operations — equivalent to a 64-bit classical brute force. NIST recommends AES-256 for 128-bit post-quantum security (Grover on AES-256 → 2^128 quantum ops). AES-128 is therefore inadequate for long-term post-quantum security.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#fbbf24;color:#000">&#127841; Medium</span>Q16. What is "harvest now, decrypt later" and which existing algorithm is most threatened by it?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q16"> (a) Cracking AES-128 using classical precomputation tables</label>
+        <label><input type="radio" name="m4q16"> (b) Recording today's TLS/HTTPS traffic to decrypt retroactively once a quantum computer exists; most threatens RSA/ECDH key exchange</label>
+        <label><input type="radio" name="m4q16"> (c) Harvesting random seeds from weak random number generators</label>
+        <label><input type="radio" name="m4q16"> (d) Brute-forcing SSH keys using rainbow tables</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b)</strong> Nation-state adversaries record encrypted communications today. RSA/ECDH key exchange is vulnerable to Shor's algorithm — once a cryptographically relevant quantum computer exists, all recorded sessions can be decrypted. Symmetric encryption (AES) is only weakly affected (Grover). The urgency: TLS migrations historically take 10+ years, and sensitive data lifetime may be 20+ years. PQC migration must start now.</div>
+    </div>
+
+    <div class="mcq-item reveal">
+      <div class="mcq-q"><span class="mcq-diff" style="background:#ef4444;color:#fff">&#128128; Expert</span>Q17. zk-SNARKs require a "trusted setup" generating a CRS. What is the catastrophic consequence if the CRS secret ("toxic waste") is not destroyed?</div>
+      <div class="mcq-opts">
+        <label><input type="radio" name="m4q17"> (a) All previous proofs become invalid</label>
+        <label><input type="radio" name="m4q17"> (b) Anyone holding the toxic waste can create valid proofs for FALSE statements — e.g., mint unlimited tokens in Zcash undetectably</label>
+        <label><input type="radio" name="m4q17"> (c) The prover's private key is exposed</label>
+        <label><input type="radio" name="m4q17"> (d) The verifier can extract the witness from any proof</label>
+      </div>
+      <button class="show-ans" onclick="this.nextElementSibling.classList.toggle('visible')">Show Answer</button>
+      <div class="mcq-answer"><strong>(b) Counterfeit proofs for false statements.</strong> In Zcash, valid SNARK proofs are required to create shielded ZEC. Toxic waste would allow minting unlimited ZEC from nothing, undetectably. Zcash's Powers of Tau ceremony used 88 participants — one honest participant destroys their secret, the full CRS is safe. zk-STARKs solve this with no trusted setup (hash-based), at the cost of larger proofs (~100 KB vs 200 bytes).</div>
+    </div>
+
+
+</section>
+</div>
+</main>
+<div id="mode-panel">
+  <button class="mode-btn active" data-mode="all">&#128218; All</button>
+  <button class="mode-btn uni-btn" data-mode="uni">&#127891; Uni</button>
+  <button class="mode-btn gate-btn" data-mode="gate">&#9889; Extra</button>
+  <button class="mode-btn adv-btn" data-mode="advanced">&#128300; Adv</button>
+</div>
+<div id="tts-panel">
+  <div class="tts-controls">
+    <button class="tts-btn" id="tts-play">&#9654;</button>
+    <button class="tts-btn" id="tts-stop">&#9209;</button>
+    <div class="tts-speed"><span>Speed</span><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><span id="tts-rate-label">1.0x</span></div>
+  </div>
+  <div class="tts-voice"><select id="tts-voice-select"><option>Loading...</option></select></div>
+</div>
+<div id="search-modal"><div class="search-box"><div class="search-input-wrap"><span class="s-icon">&#128269;</span><input id="search-input" type="text" placeholder="Search Unit 4..."></div><div id="search-results"></div></div></div>
+<div id="toast-container"></div>
+<script src="../assets/js/state.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/modes.js"></script>
+<script src="../assets/js/tts.js"></script>
+<script src="../assets/js/print.js"></script>
+<script src="../assets/js/notes.js"></script>
+<script src="../assets/js/glossary.js"></script>
+</body></html>

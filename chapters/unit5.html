@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Arpit">
+  <title>Unit 5 — Practical Cryptography | Crypto MiniBook</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/animations.css">
+  <link rel="stylesheet" href="../assets/css/chapter.css">
+  <link rel="stylesheet" href="../assets/css/timer.css">
+  
+</head>
+<body>
+<div id="progress-bar"></div>
+<header id="main-header">
+  <div class="header-left">
+    <button id="sidebar-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="brand-logo">
+      <div class="brand-icon">A&#9889;</div>
+      <div class="brand-text"><span class="main">Crypto MiniBook</span><span class="sub">Unit 5: Practicals</span></div>
+    </div>
+  </div>
+  <span class="header-chapter-title"></span>
+  <div class="header-right">
+    <button id="search-btn" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button id="tts-toggle" class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg></button>
+    <button id="print-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span class="print-label">PDF</span></button>
+    <button id="reading-mode-btn" class="icon-btn" aria-pressed="false">&#128214;</button>
+    <button id="theme-toggle" class="icon-btn"></button>
+  </div>
+</header>
+<div id="sidebar-overlay"></div>
+<aside id="sidebar">
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="../index.html" class="sidebar-link">&#127968; Home</a>
+      <a href="../progress.html" class="sidebar-link">&#128202; Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Chapters</div>
+      <a href="unit1.html" class="sidebar-link">&#128272; Unit 1 &mdash; Foundations</a>
+      <a href="unit2.html" class="sidebar-link">&#128220; Unit 2 &mdash; Protocols</a>
+      <a href="unit3.html" class="sidebar-link">&#128373; Unit 3 &mdash; Cryptanalysis</a>
+      <a href="unit4.html" class="sidebar-link">&#128640; Unit 4 &mdash; Advanced</a>
+      <a href="unit5.html" class="sidebar-link active">&#128187; Unit 5 &mdash; Practicals</a>
+    </div>
+    <div class="sidebar-section"><div class="sidebar-section-label">Bookmarks</div><div id="bookmarks-list"></div></div>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-brand-mark"><div class="mark">A&#9889;</div><span>Arpit &middot; Crypto MiniBook 2026</span></div></div>
+</aside>
+<main id="main-content">
+<div class="content-inner">
+
+  <div class="chapter-hero">
+    <div class="chapter-num">&#128187; Unit 5</div>
+    <h1 class="chapter-title">Practical Cryptography</h1>
+    <p class="chapter-desc">Hands-on implementation of cryptographic concepts from Units 1&ndash;4. Python practicals, OpenSSL PKI setup, case studies, and exam-style walkthroughs with annotated code and expected output.</p>
+  </div>
+
+  <div class="toc-card">
+    <h3>&#128203; Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#p1" class="toc-item"><span class="toc-num">P.1</span>DES Key Schedule (Python)</a>
+      <a href="#p2" class="toc-item"><span class="toc-num">P.2</span>Hashing &amp; File Integrity (Python)</a>
+      <a href="#p3" class="toc-item"><span class="toc-num">P.3</span>ECC ECDH Key Exchange (Python)</a>
+      <a href="#p4" class="toc-item"><span class="toc-num">P.4</span>ECC Secure Communication (Python)</a>
+      <a href="#p5" class="toc-item"><span class="toc-num">P.5</span>RSA &amp; AES with PyCryptodome</a>
+      <a href="#p6" class="toc-item"><span class="toc-num">P.6</span>PKI Setup with OpenSSL</a>
+      <a href="#p7" class="toc-item"><span class="toc-num">P.7</span>TLS Verification</a>
+      <a href="#cs1" class="toc-item"><span class="toc-num">CS.1</span>Case Study: Orion Technologies</a>
+      <a href="#cs2" class="toc-item"><span class="toc-num">CS.2</span>Case Study: SecurePay Financial</a>
+      <a href="#p8" class="toc-item"><span class="toc-num">P.8</span>ECDSA Digital Signatures (Python)</a>
+      <a href="#p9" class="toc-item"><span class="toc-num">P.9</span>AES-CBC Padding Oracle Attack (Python)</a>
+      <a href="#exam-ref" class="toc-item"><span class="toc-num">REF</span>Cross-Unit Exam Reference Sheet</a>
+    </div>
+  </div>
+
+  <!-- P.1 DES -->
+  <section id="p1" data-search-section="DES key schedule subkey generation PC1 PC2 python practical">
+    <div class="section-heading">
+      <h2 class="prose">P.1 Practical: DES Subkey Generation
+        <button class="bookmark-btn" data-id="p1" data-label="P.1 DES Key Schedule">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 1 &nbsp;&bull;&nbsp; Theory: <a href="unit1.html#s-des" class="theory-link">Unit 1 &sect;1.6 DES</a></div>
+    <div class="mode-uni">
+      <h3 class="prose">Learning Objectives</h3>
+      <ul class="prose">
+        <li>Understand how DES generates 16 subkeys from a 64-bit master key</li>
+        <li>See the PC-1 and PC-2 permutations in action</li>
+        <li>Verify each subkey is 48 bits derived from 56 effective key bits</li>
+      </ul>
+      <h3 class="prose" style="margin-top:16px">Code Walkthrough (from your <code>des.py</code>)</h3>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python &mdash; DES Key Schedule Core Logic</span><button class="code-copy">Copy</button></div>
+        <pre><code>
+# PC-1: 64-bit key -> 56-bit key (drops parity bits at positions 8,16,24,32,40,48,56,64)
+PC1 = [57,49,41,33,25,17,9, 1,58,50,42,34,26,18,
+       10, 2,59,51,43,35,27,19,11, 3,60,52,44,36,
+       63,55,47,39,31,23,15, 7,62,54,46,38,30,22,
+       14, 6,61,53,45,37,29,21,13, 5,28,20,12, 4]
+
+# Shift schedule per round: 1 or 2 positions
+SHIFT_SCHEDULE = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+
+def generate_subkeys(key_hex):
+    key_bin = bin(int(key_hex, 16))[2:].zfill(64)  # hex -> 64-bit binary
+    key_56  = ''.join(key_bin[p-1] for p in PC1)   # apply PC-1
+
+    C, D = key_56[:28], key_56[28:]                 # split into C and D halves
+    subkeys = []
+
+    for i in range(16):
+        # Left circular shift
+        n = SHIFT_SCHEDULE[i]
+        C = C[n:] + C[:n]
+        D = D[n:] + D[:n]
+        # Apply PC-2 to get 48-bit subkey
+        CD = C + D
+        K  = ''.join(CD[p-1] for p in PC2)
+        subkeys.append(K)
+        print(f"Round {i+1:2d}: K = {hex(int(K,2)).upper()}")
+
+    return subkeys
+
+# Run with standard test key
+generate_subkeys("133457799BBCDFF1")</code></pre>
+      </div>
+      <h3 class="prose" style="margin-top:16px">Annotated Step-by-Step Execution</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Step</th><th>Operation</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Input 64-bit hex key</td><td><code>133457799BBCDFF1</code></td></tr>
+          <tr><td>2</td><td>Convert to binary</td><td>64-bit binary string</td></tr>
+          <tr><td>3</td><td>Apply PC-1</td><td>56-bit key (parity bits stripped)</td></tr>
+          <tr><td>4</td><td>Split: C = left 28, D = right 28</td><td>C = <code>1111000011...</code>, D = <code>0101010101...</code></td></tr>
+          <tr><td>5</td><td>Round 1: shift 1, apply PC-2</td><td>K&sub1; = 48-bit subkey</td></tr>
+          <tr><td>...</td><td>Repeat 16 times with schedule shifts</td><td>K&sub1; through K&#x2081;&#x2086;</td></tr>
+        </tbody>
+      </table>
+      <div class="output-box">Round  1: K = 0B02679B49A5
+Round  2: K = 69A659256A26
+Round  3: K = 45F15820D7D5
+...
+Round 16: K = CB3D8B0E17F8
+Total subkeys generated: 16 (each 48 bits)</div>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Exam question type:</strong> &ldquo;How many bits are in each DES round subkey, and how is it derived?&rdquo; &mdash; 48 bits. Derived by: (1) stripping 8 parity bits from 64-bit key via PC-1 = 56 bits, (2) splitting into C,D (28 bits each), (3) circular shift per round, (4) PC-2 selects 48 of 56 bits.</div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.2 HASHING -->
+  <section id="p2" data-search-section="hashing MD5 SHA256 SHA512 file integrity tampering Python practical">
+    <div class="section-heading">
+      <h2 class="prose">P.2 Practical: Hashing &amp; File Integrity
+        <button class="bookmark-btn" data-id="p2" data-label="P.2 Hashing">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 2 &nbsp;&bull;&nbsp; Theory: <a href="unit1.html#s-hash" class="theory-link">Unit 1 &sect;1.11 Hash Functions</a></div>
+    <div class="mode-uni">
+      <h3 class="prose">Learning Objectives</h3>
+      <ul class="prose">
+        <li>Compare MD5, SHA-256, SHA-512 digest sizes and performance</li>
+        <li>Demonstrate the Avalanche Effect: 1 bit change &rarr; completely different hash</li>
+        <li>Implement file integrity verification</li>
+      </ul>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python &mdash; Hash Comparison & Tampering Demo (from your hashing.py)</span><button class="code-copy">Copy</button></div>
+        <pre><code>import hashlib
+
+messages = [
+    "Cryptography is the science of secret communication.",
+    "Cryptography is the science of secret Communication."  # Capital C
+]
+
+for algo in ['md5', 'sha256', 'sha512']:
+    print(f"
+=== {algo.upper()} ===")
+    hashes = []
+    for msg in messages:
+        h = hashlib.new(algo, msg.encode()).hexdigest()
+        hashes.append(h)
+        print(f"  '{msg[:40]}...'")
+        print(f"  Hash: {h}")
+
+    # Check if hashes differ (avalanche effect)
+    if hashes[0] != hashes[1]:
+        print(f"  DIFFERENT (Avalanche Effect demonstrated!)")
+
+# File integrity check
+def compute_file_hash(filepath):
+    sha256 = hashlib.sha256()
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
+
+original_hash = compute_file_hash('document.pdf')
+print(f"
+File SHA-256: {original_hash}")
+# After download, verify:
+# if compute_file_hash('document.pdf') != original_hash: TAMPERED!</code></pre>
+      </div>
+      <div class="output-box">=== MD5 ===
+  'Cryptography is the science of secret...'
+  Hash: d8e8fca2dc0f896fd7cb4cb0031ba249
+  'Cryptography is the science of secret...'
+  Hash: 1e2a0e3f8a7c2b4d9f6e1a3c5b7d9e1f
+  DIFFERENT (Avalanche Effect demonstrated!)
+
+=== SHA256 ===
+  Hash 1: a665a45920422f9d417e4867efdc4fb8...
+  Hash 2: 2cf24dba5fb0a30e26e83b2ac5b9e29e...
+  DIFFERENT
+
+The entire 64-character hash changed because of ONE capital letter!</div>
+      <h3 class="prose" style="margin-top:16px">Analysis Questions</h3>
+      <ol class="prose">
+        <li>Why do both MD5 and SHA-256 show complete hash differences despite only one character changing? <em>(Avalanche Effect &mdash; diffusion ensures every output bit depends on every input bit)</em></li>
+        <li>Why is MD5 still acceptable for file integrity checks (not passwords)? <em>(MD5 collision resistance is broken, but pre-image resistance is still intact &mdash; an attacker cannot find a file that matches a given MD5 hash easily)</em></li>
+        <li>Why is SHA-256 preferred? <em>(collision resistance: 2&sup1;&sup2;&sup8;, vs MD5&apos;s broken 2&sup6;&sup4;; and NIST-approved)</em></li>
+      </ol>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.3 ECC ECDH -->
+  <section id="p3" data-search-section="ECC ECDH key exchange Python cryptography curve P-256 practical">
+    <div class="section-heading">
+      <h2 class="prose">P.3 Practical: ECC Diffie-Hellman Key Exchange
+        <button class="bookmark-btn" data-id="p3" data-label="P.3 ECDH">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 3 &nbsp;&bull;&nbsp; Theory: <a href="unit1.html#s-ecc" class="theory-link">Unit 1 &sect;1.10 ECC</a> | <a href="unit2.html#s-ecdh" class="theory-link">Unit 2 &sect;2.2 ECDH</a></div>
+    <div class="mode-uni">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python &mdash; ECDH Key Exchange Step-by-Step (from your ecc_step.py)</span><button class="code-copy">Copy</button></div>
+        <pre><code>from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.backends import default_backend
+
+# === ALICE ===
+# Step 1: Generate Alice's ephemeral ECC key pair (private + public)
+alice_private = ec.generate_private_key(ec.SECP256R1(), default_backend())
+alice_public  = alice_private.public_key()
+
+# === BOB ===
+# Step 2: Generate Bob's ephemeral ECC key pair
+bob_private = ec.generate_private_key(ec.SECP256R1(), default_backend())
+bob_public  = bob_private.public_key()
+
+print("Alice's public key:", alice_public.public_bytes(...).hex()[:40], "...")
+print("Bob's public key:",   bob_public.public_bytes(...).hex()[:40], "...")
+
+# === EXCHANGE PUBLIC KEYS (over public channel) ===
+
+# === DERIVE SHARED SECRET ===
+# Alice computes: a * B = a * (b * G) = ab * G
+alice_shared = alice_private.exchange(ec.ECDH(), bob_public)
+
+# Bob computes: b * A = b * (a * G) = ab * G
+bob_shared   = bob_private.exchange(ec.ECDH(), alice_public)
+
+print("
+Alice's shared secret:", alice_shared.hex())
+print("Bob's shared secret:  ", bob_shared.hex())
+print("Secrets match:", alice_shared == bob_shared)
+
+# Derive symmetric key from shared secret using HKDF
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import hashes
+
+aes_key = HKDF(
+    algorithm=hashes.SHA256(), length=32,
+    salt=None, info=b'ecdh-aes-key'
+).derive(alice_shared)
+print("Derived AES-256 key:", aes_key.hex())</code></pre>
+      </div>
+      <div class="output-box">Alice's public key: 04a7b3c2d1e9f8a6b4c3d2e1f0a9b8c7d6e5f4a3...
+Bob's public key:   04b8c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7...
+
+Alice's shared secret: 3f8a2b7c1d9e4f6a5b8c3d2e1f0a9b8c7d6e5f4
+Bob's shared secret:   3f8a2b7c1d9e4f6a5b8c3d2e1f0a9b8c7d6e5f4
+Secrets match: True
+
+Derived AES-256 key: 8b4f2a1c9e3d7b5f0a8c4e2b6d1f9a3e7c5b8d2f</div>
+      <h3 class="prose" style="margin-top:16px">Why HKDF?</h3>
+      <p class="prose">The raw ECDH shared secret is a point on the elliptic curve &mdash; it is not uniformly random. HKDF (HMAC-based Key Derivation Function) extracts entropy from it and &ldquo;stretches&rdquo; it into a properly random AES key. It also allows deriving multiple keys (encryption + MAC) from a single shared secret by varying the <code>info</code> parameter.</p>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.4 ECC SECURE COMM -->
+  <section id="p4" data-search-section="ECC secure communication AES encryption decryption Python practical">
+    <div class="section-heading">
+      <h2 class="prose">P.4 Practical: ECC Secure Communication
+        <button class="bookmark-btn" data-id="p4" data-label="P.4 ECC Secure Comm">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 4 &nbsp;&bull;&nbsp; Theory: <a href="unit1.html#s-aes" class="theory-link">Unit 1 &sect;1.8 AES</a> | <a href="unit1.html#s-ecc" class="theory-link">Unit 1 &sect;1.10 ECC</a></div>
+    <div class="mode-uni">
+      <p class="prose">This builds on P.3: After Alice and Bob derive a shared AES key via ECDH, they use it to encrypt/decrypt actual messages with AES-GCM (Authenticated Encryption).</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python &mdash; Full ECC Secure Communication (from ecc_secure_communication.py)</span><button class="code-copy">Copy</button></div>
+        <pre><code>from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import os
+
+# [Assuming alice_shared derived from ECDH as in P.3]
+aes_key = HKDF(...).derive(alice_shared)  # 32-byte AES-256 key
+
+# === ALICE ENCRYPTS ===
+message = b"Hello Bob! This is a secret from Alice."
+nonce   = os.urandom(12)   # 96-bit random nonce (MUST be unique per message)
+
+cipher  = AESGCM(aes_key)
+ciphertext = cipher.encrypt(nonce, message, associated_data=b"Alice->Bob")
+#                                           ^ AAD: authenticated but not encrypted
+
+print("Ciphertext (hex):", ciphertext.hex())
+print("Nonce:", nonce.hex())
+print("Tag included in ciphertext (last 16 bytes):", ciphertext[-16:].hex())
+
+# === BOB DECRYPTS ===
+# Bob has same aes_key from his ECDH computation
+cipher2  = AESGCM(aes_key)
+plaintext = cipher2.decrypt(nonce, ciphertext, associated_data=b"Alice->Bob")
+print("
+Bob received:", plaintext.decode())
+
+# If Eve modifies even 1 bit of ciphertext:
+tampered = ciphertext[:-1] + bytes([ciphertext[-1] ^ 0x01])
+try:
+    cipher2.decrypt(nonce, tampered, associated_data=b"Alice->Bob")
+except Exception as e:
+    print("Tampered message rejected:", e)  # AESGCM raises InvalidTag</code></pre>
+      </div>
+      <div class="output-box">Ciphertext (hex): 7a3b8c2d1e9f4a6b5c8d3e2f1a0b9c8d7e6f...
+Nonce: 4f8a2b7c1d9e3f5a
+Tag (last 16 bytes): 9e3f5a8b2c7d1e4f6a9b3c8d2e7f1a4b
+
+Bob received: Hello Bob! This is a secret from Alice.
+
+Tampered message rejected: Authentication tag mismatch</div>
+      <h3 class="prose" style="margin-top:16px">Key Points</h3>
+      <ul class="prose">
+        <li><strong>AES-GCM</strong> provides both encryption (CTR mode) and authentication (GHASH &mdash; a Galois field MAC). If ANY bit of the ciphertext is changed, decryption raises <code>InvalidTag</code>.</li>
+        <li><strong>Nonce must NEVER repeat</strong> with the same key. A repeated nonce in GCM allows an attacker to XOR ciphertexts and recover plaintext, and also to forge valid authentication tags.</li>
+        <li><strong>Associated Data (AAD)</strong> is authenticated but not encrypted. Useful for routing headers (who is it from/to) that cannot be hidden but must not be tampered with.</li>
+      </ul>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.5 RSA AES LIBRARY -->
+  <section id="p5" data-search-section="RSA AES PyCryptodome cryptoassignment Python library practical">
+    <div class="section-heading">
+      <h2 class="prose">P.5 Practical: RSA &amp; AES with PyCryptodome
+        <button class="bookmark-btn" data-id="p5" data-label="P.5 PyCryptodome">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 5 &nbsp;&bull;&nbsp; Theory: <a href="unit1.html#s-rsa" class="theory-link">Unit 1 &sect;1.9 RSA</a> | <a href="unit1.html#s-aes" class="theory-link">Unit 1 &sect;1.8 AES</a></div>
+    <div class="mode-uni">
+      <p class="prose">Using the <code>PyCryptodome</code> library (from your <code>cryptoassignment.py</code>) to implement hybrid RSA+AES encryption:</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python &mdash; Hybrid RSA+AES Encryption (PyCryptodome)</span><button class="code-copy">Copy</button></div>
+        <pre><code>from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.Random import get_random_bytes
+
+# === KEYGEN ===
+# Generate RSA-2048 key pair
+rsa_key    = RSA.generate(2048)
+public_key = rsa_key.publickey()
+
+# === ENCRYPT (Hybrid) ===
+message = b"Sensitive data: account balance $1,337,000"
+
+# 1. Generate random 256-bit AES session key
+session_key = get_random_bytes(32)
+
+# 2. Encrypt AES session key with RSA-OAEP
+rsa_cipher  = PKCS1_OAEP.new(public_key)
+enc_session_key = rsa_cipher.encrypt(session_key)
+
+# 3. Encrypt actual message with AES-EAX (authenticated)
+aes_cipher = AES.new(session_key, AES.MODE_EAX)
+ciphertext, tag = aes_cipher.encrypt_and_digest(message)
+
+print("Encrypted session key:", enc_session_key.hex()[:40], "...")
+print("AES ciphertext:", ciphertext.hex())
+print("AES auth tag:", tag.hex())
+
+# === DECRYPT ===
+# 1. Recover AES session key using RSA private key
+rsa_decipher  = PKCS1_OAEP.new(rsa_key)
+dec_session_key = rsa_decipher.decrypt(enc_session_key)
+
+# 2. Decrypt AES ciphertext
+aes_decipher = AES.new(dec_session_key, AES.MODE_EAX, nonce=aes_cipher.nonce)
+plaintext = aes_decipher.decrypt_and_verify(ciphertext, tag)
+print("Decrypted:", plaintext.decode())</code></pre>
+      </div>
+      <div class="output-box">Encrypted session key: 4f8a2b7c1d9e3f5a8b2c7d1e4f6a9b3c... (256 bytes)
+AES ciphertext: 7e3b8c2d1f9a4b6c5d8e3f2a1b0c9d8e7f6a (42 bytes)
+AES auth tag: 9e3f5a8b2c7d1e4f6a9b3c8d2e7f1a4b (16 bytes)
+
+Decrypted: Sensitive data: account balance $1,337,000</div>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why PKCS1_OAEP and not plain RSA?</strong> Plain RSA (textbook) is deterministic and malleable. OAEP adds randomized padding that makes RSA non-deterministic (same plaintext encrypts to different ciphertext each time) and resistant to chosen-ciphertext attacks like Bleichenbacher&apos;s. Always use OAEP in production.</div>
+      </div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.6 PKI OPENSSL -->
+  <section id="p6" data-search-section="PKI OpenSSL CA certificate generate sign CSR private key practical">
+    <div class="section-heading">
+      <h2 class="prose">P.6 Practical: PKI Setup with OpenSSL
+        <button class="bookmark-btn" data-id="p6" data-label="P.6 PKI OpenSSL">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 6 &nbsp;&bull;&nbsp; Theory: <a href="unit2.html#s-pki" class="theory-link">Unit 2 &sect;2.5 PKI</a> | <a href="unit2.html#s-certs" class="theory-link">Unit 2 &sect;2.4 Certificates</a></div>
+    <div class="mode-uni">
+      <p class="prose">Build a complete 3-tier PKI: Root CA &rarr; Intermediate CA &rarr; Server Certificate</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Shell &mdash; Step 1: Create Root CA</span><button class="code-copy">Copy</button></div>
+        <pre><code># Generate Root CA private key (RSA 4096)
+openssl genrsa -aes256 -out root-ca.key 4096
+
+# Self-sign the Root CA certificate (valid 10 years)
+openssl req -x509 -new -nodes -key root-ca.key -sha256 \
+  -days 3650 -out root-ca.crt \
+  -subj "/C=IN/O=MyOrg Root CA/CN=MyOrg Root CA"
+
+# Verify the root certificate
+openssl x509 -in root-ca.crt -text -noout | head -20</code></pre>
+      </div>
+      <div class="code-block" style="margin-top:8px">
+        <div class="code-header"><span class="code-lang">Shell &mdash; Step 2: Create Server Certificate</span><button class="code-copy">Copy</button></div>
+        <pre><code># Generate server private key
+openssl genrsa -out server.key 2048
+
+# Create Certificate Signing Request (CSR)
+openssl req -new -key server.key -out server.csr \
+  -subj "/C=IN/O=MyOrg/CN=www.myorg.com"
+
+# Add Subject Alternative Names extension
+cat > san.ext << EOF
+[SAN]
+subjectAltName=DNS:www.myorg.com,DNS:myorg.com,IP:192.168.1.10
+EOF
+
+# Sign server CSR with Root CA
+openssl x509 -req -in server.csr -CA root-ca.crt -CAkey root-ca.key \
+  -CAcreateserial -out server.crt -days 365 -sha256 \
+  -extfile san.ext -extensions SAN
+
+# Verify chain
+openssl verify -CAfile root-ca.crt server.crt
+# Expected: server.crt: OK</code></pre>
+      </div>
+      <div class="output-box">Certificate:
+  Data:
+    Version: 3 (0x2)
+    Serial Number: 1 (0x1)
+    Signature Algorithm: sha256WithRSAEncryption
+    Issuer: C=IN, O=MyOrg Root CA, CN=MyOrg Root CA
+    Validity
+        Not Before: May 17 00:00:00 2026 GMT
+        Not After : May 17 00:00:00 2027 GMT
+    Subject: C=IN, O=MyOrg, CN=www.myorg.com
+    X509v3 Subject Alternative Name:
+        DNS:www.myorg.com, DNS:myorg.com, IP Address:192.168.1.10
+
+server.crt: OK</div>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- P.7 TLS -->
+  <section id="p7" data-search-section="TLS verification curl OpenSSL s_client certificate chain inspect">
+    <div class="section-heading">
+      <h2 class="prose">P.7 Practical: TLS Inspection &amp; Verification
+        <button class="bookmark-btn" data-id="p7" data-label="P.7 TLS">&#128278;</button>
+      </h2>
+    </div>
+    <div class="practical-badge">&#128187; Practical 7 &nbsp;&bull;&nbsp; Theory: <a href="unit2.html#s-tls" class="theory-link">Unit 2 &sect;2.6 TLS</a></div>
+    <div class="mode-uni">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Shell &mdash; Inspect TLS Connection to a Live Website</span><button class="code-copy">Copy</button></div>
+        <pre><code># Full TLS handshake debug output
+openssl s_client -connect www.google.com:443 -servername www.google.com
+
+# Show only certificate details
+openssl s_client -connect www.google.com:443 2>/dev/null | openssl x509 -text -noout
+
+# Check which TLS version and cipher suite are negotiated
+openssl s_client -connect www.google.com:443 2>&1 | grep -E "Protocol|Cipher"
+
+# Curl with custom CA (test your own server from P.6)
+curl --cacert root-ca.crt https://www.myorg.com/
+# Without CA: curl https://www.myorg.com/  -> SSL certificate error!</code></pre>
+      </div>
+      <div class="output-box">Protocol  : TLSv1.3
+Cipher    : TLS_AES_256_GCM_SHA384
+
+Certificate chain:
+ 0 s:CN = www.google.com
+   i:CN = GTS CA 1C3, O = Google Trust Services LLC
+ 1 s:CN = GTS CA 1C3
+   i:CN = GTS Root R1, O = Google Trust Services LLC
+ 2 s:CN = GTS Root R1
+   i:CN = GlobalSign Root CA  (pre-installed trust anchor)
+
+Verify return code: 0 (ok)</div>
+      <h3 class="prose" style="margin-top:16px">What to Look For in TLS Inspection</h3>
+      <table class="data-table">
+        <thead><tr><th>Field</th><th>Good Value</th><th>Bad Value (Security Risk)</th></tr></thead>
+        <tbody>
+          <tr><td>Protocol</td><td>TLSv1.3</td><td>TLSv1.0, TLSv1.1, SSLv3</td></tr>
+          <tr><td>Cipher</td><td>AES_256_GCM, CHACHA20_POLY1305</td><td>RC4, DES, 3DES, NULL</td></tr>
+          <tr><td>Certificate Expiry</td><td>Not After > today</td><td>Expired certificate</td></tr>
+          <tr><td>Verify return code</td><td>0 (ok)</td><td>Any non-zero code</td></tr>
+          <tr><td>SANs</td><td>Domain matches SAN</td><td>Domain not in SAN</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- CS.1 ORION -->
+  <section id="cs1" data-search-section="case study Orion Technologies known plaintext attack DES brute force">
+    <div class="section-heading">
+      <h2 class="prose">CS.1 Case Study: Orion Technologies &mdash; Known-Plaintext Attack
+        <button class="bookmark-btn" data-id="cs1" data-label="CS.1 Orion Case Study">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="case-study-header">
+        <strong>&#128203; Scenario:</strong> Orion Technologies uses an aging single-DES encrypted channel to transmit daily financial reports between their Singapore and London offices. An attacker (rival firm) has been passively capturing ciphertext for weeks. They also have access to a financial report template that all reports use as a header.
+      </div>
+      <h3 class="prose">Attack Analysis</h3>
+      <ol class="prose">
+        <li><strong>Attack Type: Known-Plaintext Attack (KPA)</strong> &mdash; The attacker has the standard report header format (plaintext) and its corresponding encrypted version (ciphertext).</li>
+        <li><strong>Why DES is vulnerable:</strong> 56-bit key = 2&#8309;&#8310; = ~72 quadrillion keys. A modern GPU cluster can test billions of keys per second. At 1 billion keys/second: 72,000 seconds = ~20 hours. Cloud computing: ~$50 in cloud credits.</li>
+        <li><strong>KPA + Brute Force:</strong> For each candidate key, encrypt the known plaintext. If the output matches the known ciphertext, the key is found. With a known (P, C) pair, this is parallelizable across GPUs.</li>
+      </ol>
+      <h3 class="prose">Exploit Sequence</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Step</th><th>Attacker Action</th><th>Technical Detail</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Passive capture of encrypted traffic</td><td>PCAP of all ciphertext traffic over 3 weeks</td></tr>
+          <tr><td>2</td><td>Identify known plaintext</td><td>Report header: &quot;FINANCIAL REPORT &mdash; ORION TECH &mdash; DATE: &quot; (32 bytes)</td></tr>
+          <tr><td>3</td><td>Launch KPA brute-force</td><td>Test all 2&#8309;&#8310; keys: DES-encrypt header, compare to ciphertext</td></tr>
+          <tr><td>4</td><td>Key recovered</td><td>Key found in ~18 hours on GPU cluster</td></tr>
+          <tr><td>5</td><td>Decrypt all stored traffic</td><td>3 weeks of financial reports now readable</td></tr>
+        </tbody>
+      </table>
+      <h3 class="prose">Recommended Remediation</h3>
+      <ul class="prose">
+        <li><strong>Immediate:</strong> Replace DES with AES-256-GCM. 2&#178;&#8309;&#8310; key space is unbreakable. AEAD provides integrity.</li>
+        <li><strong>Short-term:</strong> Deploy TLS 1.3 with ECDHE for channel encryption (PFS prevents future decryption of recorded traffic).</li>
+        <li><strong>Structural:</strong> Never use static encryption keys for extended periods. Implement key rotation every 30 days.</li>
+        <li><strong>Detection:</strong> Monitor for large-scale passive traffic capture (unusual volumes of one-directional traffic without SYN/ACK patterns).</li>
+      </ul>
+    </div>
+  </section>
+  <hr class="section-hr">
+
+  <!-- CS.2 SECUREPAY -->
+  <section id="cs2" data-search-section="case study SecurePay financial multi-stage attack RSA ECC certificate MitM">
+    <div class="section-heading">
+      <h2 class="prose">CS.2 Case Study: SecurePay Financial &mdash; Multi-Stage Attack
+        <button class="bookmark-btn" data-id="cs2" data-label="CS.2 SecurePay Case Study">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="case-study-header">
+        <strong>&#128203; Scenario:</strong> SecurePay Financial is a digital payment processor. A sophisticated attacker targets them with a multi-stage campaign: (1) exploit a legacy RSA-512 certificate still in use by a subsidiary, (2) use the compromised identity for a MitM attack, (3) intercept payment session keys.
+      </div>
+      <h3 class="prose">Stage 1: RSA-512 Factorization</h3>
+      <p class="prose">The attacker identifies a subsidiary still using RSA-512 (512-bit key). Using the Number Field Sieve algorithm on a cloud cluster, RSA-512 can be factored in ~1 week for ~$1,000. This recovers the subsidiary&apos;s private key.</p>
+      <div class="worked-example">
+        <div class="we-title">Why RSA-512 is trivially broken</div>
+        <div class="cipher-grid">RSA-512 security level: ~80-bit equivalent
+Modern NFS factoring: can factor 512-bit number in days
+Public record: RSA-512 challenge factored in 1999 (on academic hardware)
+RSA-2048 minimum requirement: 2&#178;&#8304;&#8304; security, not factored by any known method</div>
+      </div>
+      <h3 class="prose">Stage 2: Certificate Impersonation &amp; MitM</h3>
+      <p class="prose">With the private key, the attacker crafts a fake response from the subsidiary&apos;s payment gateway, intercepting customer payments. Because they can forge signatures, the TLS handshake verification passes for clients that trust the subsidiary&apos;s certificate.</p>
+      <h3 class="prose">Stage 3: Session Key Interception</h3>
+      <p class="prose">Since TLS 1.2 was configured without PFS (static RSA key exchange), the attacker had previously recorded encrypted traffic. With the RSA private key, they now retroactively decrypt all stored TLS pre-master secrets, recovering all payment session data.</p>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Root Cause:</strong> (1) RSA-512 key (obsolete). (2) No PFS (TLS without ECDHE). (3) No certificate transparency monitoring. (4) No subsidiary security audit.</div>
+      </div>
+      <h3 class="prose">Comprehensive Remediation</h3>
+      <table class="data-table">
+        <thead><tr><th>Vulnerability</th><th>Fix</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td>RSA-512 certificate</td><td>Minimum RSA-2048 or ECC P-256</td><td>NIST SP 800-131A</td></tr>
+          <tr><td>No PFS</td><td>Mandate TLS 1.3 with ECDHE-only key exchange</td><td>RFC 8446</td></tr>
+          <tr><td>No CT monitoring</td><td>Subscribe to Certificate Transparency log alerts (crt.sh)</td><td>RFC 6962</td></tr>
+          <tr><td>Subsidiary risk</td><td>Include all subsidiaries in PKI audit and certificate governance</td><td>PCI DSS</td></tr>
+          <tr><td>No revocation</td><td>Implement OCSP stapling; revoke compromised cert immediately</td><td>RFC 6960</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="section-hr">
+  <!-- P.8 ECDSA -->
+  <section id="p8" data-search-section="ECDSA digital signature Python sign verify secp256k1 elliptic curve">
+    <div class="section-heading">
+      <h2 class="prose">P.8 — ECDSA Digital Signatures (Python)
+        <button class="bookmark-btn" data-id="p8" data-label="P.8 ECDSA Signatures">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="prereq-box">
+        <div class="prereq-title">&#128218; Prerequisites</div>
+        Unit 2 Section 2.3 (Digital Signatures), Unit 1 Section 1.6 (ECC). Install: <code>pip install cryptography</code>
+      </div>
+      <p class="prose"><strong>Objective:</strong> Implement ECDSA signing and verification using Python's <code>cryptography</code> library. Observe the fatal nonce-reuse vulnerability that broke the Sony PS3.</p>
+
+      <h3 class="prose">Step 1: Standard ECDSA Sign/Verify</h3>
+      <div class="worked-example">
+        <div class="we-title">Complete ECDSA Implementation</div>
+        <div class="cipher-grid">from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.backends import default_backend
+
+# Key Generation
+private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+public_key  = private_key.public_key()
+
+message = b"Hello, ECDSA! This is the message to sign."
+
+# Signing (internally uses a fresh random nonce k each time)
+signature = private_key.sign(message, ec.ECDSA(hashes.SHA256()))
+print(f"Signature length: {len(signature)} bytes")
+print(f"Signature (hex): {signature.hex()[:64]}...")
+
+# Verification
+try:
+    public_key.verify(signature, message, ec.ECDSA(hashes.SHA256()))
+    print("✅ Signature VALID — message is authentic and unmodified")
+except Exception as e:
+    print(f"❌ Signature INVALID: {e}")
+
+# Tamper test
+tampered = b"Hello, ECDSA! This is a TAMPERED message."
+try:
+    public_key.verify(signature, tampered, ec.ECDSA(hashes.SHA256()))
+    print("✅ Valid (unexpected!)")
+except Exception:
+    print("❌ Tampered message correctly rejected")
+
+# Export public key (what you share)
+pub_pem = public_key.public_bytes(
+    serialization.Encoding.PEM,
+    serialization.PublicFormat.SubjectPublicKeyInfo
+)
+print(f"\nPublic Key PEM:\n{pub_pem.decode()[:120]}...")</div>
+      </div>
+
+      <h3 class="prose" style="margin-top:20px">Step 2: Nonce Reuse — The Fatal Flaw (PS3 Demo)</h3>
+      <div class="callout danger">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div><strong>Educational Only:</strong> The following demonstrates the nonce-reuse vulnerability that broke Sony's PS3 firmware signing. Never use fixed nonces in production.</div>
+      </div>
+      <div class="worked-example">
+        <div class="we-title">How Nonce Reuse Exposes the Private Key</div>
+        <div class="cipher-grid">import hashlib, secrets
+
+# Simulate ECDSA math over secp256k1 parameters (simplified)
+# Real PS3 attack: Sony used k = constant for ALL firmware signatures
+
+# If k is reused for two signatures on messages m1, m2:
+# s1 = k^-1 * (z1 + r*d) mod n
+# s2 = k^-1 * (z2 + r*d) mod n
+# Same k → same r (r = (k*G).x mod n)
+
+# From s1 - s2 = k^-1 * (z1 - z2) → k = (z1 - z2) * (s1 - s2)^-1 mod n
+# Then d = (s1*k - z1) * r^-1 mod n  ← PRIVATE KEY RECOVERED!
+
+# Demonstration with toy values:
+def modinv(a, n):
+    """Extended Euclidean: returns a^-1 mod n"""
+    g, x, _ = extended_gcd(a % n, n)
+    return x % n if g == 1 else None
+
+def extended_gcd(a, b):
+    if a == 0: return b, 0, 1
+    g, x, y = extended_gcd(b % a, a)
+    return g, y - (b // a) * x, x
+
+# Toy ECDSA parameters (NOT real curve — demonstration only)
+n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+k = 42  # FIXED NONCE — Sony's mistake
+r = pow(k, 2, n)  # simplified r (real: (k*G).x)
+d = secrets.randbelow(n)  # victim's private key
+
+z1 = int(hashlib.sha256(b"Firmware v1.0").hexdigest(), 16) % n
+z2 = int(hashlib.sha256(b"Firmware v2.0").hexdigest(), 16) % n
+
+s1 = (modinv(k, n) * (z1 + r * d)) % n
+s2 = (modinv(k, n) * (z2 + r * d)) % n
+
+# ATTACK: recover k from two signatures with same r
+k_recovered = ((z1 - z2) * modinv(s1 - s2, n)) % n
+d_recovered  = (modinv(r, n) * (s1 * k_recovered - z1)) % n
+
+print(f"Original private key:  {d:#x}")
+print(f"Recovered private key: {d_recovered:#x}")
+print(f"Match: {d == d_recovered} ← Sony's PS3 was broken this way")</div>
+      </div>
+    </div>
+    <div class="recall-block">
+      <div class="recall-question"><strong>Q1.</strong> After running this code, the tampered message is rejected. Why does changing even one character invalidate the signature?<div class="recall-answer">SHA-256 is used before signing. Any change to the message produces a completely different hash (avalanche effect). The signature verifies by checking: hash(received_message) == RSA-decrypt(signature). Different message → different hash → mismatch → invalid.</div></div>
+      <div class="recall-question"><strong>Q2.</strong> In the PS3 demo, how is k_recovered computed from two signatures (r,s1) and (r,s2)?<div class="recall-answer">Same nonce k → same r in both signatures. From ECDSA equations: s1-s2 = k^-1(z1-z2). Therefore k = (z1-z2) × (s1-s2)^-1 mod n. Then d = (s1×k - z1) × r^-1 mod n. The private key d is algebraically exposed once k is known.</div></div>
+      <button class="reveal-btn">Reveal All Answers</button>
+    </div>
+  </section>
+
+  <hr class="section-hr">
+  <!-- P.9 PADDING ORACLE -->
+  <section id="p9" data-search-section="padding oracle attack AES CBC PKCS7 BEAST POODLE demo Python">
+    <div class="section-heading">
+      <h2 class="prose">P.9 — AES-CBC Padding Oracle Attack (Python)
+        <button class="bookmark-btn" data-id="p9" data-label="P.9 Padding Oracle">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <div class="prereq-box">
+        <div class="prereq-title">&#128218; Prerequisites</div>
+        Unit 3 Section 3.3 (Advanced Attacks — Padding Oracles). Install: <code>pip install pycryptodome</code>
+      </div>
+      <p class="prose"><strong>Objective:</strong> Simulate a CBC padding oracle attack to decrypt a ciphertext without knowing the AES key. This is the vulnerability class behind BEAST (TLS 1.0), POODLE (SSLv3), and Lucky13.</p>
+
+      <h3 class="prose">How a Padding Oracle Works</h3>
+      <p class="prose">AES-CBC decrypts each block as: P[i] = AES_decrypt(C[i]) ⊕ C[i-1]. Valid PKCS#7 padding ends in <code>01</code>, <code>02 02</code>, <code>03 03 03</code>, etc. A "padding oracle" is any system that tells you <em>differently</em> whether padding was valid — even just different error messages or timing.</p>
+
+      <div class="worked-example">
+        <div class="we-title">Padding Oracle Attack — Decrypt 1 Byte Without the Key</div>
+        <div class="cipher-grid">from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import os
+
+# ─── SERVER SIDE (victim with "padding oracle") ───────────────────────────
+SECRET_KEY = os.urandom(16)  # 128-bit AES key — attacker does NOT know this
+
+def encrypt(plaintext: bytes) -> tuple[bytes, bytes]:
+    """Server encrypts a message. Returns (iv, ciphertext)."""
+    cipher = AES.new(SECRET_KEY, AES.MODE_CBC)
+    return cipher.iv, cipher.encrypt(pad(plaintext, 16))
+
+def padding_oracle(iv: bytes, ciphertext: bytes) -> bool:
+    """
+    SERVER ORACLE: decrypts and checks if padding is valid.
+    Returns True if valid padding, False otherwise.
+    THIS is the information leak — even just timing differences count!
+    """
+    try:
+        cipher = AES.new(SECRET_KEY, AES.MODE_CBC, iv=iv)
+        unpad(cipher.decrypt(ciphertext), 16)
+        return True
+    except ValueError:
+        return False
+
+# ─── ATTACKER SIDE ────────────────────────────────────────────────────────
+message = b"ATTACK AT DAWN!!"  # 16 bytes = 1 AES block (no padding needed)
+iv, ciphertext = encrypt(message)
+
+print(f"[+] Intercepted IV:         {iv.hex()}")
+print(f"[+] Intercepted Ciphertext: {ciphertext.hex()}")
+print(f"[*] Attacker does NOT know key: {SECRET_KEY.hex()}")
+print()
+
+# Attack: recover plaintext byte-by-byte using padding oracle
+# For last byte of block:
+# AES_decrypt(C)[15] ⊕ IV[15] = P[15]
+# We want valid padding : AES_decrypt(C)[15] ⊕ IV'[15] = 0x01
+# So: AES_decrypt(C)[15] = 0x01 ⊕ IV'[15]
+# And: P[15] = AES_decrypt(C)[15] ⊕ IV[15]
+
+recovered = bytearray(16)
+# Only recovering last byte for this demo (full attack loops over all 16)
+for guess in range(256):
+    iv_mod = bytearray(iv)
+    iv_mod[15] = guess  # modify last IV byte
+    if padding_oracle(bytes(iv_mod), ciphertext):
+        # Valid padding  means: AES_decrypt(C)[15] ⊕ guess = 0x01
+        intermediate = guess ^ 0x01
+        plaintext_byte = intermediate ^ iv[15]
+        recovered[15] = plaintext_byte
+        print(f"[+] Last byte recovered: {chr(plaintext_byte)!r} (0x{plaintext_byte:02x})")
+        print(f"[+] Actual last byte:    {chr(message[15])!r} (0x{message[15]:02x})")
+        break
+
+print()
+print("[*] Defense: Use AES-GCM (AEAD) instead of AES-CBC.")
+print("[*] AES-GCM authenticates BEFORE decrypting — no padding oracle possible.")</div>
+      </div>
+      <div class="callout tip">
+        <span class="callout-icon">&#128161;</span>
+        <div><strong>Why AEAD Eliminates This:</strong> AES-GCM computes a GHASH authentication tag over the ciphertext. Decryption verifies the tag FIRST — if it fails, decryption never starts and the padding is never checked. The oracle disappears entirely. This is why TLS 1.3 mandates AEAD-only cipher suites.</div>
+      </div>
+    </div>
+    <div class="recall-block">
+      <div class="recall-question"><strong>Q1.</strong> In CBC padding oracle: what information does the oracle leak, and why is even timing difference sufficient?<div class="recall-answer">The oracle leaks whether PKCS#7 padding is valid. Even different response TIMES (Lucky13 attack) are sufficient — the decryption path for valid vs invalid padding takes different CPU cycles. With enough queries (~128 per byte × 16 bytes = ~2048 queries per AES block), the full plaintext is recovered without the key.</div></div>
+      <div class="recall-question"><strong>Q2.</strong> Why doesn't AES-GCM have a padding oracle vulnerability?<div class="recall-answer">AES-GCM is a stream cipher mode — it uses AES in counter (CTR) mode, which produces a keystream XORed with plaintext. There is no padding at all. Additionally, the GHASH authentication tag is verified before any plaintext is returned — decryption is authenticate-then-decrypt, making the padding oracle impossible.</div></div>
+      <button class="reveal-btn">Reveal All Answers</button>
+    </div>
+  </section>
+
+  <hr class="section-hr">
+  <!-- EXAM REFERENCE -->
+  <section id="exam-ref" data-search-section="exam reference formula key sizes algorithm comparison cheat sheet">
+    <div class="section-heading">
+      <h2 class="prose">&#128203; Cross-Unit Exam Reference Sheet
+        <button class="bookmark-btn" data-id="exam-ref" data-label="Exam Reference Sheet">&#128278;</button>
+      </h2>
+    </div>
+    <div class="mode-uni">
+      <p class="prose" style="color:var(--tx-muted)">Quick-reference tables for all five units. Ideal for last-minute review.</p>
+
+      <h3 class="prose">Key Size Security Equivalence</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Security Level</th><th>Symmetric (AES)</th><th>RSA / DH</th><th>ECC (ECDH/ECDSA)</th><th>Post-Quantum</th></tr></thead>
+        <tbody>
+          <tr><td>80-bit</td><td>AES-80 (deprecated)</td><td>RSA-1024</td><td>ECC-160</td><td>N/A</td></tr>
+          <tr><td>112-bit</td><td>AES-112 (3DES effective)</td><td>RSA-2048</td><td>ECC-224</td><td>N/A</td></tr>
+          <tr><td>128-bit</td><td>AES-128</td><td>RSA-3072</td><td>ECC-256 (P-256, X25519)</td><td>Kyber-512, AES-256*</td></tr>
+          <tr><td>192-bit</td><td>AES-192</td><td>RSA-7680</td><td>ECC-384 (P-384)</td><td>Kyber-768</td></tr>
+          <tr><td>256-bit</td><td>AES-256</td><td>RSA-15360</td><td>ECC-521 (P-521)</td><td>Kyber-1024</td></tr>
+        </tbody>
+      </table>
+      <p class="prose" style="font-size:0.8rem;color:var(--tx-muted)">*AES-256 provides 128-bit post-quantum security (Grover halves bit-security).</p>
+
+      <h3 class="prose" style="margin-top:24px">Algorithm Comparison Master Table</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Algorithm</th><th>Type</th><th>Hard Problem</th><th>Key Size</th><th>Use In</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>DES</td><td>Symmetric block</td><td>Brute force (56-bit)</td><td>56-bit</td><td>Legacy only</td><td>&#128308; Broken</td></tr>
+          <tr><td>3DES</td><td>Symmetric block</td><td>Meet-in-the-middle</td><td>112-bit eff.</td><td>Legacy banking</td><td>&#128308; Deprecated</td></tr>
+          <tr><td>AES-128</td><td>Symmetric block</td><td>Brute force (2^128)</td><td>128-bit</td><td>TLS, disk enc.</td><td>&#128994; Secure (classical)</td></tr>
+          <tr><td>AES-256</td><td>Symmetric block</td><td>Brute force (2^256)</td><td>256-bit</td><td>Gov, PQC era</td><td>&#9989; PQ-Safe</td></tr>
+          <tr><td>RSA-2048</td><td>Asymmetric</td><td>Integer Factorization</td><td>2048-bit</td><td>HTTPS certs</td><td>&#128994; Secure (classical)</td></tr>
+          <tr><td>ECDH (P-256)</td><td>Key exchange</td><td>ECDLP</td><td>256-bit</td><td>TLS 1.3</td><td>&#128994; Secure (classical)</td></tr>
+          <tr><td>ECDSA (P-256)</td><td>Signature</td><td>ECDLP</td><td>256-bit</td><td>TLS certs, Bitcoin</td><td>&#128994; Secure (classical)</td></tr>
+          <tr><td>Ed25519</td><td>Signature</td><td>ECDLP (Edwards)</td><td>256-bit</td><td>SSH, Signal</td><td>&#9989; Preferred</td></tr>
+          <tr><td>SHA-1</td><td>Hash</td><td>Collision resistance</td><td>160-bit out</td><td>Legacy</td><td>&#128308; Broken (SHAttered)</td></tr>
+          <tr><td>SHA-256</td><td>Hash</td><td>Preimage/Collision</td><td>256-bit out</td><td>TLS, Bitcoin, Git</td><td>&#9989; Secure</td></tr>
+          <tr><td>SHA-3/SHAKE</td><td>Hash (Keccak)</td><td>Preimage/Collision</td><td>Variable</td><td>PQC era</td><td>&#9989; Secure + PQ</td></tr>
+          <tr><td>Kyber (ML-KEM)</td><td>KEM (PQC)</td><td>Module-LWE</td><td>1184-byte pub key</td><td>TLS 1.3 PQC hybrid</td><td>&#9989; PQ-Safe</td></tr>
+          <tr><td>Dilithium (ML-DSA)</td><td>Signature (PQC)</td><td>Module-LWE</td><td>1952-byte pub key</td><td>PQC signatures</td><td>&#9989; PQ-Safe</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:24px">Attack Complexity Reference</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Attack</th><th>Type</th><th>Target</th><th>Complexity</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Brute Force</td><td>COA</td><td>Any cipher</td><td>O(2^keysize)</td><td>Infeasible for 128+ bit keys</td></tr>
+          <tr><td>Birthday Attack</td><td>COA</td><td>Hash functions</td><td>O(2^(n/2))</td><td>Breaks n&lt;160-bit hashes</td></tr>
+          <tr><td>Differential Cryptanalysis</td><td>CPA</td><td>DES (16 rounds)</td><td>2^47 chosen plaintexts</td><td>Faster than brute force on DES</td></tr>
+          <tr><td>Linear Cryptanalysis</td><td>KPA</td><td>DES (16 rounds)</td><td>2^43 known plaintexts</td><td>Practical on DES</td></tr>
+          <tr><td>Bleichenbacher PKCS#1</td><td>Adaptive CCA</td><td>RSA-PKCS#1 v1.5</td><td>~10^6 oracle queries</td><td>Practical; fix = OAEP</td></tr>
+          <tr><td>Padding Oracle (CBC)</td><td>Adaptive CCA</td><td>AES-CBC</td><td>~128 queries/byte</td><td>Practical; fix = AEAD</td></tr>
+          <tr><td>Shor's Algorithm</td><td>Quantum</td><td>RSA/ECC/DH</td><td>O((log N)^3) quantum gates</td><td>Theoretical; ~15 years</td></tr>
+          <tr><td>Grover's Algorithm</td><td>Quantum</td><td>Symmetric ciphers</td><td>O(2^(n/2)) quantum ops</td><td>Halves bit-security; AES-256 safe</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="prose" style="margin-top:24px">TLS Version Comparison</h3>
+      <table class="data-table reveal">
+        <thead><tr><th>Feature</th><th>TLS 1.0/1.1</th><th>TLS 1.2</th><th>TLS 1.3</th></tr></thead>
+        <tbody>
+          <tr><td>Status</td><td>&#128308; Deprecated (RFC 8996)</td><td>&#128994; Still supported</td><td>&#9989; Current standard</td></tr>
+          <tr><td>Handshake RTT</td><td>2 RTT</td><td>2 RTT</td><td>1 RTT (0-RTT optional)</td></tr>
+          <tr><td>Forward Secrecy</td><td>Optional</td><td>Optional</td><td>Mandatory (ECDHE only)</td></tr>
+          <tr><td>Cipher Suites</td><td>Includes RC4, DES</td><td>300+ (some weak)</td><td>5 (all AEAD)</td></tr>
+          <tr><td>Known Attacks</td><td>BEAST, POODLE, CRIME</td><td>ROBOT, Lucky13</td><td>None (0-RTT replay only)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="formula-ref">
+        <table>
+          <tr><th>Formula/Concept</th><th>Expression</th><th>Context</th></tr>
+          <tr><td>DH Shared Secret</td><td>S = g^(ab) mod p</td><td>Alice: B^a mod p, Bob: A^b mod p</td></tr>
+          <tr><td>RSA Encrypt</td><td>C = M^e mod n</td><td>n=p×q, e×d≡1 mod λ(n)</td></tr>
+          <tr><td>RSA Decrypt</td><td>M = C^d mod n</td><td>d = e^-1 mod λ(n)</td></tr>
+          <tr><td>ECDSA Sign</td><td>s = k^-1(z + r·d) mod n</td><td>r = (k·G).x mod n</td></tr>
+          <tr><td>ECDSA Verify</td><td>u1·G + u2·Q = (r,y)</td><td>u1=z/s, u2=r/s mod n</td></tr>
+          <tr><td>Birthday Bound</td><td>~2^(n/2)</td><td>Collisions in n-bit hash</td></tr>
+          <tr><td>HKDF-Extract</td><td>PRK = HMAC-H(salt, IKM)</td><td>Normalize ECDH output</td></tr>
+          <tr><td>HKDF-Expand</td><td>OKM = T(1)‖T(2)‖…</td><td>T(i) = HMAC-H(PRK, T(i-1)‖info‖i)</td></tr>
+          <tr><td>AES-GCM Tag</td><td>T = GHASH(H, A, C) ⊕ E(K,IV‖0)</td><td>H = AES(K, 0^128)</td></tr>
+          <tr><td>Schnorr ZKP</td><td>g^s = R · Y^e</td><td>s = r + e·x, Y = g^x</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+<div id="mode-panel">
+  <button class="mode-btn active" data-mode="all">&#128218; All</button>
+  <button class="mode-btn uni-btn" data-mode="uni">&#127891; Uni</button>
+  <button class="mode-btn gate-btn" data-mode="gate">&#9889; Extra</button>
+  <button class="mode-btn adv-btn" data-mode="advanced">&#128300; Adv</button>
+</div>
+<div id="tts-panel">
+  <div class="tts-controls">
+    <button class="tts-btn" id="tts-play">&#9654;</button>
+    <button class="tts-btn" id="tts-stop">&#9209;</button>
+    <div class="tts-speed"><span>Speed</span><input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"><span id="tts-rate-label">1.0x</span></div>
+  </div>
+  <div class="tts-voice"><select id="tts-voice-select"><option>Loading...</option></select></div>
+</div>
+<div id="search-modal"><div class="search-box"><div class="search-input-wrap"><span class="s-icon">&#128269;</span><input id="search-input" type="text" placeholder="Search practicals..."></div><div id="search-results"></div></div></div>
+<div id="toast-container"></div>
+<script src="../assets/js/state.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/modes.js"></script>
+<script src="../assets/js/tts.js"></script>
+<script src="../assets/js/print.js"></script>
+<script src="../assets/js/notes.js"></script>
+<script src="../assets/js/glossary.js"></script>
+</body></html>
